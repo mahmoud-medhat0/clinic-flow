@@ -171,10 +171,10 @@ const Navbar = () => {
       {/* Mobile Menu */}
       <div
         className={`lg:hidden transition-all duration-300 overflow-hidden ${
-          isMobileMenuOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+          isMobileMenuOpen ? 'max-h-[calc(100vh-64px)] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
-        <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-100 dark:border-gray-800 px-4 py-4 space-y-3">
+        <div className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-md border-t border-gray-100 dark:border-gray-800 px-4 py-4 space-y-3 h-[calc(100vh-64px)] overflow-y-auto">
           {navLinks.map((link) => (
             <a
               key={link.nameKey}

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Monitor, Calendar, Users, FileText, ChevronLeft, ChevronRight, DollarSign, Clock, TrendingUp, ArrowUpRight } from 'lucide-react';
 import { useTranslation } from '../../../context/DirectionContext';
 
+
 const ScreenshotsSection = () => {
   const [activeTab, setActiveTab] = useState(0);
   const { t } = useTranslation();
@@ -35,53 +36,52 @@ const ScreenshotsSection = () => {
 
   // Mock Dashboard - matches actual Dashboard.jsx layout
   const MockDashboard = () => (
-    <div className="bg-gray-100 dark:bg-gray-900 p-4 h-full overflow-hidden">
-      {/* Stats Grid - 4 columns like actual dashboard */}
-      <div className="grid grid-cols-4 gap-3 mb-4">
+    <div className="bg-gray-100 dark:bg-gray-900 p-3 md:p-4 h-full overflow-hidden">
+      {/* Stats Grid - responsive columns */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 mb-3 md:mb-4">
         {[
           { label: t('dashboard.appointmentsToday'), value: '12', change: '+8%', icon: Calendar, color: 'bg-blue-100 dark:bg-blue-900/30 text-blue-600' },
           { label: t('dashboard.monthlyRevenue'), value: '$24.5K', change: '+12%', icon: DollarSign, color: 'bg-teal-100 dark:bg-teal-900/30 text-teal-600' },
           { label: t('dashboard.newPatients'), value: '48', change: '+23%', icon: Users, color: 'bg-green-100 dark:bg-green-900/30 text-green-600' },
           { label: t('dashboard.avgWaitTime'), value: '14m', change: '-5%', icon: Clock, color: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600' },
         ].map((stat) => (
-          <div key={stat.label} className="bg-white dark:bg-gray-800 rounded-xl p-3 shadow-sm">
-            <div className="flex items-center justify-between mb-2">
-              <div className={`w-8 h-8 rounded-lg ${stat.color} flex items-center justify-center`}>
-                <stat.icon className="w-4 h-4" />
+          <div key={stat.label} className="bg-white dark:bg-gray-800 rounded-xl p-2 md:p-3 shadow-sm">
+            <div className="flex items-center justify-between mb-1 md:mb-2">
+              <div className={`w-6 h-6 md:w-8 md:h-8 rounded-lg ${stat.color} flex items-center justify-center`}>
+                <stat.icon className="w-3 h-3 md:w-4 md:h-4" />
               </div>
-              <div className="flex items-center gap-1 text-xs text-green-600 bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded">
-                <ArrowUpRight className="w-3 h-3" />
+              <div className="flex items-center gap-1 text-[10px] md:text-xs text-green-600 bg-green-50 dark:bg-green-900/30 px-1 md:px-1.5 py-0.5 rounded">
+                <ArrowUpRight className="w-2 h-2 md:w-3 md:h-3" />
                 {stat.change}
               </div>
             </div>
-            <div className="text-xl font-bold text-gray-900 dark:text-white">{stat.value}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{stat.label}</div>
+            <div className="text-base md:text-xl font-bold text-gray-900 dark:text-white">{stat.value}</div>
+            <div className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 truncate">{stat.label}</div>
           </div>
         ))}
       </div>
 
-      {/* Content Grid - 2 columns like actual dashboard */}
-      <div className="grid grid-cols-3 gap-3 h-48">
+      {/* Content Grid - responsive: stack on mobile */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-3 h-36 md:h-48">
         {/* Today's Appointments */}
-        <div className="col-span-2 bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
-          <div className="flex items-center justify-between px-4 py-2 border-b border-gray-100 dark:border-gray-700">
-            <h4 className="text-sm font-semibold text-gray-800 dark:text-white">{t('dashboard.todaysAppointments')}</h4>
-            <button className="text-xs text-primary-600 dark:text-primary-400 hover:underline">{t('common.viewAll')}</button>
+        <div className="md:col-span-2 bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
+          <div className="flex items-center justify-between px-3 md:px-4 py-1.5 md:py-2 border-b border-gray-100 dark:border-gray-700">
+            <h4 className="text-xs md:text-sm font-semibold text-gray-800 dark:text-white">{t('dashboard.todaysAppointments')}</h4>
+            <button className="text-[10px] md:text-xs text-primary-600 dark:text-primary-400 hover:underline">{t('common.viewAll')}</button>
           </div>
-          <div className="p-2 space-y-1">
+          <div className="p-1.5 md:p-2 space-y-0.5 md:space-y-1">
             {[
               { time: '9:00 AM', patient: 'Sarah Johnson', type: 'Check-up', status: 'confirmed' },
               { time: '9:30 AM', patient: 'Ahmed Hassan', type: 'Follow-up', status: 'confirmed' },
               { time: '10:00 AM', patient: 'Maria Garcia', type: 'Consultation', status: 'pending' },
-              { time: '10:30 AM', patient: 'John Smith', type: 'Lab Results', status: 'confirmed' },
             ].map((apt) => (
-              <div key={apt.time} className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                <span className="text-xs font-medium text-gray-500 dark:text-gray-400 w-14">{apt.time}</span>
+              <div key={apt.time} className="flex items-center gap-2 md:gap-3 p-1.5 md:p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                <span className="text-[10px] md:text-xs font-medium text-gray-500 dark:text-gray-400 w-12 md:w-14">{apt.time}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800 dark:text-white truncate">{apt.patient}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{apt.type}</p>
+                  <p className="text-xs md:text-sm font-medium text-gray-800 dark:text-white truncate">{apt.patient}</p>
+                  <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400">{apt.type}</p>
                 </div>
-                <span className={`text-xs px-2 py-0.5 rounded-full ${
+                <span className={`text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 rounded-full ${
                   apt.status === 'confirmed' ? 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300' :
                   'bg-amber-100 dark:bg-amber-900/50 text-amber-700 dark:text-amber-300'
                 }`}>{apt.status}</span>
@@ -90,8 +90,8 @@ const ScreenshotsSection = () => {
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
+        {/* Quick Actions - hidden on mobile */}
+        <div className="hidden md:block bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm">
           <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
             <h4 className="text-sm font-semibold text-gray-800 dark:text-white">{t('dashboard.quickActions')}</h4>
           </div>

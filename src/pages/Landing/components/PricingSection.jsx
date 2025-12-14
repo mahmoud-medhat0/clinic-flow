@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Check, Sparkles, Zap, Building2 } from 'lucide-react';
 import { useTranslation } from '../../../context/DirectionContext';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const PricingSection = () => {
   const [isAnnual, setIsAnnual] = useState(true);
@@ -85,6 +89,94 @@ const PricingSection = () => {
     }
   };
 
+  const PricingCard = ({ plan, isInSwiper = false }) => (
+    <div
+      className={`relative bg-white dark:bg-gray-800 rounded-2xl p-6 border transition-all duration-500 h-full ${
+        isInSwiper ? '' : 'hover:-translate-y-2'
+      } ${
+        plan.popular
+          ? `border-primary-200 dark:border-primary-700 shadow-soft-xl ${isInSwiper ? '' : 'scale-105'} z-10`
+          : 'border-gray-100 dark:border-gray-700 shadow-soft hover:shadow-soft-xl'
+      }`}
+    >
+      {/* Popular Badge - inside card as top banner */}
+      {plan.popular && (
+        <div className="flex justify-center mb-4">
+          <div className="px-4 py-1.5 rounded-full bg-gradient-to-r from-primary-500 to-teal-500 text-white text-sm font-semibold shadow-glow">
+            {t('landing.pricing.mostPopular')}
+          </div>
+        </div>
+      )}
+
+      {/* Plan Header */}
+      <div className="flex items-center gap-3 mb-4">
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+          plan.popular
+            ? 'bg-gradient-to-br from-primary-500 to-teal-500'
+            : 'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600'
+        }`}>
+          <plan.icon className={`w-6 h-6 ${plan.popular ? 'text-white' : 'text-gray-600 dark:text-gray-300'}`} />
+        </div>
+        <div>
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white">{t(plan.nameKey)}</h3>
+        </div>
+      </div>
+
+      <p className="text-gray-600 dark:text-gray-300 text-sm mb-6">{t(plan.descriptionKey)}</p>
+
+      {/* Price */}
+      <div className="mb-6">
+        <div className="flex items-baseline gap-1">
+          <span className="text-4xl font-bold text-gray-900 dark:text-white">
+            ${isAnnual ? plan.annualPrice : plan.monthlyPrice}
+          </span>
+          {plan.monthlyPrice > 0 && (
+            <span className="text-gray-500 dark:text-gray-400">{t('landing.pricing.perMonth')}</span>
+          )}
+        </div>
+        {plan.monthlyPrice > 0 && isAnnual && (
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            {t('landing.pricing.billedAnnually')} (${plan.annualPrice * 12}/year)
+          </p>
+        )}
+        {plan.monthlyPrice === 0 && (
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('landing.pricing.freeForever')}</p>
+        )}
+      </div>
+
+      {/* CTA Button */}
+      <a
+        href="#cta"
+        onClick={(e) => scrollToSection(e, '#cta')}
+        className={`block w-full text-center py-3 px-6 rounded-full font-semibold transition-all duration-300 mb-8 ${
+          plan.ctaStyle === 'primary'
+            ? 'bg-gradient-to-r from-primary-500 to-teal-500 text-white shadow-glow hover:shadow-glow-teal hover:scale-105'
+            : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
+        }`}
+      >
+        {t(plan.ctaKey)}
+      </a>
+
+      {/* Features List */}
+      <div className="space-y-3">
+        {plan.featureKeys.map((featureKey) => (
+          <div key={featureKey} className="flex items-start gap-3">
+            <Check className="w-5 h-5 text-teal-500 flex-shrink-0 mt-0.5" />
+            <span className="text-gray-600 dark:text-gray-300 text-sm">{t(featureKey)}</span>
+          </div>
+        ))}
+        {plan.limitationKeys.map((limitationKey) => (
+          <div key={limitationKey} className="flex items-start gap-3 opacity-50">
+            <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-1.5 h-0.5 bg-gray-400 dark:bg-gray-500 rounded" />
+            </div>
+            <span className="text-gray-500 dark:text-gray-400 text-sm">{t(limitationKey)}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
     <section id="pricing" className="py-20 lg:py-32 bg-gradient-to-br from-gray-50 via-white to-teal-50/30 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 relative overflow-hidden">
       {/* Background Elements */}
@@ -135,93 +227,29 @@ const PricingSection = () => {
           </div>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 lg:gap-6">
+        {/* Mobile Swiper */}
+        <div className="md:hidden">
+          <Swiper
+            modules={[Pagination]}
+            spaceBetween={16}
+            slidesPerView={1.1}
+            centeredSlides={true}
+            initialSlide={1}
+            pagination={{ clickable: true }}
+            className="pb-12"
+          >
+            {plans.map((plan) => (
+              <SwiperSlide key={plan.nameKey}>
+                <PricingCard plan={plan} isInSwiper={true} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+        {/* Desktop Grid */}
+        <div className="hidden md:grid md:grid-cols-3 gap-8 lg:gap-6">
           {plans.map((plan) => (
-            <div
-              key={plan.nameKey}
-              className={`relative bg-white dark:bg-gray-800 rounded-2xl p-8 border transition-all duration-500 hover:-translate-y-2 ${
-                plan.popular
-                  ? 'border-primary-200 dark:border-primary-700 shadow-soft-xl scale-105 z-10'
-                  : 'border-gray-100 dark:border-gray-700 shadow-soft hover:shadow-soft-xl'
-              }`}
-            >
-              {/* Popular Badge */}
-              {plan.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                  <div className="px-4 py-1.5 rounded-full bg-gradient-to-r from-primary-500 to-teal-500 text-white text-sm font-semibold shadow-glow">
-                    {t('landing.pricing.mostPopular')}
-                  </div>
-                </div>
-              )}
-
-              {/* Plan Header */}
-              <div className="flex items-center gap-3 mb-4">
-                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                  plan.popular
-                    ? 'bg-gradient-to-br from-primary-500 to-teal-500'
-                    : 'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-600'
-                }`}>
-                  <plan.icon className={`w-6 h-6 ${plan.popular ? 'text-white' : 'text-gray-600 dark:text-gray-300'}`} />
-                </div>
-                <div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white">{t(plan.nameKey)}</h3>
-                </div>
-              </div>
-
-              <p className="text-gray-600 dark:text-gray-300 text-sm mb-6">{t(plan.descriptionKey)}</p>
-
-              {/* Price */}
-              <div className="mb-6">
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-gray-900 dark:text-white">
-                    ${isAnnual ? plan.annualPrice : plan.monthlyPrice}
-                  </span>
-                  {plan.monthlyPrice > 0 && (
-                    <span className="text-gray-500 dark:text-gray-400">{t('landing.pricing.perMonth')}</span>
-                  )}
-                </div>
-                {plan.monthlyPrice > 0 && isAnnual && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    {t('landing.pricing.billedAnnually')} (${plan.annualPrice * 12}/year)
-                  </p>
-                )}
-                {plan.monthlyPrice === 0 && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{t('landing.pricing.freeForever')}</p>
-                )}
-              </div>
-
-              {/* CTA Button */}
-              <a
-                href="#cta"
-                onClick={(e) => scrollToSection(e, '#cta')}
-                className={`block w-full text-center py-3 px-6 rounded-full font-semibold transition-all duration-300 mb-8 ${
-                  plan.ctaStyle === 'primary'
-                    ? 'bg-gradient-to-r from-primary-500 to-teal-500 text-white shadow-glow hover:shadow-glow-teal hover:scale-105'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                {t(plan.ctaKey)}
-              </a>
-
-              {/* Features List */}
-              <div className="space-y-3">
-                {plan.featureKeys.map((featureKey) => (
-                  <div key={featureKey} className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-teal-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-600 dark:text-gray-300 text-sm">{t(featureKey)}</span>
-                  </div>
-                ))}
-                {plan.limitationKeys.map((limitationKey) => (
-                  <div key={limitationKey} className="flex items-start gap-3 opacity-50">
-                    <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <div className="w-1.5 h-0.5 bg-gray-400 dark:bg-gray-500 rounded" />
-                    </div>
-                    <span className="text-gray-500 dark:text-gray-400 text-sm">{t(limitationKey)}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <PricingCard key={plan.nameKey} plan={plan} />
           ))}
         </div>
 
@@ -237,3 +265,4 @@ const PricingSection = () => {
 };
 
 export default PricingSection;
+

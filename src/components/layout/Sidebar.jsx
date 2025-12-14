@@ -9,11 +9,12 @@ import {
   ChevronRight,
   PanelLeftClose,
   PanelLeft,
-  Package
+  Package,
+  X
 } from 'lucide-react';
 import { useTranslation } from '../../context/DirectionContext';
 
-function Sidebar({ isCollapsed, onToggle }) {
+function Sidebar({ isCollapsed, onToggle, isMobileOpen, onMobileClose }) {
   const location = useLocation();
   const { t } = useTranslation();
 
@@ -27,7 +28,7 @@ function Sidebar({ isCollapsed, onToggle }) {
   ];
 
   return (
-    <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
+    <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}>
       <div className="sidebar-header">
         <div className="logo">
           <div className="logo-icon">
@@ -43,6 +44,17 @@ function Sidebar({ isCollapsed, onToggle }) {
             </div>
           )}
         </div>
+        
+        {/* Mobile close button */}
+        <button 
+          className="mobile-close-btn"
+          onClick={onMobileClose}
+          title={t('common.close')}
+        >
+          <X size={20} />
+        </button>
+        
+        {/* Desktop toggle button */}
         <button 
           className="sidebar-toggle"
           onClick={onToggle}
@@ -65,6 +77,7 @@ function Sidebar({ isCollapsed, onToggle }) {
                 to={item.path}
                 className={`nav-item ${isActive ? 'active' : ''}`}
                 title={isCollapsed ? t(item.labelKey) : ''}
+                onClick={onMobileClose}
               >
                 <Icon size={20} strokeWidth={1.5} />
                 {!isCollapsed && <span className="nav-item-label">{t(item.labelKey)}</span>}
@@ -87,3 +100,4 @@ function Sidebar({ isCollapsed, onToggle }) {
 }
 
 export default Sidebar;
+

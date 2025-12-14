@@ -461,6 +461,70 @@ body {
 .sidebar.collapsed .sidebar-footer { padding: var(--space-2); }
 [dir="rtl"] .sidebar.collapsed .nav-item.active::before { left: auto; right: 0; }
 
+/* Mobile Close Button - Hidden by default */
+.mobile-close-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--color-gray-500);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+.mobile-close-btn:hover {
+  background: var(--color-gray-100);
+  color: var(--color-gray-700);
+}
+
+/* Mobile Menu Button in TopBar - Hidden by default */
+.mobile-menu-btn {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: var(--color-gray-700);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+.mobile-menu-btn:hover {
+  background: var(--color-gray-100);
+}
+
+/* Mobile Overlay */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: calc(var(--z-sticky) - 1);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes slideInRtl {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
 /* ===================== LAYOUT - TOPBAR ===================== */
 
 .topbar {
@@ -478,7 +542,7 @@ body {
   z-index: var(--z-sticky);
   gap: var(--space-5);
 }
-.topbar-left { flex-shrink: 0; }
+.topbar-left { flex-shrink: 0; display: flex; align-items: center; gap: var(--space-2); }
 .page-title { font-size: var(--font-size-h4); font-weight: var(--font-weight-semibold); color: var(--color-gray-900); margin: 0; }
 .topbar-center { flex: 1; max-width: 480px; }
 .search-container { position: relative; width: 100%; }
@@ -901,6 +965,9 @@ body {
   .day-column { min-width: 100px; }
   .patients-content { grid-template-columns: 1fr; }
   .patient-details-panel { display: none; }
+  
+  /* Dashboard stat cards adjustments */
+  .stat-value { font-size: var(--font-size-h3); }
 }
 
 @media (max-width: 1024px) {
@@ -916,14 +983,110 @@ body {
   .time-slot, .slot { height: 50px; }
   .profile-content { grid-template-columns: 1fr; }
   .profile-sidebar { display: grid; grid-template-columns: repeat(2, 1fr); }
+  
+  /* Dashboard improvements for tablet */
+  .quick-actions { grid-template-columns: repeat(2, 1fr); }
+  .stat-card { padding: var(--space-4); }
+  .stat-icon { width: 40px; height: 40px; }
+  .stat-icon svg { width: 20px; height: 20px; }
+  
+  /* RTL support for collapsed sidebar */
+  [dir="rtl"] .sidebar { width: var(--sidebar-collapsed-width); }
+  [dir="rtl"] .topbar { left: 0; right: var(--sidebar-collapsed-width); }
+  [dir="rtl"] .main-content { margin-left: 0; margin-right: var(--sidebar-collapsed-width); }
 }
 
 @media (max-width: 768px) {
-  .sidebar { display: none; }
-  .topbar { left: 0; padding: 0 var(--space-4); }
+  /* Hide sidebar by default on mobile (slide off-screen) */
+  .sidebar { 
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+    z-index: var(--z-modal);
+  }
+  [dir="rtl"] .sidebar {
+    transform: translateX(100%);
+  }
+  
+  /* Show sidebar when mobile-open */
+  .sidebar.mobile-open {
+    transform: translateX(0);
+    animation: slideIn 0.3s ease-out;
+  }
+  [dir="rtl"] .sidebar.mobile-open {
+    animation: slideInRtl 0.3s ease-out;
+  }
+  
+  /* Show mobile menu button */
+  .mobile-menu-btn {
+    display: flex;
+  }
+  
+  /* Show mobile close button in sidebar */
+  .mobile-close-btn {
+    display: flex;
+  }
+  
+  /* Hide desktop sidebar toggle on mobile */
+  .sidebar-toggle {
+    display: none;
+  }
+  
+  /* Show overlay when mobile menu is open */
+  .app-layout.mobile-menu-open .mobile-overlay {
+    display: block;
+  }
+  
+  /* Mobile sidebar - ensure full width and proper display */
+  .sidebar.mobile-open {
+    width: var(--sidebar-width) !important;
+  }
+  
+  .sidebar.mobile-open .logo-text {
+    display: flex !important;
+    flex-direction: column;
+  }
+  
+  .sidebar.mobile-open .nav-section-title {
+    display: block !important;
+  }
+  
+  .sidebar.mobile-open .nav-item-label {
+    display: inline !important;
+    flex: 1;
+  }
+  
+  .sidebar.mobile-open .nav-item-arrow {
+    display: inline-flex !important;
+  }
+  
+  .sidebar.mobile-open .version-info {
+    display: block !important;
+  }
+  
+  .sidebar.mobile-open .nav-item {
+    justify-content: flex-start !important;
+    padding: var(--space-3) var(--space-4) !important;
+    gap: var(--space-3);
+  }
+  
+  /* Topbar adjustments */
+  .topbar { left: 0; right: 0; padding: 0 var(--space-3); gap: var(--space-3); }
+  [dir="rtl"] .topbar { left: 0; right: 0; }
+  .topbar-left { gap: var(--space-1); }
   .main-content { margin-left: 0; padding: var(--space-4); }
+  [dir="rtl"] .main-content { margin-right: 0; }
+  
+  /* Topbar-right adjustments for mobile */
+  .topbar-right { gap: var(--space-1); }
+  .topbar-btn { width: 32px; height: 32px; }
+  .user-menu { display: block; }
+  .user-menu-trigger { padding: var(--space-1); gap: 0; }
+  .user-avatar { width: 28px; height: 28px; }
+  .user-info { display: none; }
+  .user-chevron { display: none; }
+  
   .search-container { display: none; }
-  .stats-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-3); }
   .appointments-page { height: auto; }
   .page-header { flex-direction: column; align-items: stretch; }
   .header-left, .header-right { justify-content: center; }
@@ -947,6 +1110,116 @@ body {
   .hours-row { flex-direction: column; align-items: flex-start; gap: var(--space-3); }
   .time-inputs { width: 100%; }
   .time-input { flex: 1; }
+  
+  /* Dashboard tablet improvements */
+  .dashboard { gap: var(--space-4); }
+  .stat-card { padding: var(--space-3); }
+  .stat-header { margin-bottom: var(--space-3); }
+  .stat-icon { width: 36px; height: 36px; }
+  .stat-icon svg { width: 18px; height: 18px; }
+  .stat-value { font-size: var(--font-size-h4); line-height: 1.1; }
+  .stat-label { font-size: var(--font-size-body-sm); }
+  .stat-change { font-size: var(--font-size-micro); padding: 1px var(--space-1); }
+  
+  /* Quick actions for tablet */
+  .quick-actions { grid-template-columns: repeat(2, 1fr); gap: var(--space-2); }
+  .quick-action-btn { padding: var(--space-3) var(--space-2); }
+  .quick-action-btn svg { width: 20px; height: 20px; }
+  .quick-action-btn span { font-size: var(--font-size-body-sm); }
+  
+  /* Appointments list in dashboard */
+  .appointments-card .card-header { padding: var(--space-3) var(--space-4); }
+  .appointments-card .card-header h3 { font-size: var(--font-size-body-md); }
+  .appointments-list { padding: var(--space-3); }
+  .appointment-item { gap: var(--space-3); padding: var(--space-2) var(--space-3); }
+  .appointment-time { width: 70px; font-size: var(--font-size-micro); }
+  .patient-name { font-size: var(--font-size-body-sm); }
+  .appointment-type { font-size: var(--font-size-micro); }
+}
+
+@media (max-width: 480px) {
+  /* Mobile-specific dashboard styles */
+  .dashboard { gap: var(--space-3); }
+  .stats-grid { grid-template-columns: 1fr 1fr; gap: var(--space-2); }
+  
+  .stat-card { padding: var(--space-2); }
+  .stat-header { margin-bottom: var(--space-2); flex-wrap: wrap; gap: var(--space-1); }
+  .stat-icon { width: 32px; height: 32px; }
+  .stat-icon svg { width: 16px; height: 16px; }
+  .stat-value { 
+    font-size: var(--font-size-h5); 
+    line-height: 1.1;
+    word-break: break-word;
+  }
+  .stat-label { 
+    font-size: var(--font-size-micro); 
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .stat-change { 
+    font-size: 10px; 
+    padding: 1px 4px;
+  }
+  
+  /* Content grid for mobile */
+  .content-grid { gap: var(--space-3); }
+  
+  /* Quick actions for mobile */
+  .quick-actions-card .card-header { padding: var(--space-3); }
+  .quick-actions-card .card-header h3 { font-size: var(--font-size-body-md); }
+  .quick-actions { 
+    grid-template-columns: repeat(2, 1fr); 
+    gap: var(--space-2);
+    padding: var(--space-3);
+  }
+  .quick-action-btn { 
+    padding: var(--space-3) var(--space-2);
+    gap: var(--space-1);
+  }
+  .quick-action-btn svg { width: 18px; height: 18px; }
+  .quick-action-btn span { 
+    font-size: var(--font-size-micro); 
+    text-align: center;
+    line-height: 1.2;
+  }
+  
+  /* Appointments for mobile */
+  .appointments-card .card-header { 
+    padding: var(--space-3); 
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-2);
+  }
+  .appointments-card .card-header h3 { font-size: var(--font-size-body-md); }
+  .appointments-card .card-header .btn { 
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-size-micro);
+  }
+  .appointments-list { padding: var(--space-2); }
+  .appointment-item { 
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-1);
+    padding: var(--space-2);
+    border-bottom: 1px solid var(--color-gray-100);
+  }
+  .appointment-item:last-child { border-bottom: none; }
+  .appointment-time { width: auto; }
+  .appointment-info { width: 100%; }
+  
+  /* Main content padding reduction */
+  .main-content { padding: var(--space-3); }
+  
+  /* Topbar adjustments */
+  .topbar { padding: 0 var(--space-3); height: 56px; }
+  .page-title { font-size: var(--font-size-body-lg); }
+  .topbar-btn { width: 36px; height: 36px; }
+  .user-menu-trigger { padding: var(--space-1) var(--space-2); }
+  .user-avatar { width: 32px; height: 32px; }
 }
 
 /* ===================== RTL/LTR SUPPORT ===================== */

@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState, useEffect, useMemo } from '
 // Import translations
 import en from '../i18n/en.json';
 import ar from '../i18n/ar.json';
-import he from '../i18n/he.json';
 import fr from '../i18n/fr.json';
 
 // Direction Context for RTL/LTR support and Theme
@@ -70,12 +69,11 @@ export const DirectionProvider = ({ children }) => {
   const languageConfig = {
     en: { name: 'English', dir: 'ltr', flag: '🇺🇸' },
     ar: { name: 'العربية', dir: 'rtl', flag: '🇸🇦' },
-    he: { name: 'עברית', dir: 'rtl', flag: '🇮🇱' },
     fr: { name: 'Français', dir: 'ltr', flag: '🇫🇷' },
   };
 
   const translations = useMemo(() => {
-    const files = { en, ar, he, fr };
+    const files = { en, ar, fr };
     return files[language] || en;
   }, [language]);
 

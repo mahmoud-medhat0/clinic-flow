@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bell, User, ChevronDown, Globe, X, Check, Clock, Sun, Moon } from 'lucide-react';
+import { Search, Bell, User, ChevronDown, Globe, X, Check, Clock, Sun, Moon, Menu } from 'lucide-react';
 import { useDirection, useTranslation } from '../../context/DirectionContext';
 import { useAuth } from '../../context/AuthContext';
 
@@ -13,7 +13,7 @@ const notificationsData = [
   { id: 5, type: 'reminder', titleKey: 'notifications.weeklyReport', message: 'Your weekly summary is ready', timeValue: 1, timeUnit: 'days', read: true },
 ];
 
-function TopBar({ title }) {
+function TopBar({ title, onMobileMenuToggle, isMobileMenuOpen }) {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showLanguageMenu, setShowLanguageMenu] = useState(false);
@@ -22,7 +22,7 @@ function TopBar({ title }) {
   const topBarRef = useRef(null);
   const searchInputRef = useRef(null);
   
-  const { language, changeLanguage, languageConfig, theme, toggleTheme, isDark } = useDirection();
+  const { language, changeLanguage, languageConfig, toggleTheme, isDark } = useDirection();
   const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -115,6 +115,14 @@ function TopBar({ title }) {
   return (
     <header className="topbar" ref={topBarRef}>
       <div className="topbar-left">
+        {/* Mobile menu button */}
+        <button 
+          className="mobile-menu-btn"
+          onClick={onMobileMenuToggle}
+          aria-label={isMobileMenuOpen ? t('common.close') : t('nav.menu')}
+        >
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
         <h1 className="page-title">{title}</h1>
       </div>
       

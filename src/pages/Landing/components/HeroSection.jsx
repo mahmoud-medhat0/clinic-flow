@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Play, ArrowRight, CheckCircle2, Sparkles } from 'lucide-react';
 import { useTranslation } from '../../../context/DirectionContext';
+import DemoModal from './DemoModal';
 
 const HeroSection = () => {
   const { t } = useTranslation();
+  const [isDemoModalOpen, setIsDemoModalOpen] = useState(false);
 
   const scrollToSection = (e, href) => {
     e.preventDefault();
@@ -14,6 +16,7 @@ const HeroSection = () => {
   };
 
   return (
+    <>
     <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-white via-primary-50/30 to-teal-50/40 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -58,13 +61,13 @@ const HeroSection = () => {
                 {t('landing.hero.startFreeTrial')}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </a>
-              <a
-                href="#demo"
+              <button
+                onClick={() => setIsDemoModalOpen(true)}
                 className="group inline-flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 font-semibold text-lg shadow-soft-lg hover:shadow-soft-xl hover:scale-105 border border-gray-200 dark:border-gray-700 transition-all duration-300"
               >
                 <Play className="w-5 h-5 text-primary-500" />
                 {t('landing.hero.bookDemo')}
-              </a>
+              </button>
             </div>
 
             {/* Trust Indicators */}
@@ -174,7 +177,12 @@ const HeroSection = () => {
         </div>
       </div>
     </section>
+    
+    {/* Demo Modal */}
+    <DemoModal isOpen={isDemoModalOpen} onClose={() => setIsDemoModalOpen(false)} />
+    </>
   );
 };
 
 export default HeroSection;
+

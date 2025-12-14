@@ -1,6 +1,10 @@
 import React from 'react';
 import { Star, Quote } from 'lucide-react';
 import { useTranslation } from '../../../context/DirectionContext';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const TestimonialsSection = () => {
   const { t } = useTranslation();
@@ -39,6 +43,42 @@ const TestimonialsSection = () => {
     { value: '99.9%', labelKey: 'landing.testimonials.uptime' },
   ];
 
+  const TestimonialCard = ({ testimonial }) => (
+    <div
+      className="relative bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-800/50 rounded-2xl p-6 pt-8 border border-gray-100 dark:border-gray-700 shadow-soft hover:shadow-soft-xl transition-all duration-500 group h-full overflow-visible"
+    >
+      {/* Quote Icon - positioned inside on mobile */}
+      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-teal-500 flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform mb-4">
+        <Quote className="w-5 h-5 text-white" />
+      </div>
+
+      {/* Stars */}
+      <div className="flex gap-1 mb-4">
+        {[...Array(testimonial.rating)].map((_, i) => (
+          <Star key={i} className="w-5 h-5 text-amber-400 fill-amber-400" />
+        ))}
+      </div>
+
+      {/* Quote */}
+      <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6 italic">
+        "{t(testimonial.quoteKey)}"
+      </p>
+
+      {/* Author */}
+      <div className="flex items-center gap-4">
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-teal-400 flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+          {t(testimonial.nameKey).split(' ').map(n => n[0]).join('')}
+        </div>
+        <div>
+          <h4 className="font-semibold text-gray-900 dark:text-white">{t(testimonial.nameKey)}</h4>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{t(testimonial.roleKey)}</p>
+          <p className="text-xs text-primary-600 dark:text-primary-400">{t(testimonial.clinicKey)}</p>
+        </div>
+      </div>
+    </div>
+  );
+
+
   return (
     <section id="testimonials" className="py-20 lg:py-32 bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
       {/* Background Decoration */}
@@ -62,42 +102,29 @@ const TestimonialsSection = () => {
           </p>
         </div>
 
-        {/* Testimonials Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={testimonial.nameKey}
-              className="relative bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-800/50 rounded-2xl p-8 border border-gray-100 dark:border-gray-700 shadow-soft hover:shadow-soft-xl transition-all duration-500 group"
-            >
-              {/* Quote Icon */}
-              <div className="absolute -top-4 -left-4 w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-teal-500 flex items-center justify-center shadow-glow group-hover:scale-110 transition-transform">
-                <Quote className="w-6 h-6 text-white" />
-              </div>
+        {/* Mobile Swiper */}
+        <div className="md:hidden mb-16">
+          <Swiper
+            modules={[Pagination, Autoplay]}
+            spaceBetween={16}
+            slidesPerView={1.1}
+            centeredSlides={true}
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            className="pb-12"
+          >
+            {testimonials.map((testimonial) => (
+              <SwiperSlide key={testimonial.nameKey}>
+                <TestimonialCard testimonial={testimonial} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
 
-              {/* Stars */}
-              <div className="flex gap-1 mb-4 pt-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-amber-400 fill-amber-400" />
-                ))}
-              </div>
-
-              {/* Quote */}
-              <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6 italic">
-                "{t(testimonial.quoteKey)}"
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-400 to-teal-400 flex items-center justify-center text-white font-bold text-lg">
-                  {t(testimonial.nameKey).split(' ').map(n => n[0]).join('')}
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 dark:text-white">{t(testimonial.nameKey)}</h4>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">{t(testimonial.roleKey)}</p>
-                  <p className="text-xs text-primary-600 dark:text-primary-400">{t(testimonial.clinicKey)}</p>
-                </div>
-              </div>
-            </div>
+        {/* Desktop Grid */}
+        <div className="hidden md:grid md:grid-cols-3 gap-8 mb-16">
+          {testimonials.map((testimonial) => (
+            <TestimonialCard key={testimonial.nameKey} testimonial={testimonial} />
           ))}
         </div>
 
@@ -122,3 +149,4 @@ const TestimonialsSection = () => {
 };
 
 export default TestimonialsSection;
+

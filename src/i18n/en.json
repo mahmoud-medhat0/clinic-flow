@@ -524,6 +524,25 @@
       "patientsServed": "Patients Served",
       "avgRating": "Average Rating",
       "uptime": "Uptime"
+    },
+    "demo": {
+      "title": "Book a Demo",
+      "subtitle": "We'll get back to you soon",
+      "name": "Full Name",
+      "namePlaceholder": "Enter your name",
+      "email": "Email Address",
+      "emailPlaceholder": "Enter your email",
+      "phone": "Phone Number",
+      "phonePlaceholder": "Enter your phone number",
+      "clinic": "Clinic Name",
+      "clinicPlaceholder": "Enter your clinic name",
+      "message": "Message (optional)",
+      "messagePlaceholder": "Tell us about your needs...",
+      "submit": "Book Demo",
+      "submitting": "Submitting...",
+      "successTitle": "Request Submitted!",
+      "successMessage": "Our team will contact you within 24 hours.",
+      "privacy": "By submitting this form, you agree to our Privacy Policy."
     }
   }
 }
