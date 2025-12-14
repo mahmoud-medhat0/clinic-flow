@@ -4,6 +4,7 @@ import { DirectionProvider } from './context/DirectionContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/layout/Layout';
 import Login from './pages/Login/Login';
+import LandingPage from './pages/Landing/LandingPage';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Appointments from './pages/Appointments/Appointments';
 import Patients from './pages/Patients/Patients';
@@ -12,6 +13,7 @@ import Inventory from './pages/Inventory/Inventory';
 import Invoices from './pages/Invoices/Invoices';
 import Settings from './pages/Settings/Settings';
 import './App.css';
+import './index.css';
 
 // Protected Route wrapper
 const ProtectedRoute = ({ children }) => {
@@ -38,6 +40,9 @@ const PublicRoute = ({ children }) => {
 function AppRoutes() {
   return (
     <Routes>
+      {/* Landing Page - Public */}
+      <Route path="/landing" element={<LandingPage />} />
+      
       <Route path="/login" element={
         <PublicRoute>
           <Login />

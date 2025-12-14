@@ -1,8 +1,7 @@
 /* ============================================================
    a2zenon ClinicFlow Design System - Consolidated Styles
    ============================================================ */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@400;500;600;700&display=swap');
 
 /* ===================== CSS VARIABLES / DESIGN TOKENS ===================== */
 
@@ -45,7 +44,8 @@
   --color-error-light: #FFE8E9;
   
   /* Typography */
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family: 'Inter', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-arabic: 'Cairo', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-size-h1: 32px;
   --font-size-h2: 28px;
   --font-size-h3: 24px;
@@ -128,6 +128,11 @@ body {
   line-height: var(--line-height-normal);
   color: var(--color-gray-900);
   background-color: var(--color-bg-secondary);
+}
+
+/* RTL Arabic Font */
+[dir="rtl"] body {
+  font-family: var(--font-family-arabic);
 }
 
 ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -470,11 +475,11 @@ body {
 .stat-change { display: flex; align-items: center; gap: 2px; font-size: var(--font-size-body-sm); font-weight: var(--font-weight-medium); padding: 2px var(--space-2); border-radius: var(--radius-sm); }
 .stat-change.positive { background: var(--color-success-light); color: var(--color-success); }
 .stat-change.negative { background: var(--color-error-light); color: var(--color-error); }
-.stat-value { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); color: var(--color-gray-900); margin-bottom: var(--space-1); }
-.stat-label { font-size: var(--font-size-body-md); color: var(--color-gray-500); }
+.stat-value { font-size: var(--font-size-h2); font-weight: var(--font-weight-bold); color: var(--color-gray-900); margin-bottom: var(--space-1); line-height: 1.2; }
+.stat-label { font-size: var(--font-size-body-md); color: var(--color-gray-500); font-weight: var(--font-weight-medium); }
 .content-grid { display: grid; grid-template-columns: 2fr 1fr; gap: var(--space-5); }
 .appointments-card .card-header, .quick-actions-card .card-header { display: flex; align-items: center; justify-content: space-between; padding: var(--space-4) var(--space-5); border-bottom: 1px solid var(--color-gray-200); }
-.appointments-card .card-header h3, .quick-actions-card .card-header h3 { font-size: var(--font-size-h6); font-weight: var(--font-weight-semibold); color: var(--color-gray-900); margin: 0; }
+.appointments-card .card-header h3, .quick-actions-card .card-header h3 { font-size: var(--font-size-h5); font-weight: var(--font-weight-semibold); color: var(--color-gray-900); margin: 0; }
 .appointments-list { padding: var(--space-4); }
 .appointment-item { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-4); border-radius: var(--radius-md); transition: background var(--transition-fast); }
 .appointment-item:hover { background: var(--color-gray-100); }
