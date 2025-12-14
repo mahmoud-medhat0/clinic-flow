@@ -442,12 +442,6 @@
       "cancelAnytime": "Cancel anytime",
       "support247": "24/7 Support"
     },
-    "testimonials": {
-      "badge": "Testimonials",
-      "title": "Loved by",
-      "titleHighlight": "healthcare professionals",
-      "description": "See what doctors and clinic managers are saying about ClinicFlow."
-    },
     "footer": {
       "tagline": "The all-in-one practice management platform for modern healthcare providers. Streamline your clinic, delight your patients.",
       "product": "Product",
@@ -475,6 +469,63 @@
       "security": "Security",
       "cookiePolicy": "Cookie Policy",
       "allRightsReserved": "All rights reserved."
+    },
+    "screenshots": {
+      "badge": "Product Preview",
+      "title": "See",
+      "titleSuffix": "in action",
+      "description": "A powerful yet intuitive interface designed for healthcare professionals.",
+      "dashboard": "Dashboard",
+      "dashboardDesc": "Get a complete overview of your clinic at a glance",
+      "appointments": "Appointments",
+      "appointmentsDesc": "Manage your schedule with ease",
+      "patients": "Patient Records",
+      "patientsDesc": "Access complete patient information",
+      "invoices": "Invoices",
+      "invoicesDesc": "Track payments and billing",
+      "dashboardOverview": "Dashboard Overview",
+      "today": "Today",
+      "week": "Week",
+      "month": "Month",
+      "todaysPatients": "Today's Patients",
+      "pending": "Pending",
+      "completed": "Completed",
+      "revenue": "Revenue",
+      "upcomingAppointments": "Upcoming Appointments",
+      "recentActivity": "Recent Activity",
+      "newPatientRegistered": "New patient registered",
+      "invoicePaid": "Invoice #1234 paid",
+      "appointmentConfirmed": "Appointment confirmed",
+      "newAppointment": "New Appointment",
+      "patientRecords": "Patient Records",
+      "searchPatients": "Search patients...",
+      "addPatient": "Add Patient",
+      "lastVisit": "Last visit",
+      "createInvoice": "Create Invoice"
+    },
+    "testimonials": {
+      "badge": "Testimonials",
+      "title": "Loved by",
+      "titleHighlight": "doctors worldwide",
+      "description": "Don't just take our word for it. Here's what healthcare professionals say about ClinicFlow.",
+      "name1": "Dr. Sarah Ahmed",
+      "role1": "Family Medicine",
+      "clinic1": "Ahmed Family Clinic",
+      "quote1": "ClinicFlow has transformed how I manage my practice. I've reduced no-shows by 45% and patient satisfaction has never been higher.",
+      "name2": "Dr. Michael Chen",
+      "role2": "Pediatrician",
+      "clinic2": "Little Stars Pediatrics",
+      "quote2": "As a busy pediatrician, I needed a system that was fast and reliable. ClinicFlow delivers on both fronts.",
+      "name3": "Dr. Fatima Al-Hassan",
+      "role3": "Dermatologist",
+      "clinic3": "Glow Skin Center",
+      "quote3": "The billing feature is a game-changer. What used to take hours now takes minutes. My revenue has increased 30%.",
+      "happyClinics": "Happy Clinics",
+      "patientsServed": "Patients Served",
+      "avgRating": "Average Rating",
+      "uptime": "Uptime"
     }
   }
 }
+
+

@@ -106,6 +106,53 @@
   --max-content-width: 1440px;
 }
 
+/* ===================== DARK MODE ===================== */
+
+[data-theme="dark"] {
+  /* Primary - Medical Blue (adjusted for dark) */
+  --color-primary: #4A9FFF;
+  --color-primary-dark: #2A7CFF;
+  --color-primary-light: #1E3A5F;
+  --color-primary-hover: #3A8FEF;
+  
+  /* Secondary - Teal (adjusted for dark) */
+  --color-secondary: #2ECDB5;
+  --color-secondary-dark: #18B8A0;
+  --color-secondary-light: #0E3D35;
+  --color-secondary-hover: #24BDA5;
+  
+  /* Background Colors - Dark */
+  --color-bg-primary: #0f172a;
+  --color-bg-secondary: #1e293b;
+  --color-bg-surface: #1a2234;
+  
+  /* Neutral Gray Scale - Inverted for dark mode */
+  --color-gray-50: #1a1d1f;
+  --color-gray-100: #2e3338;
+  --color-gray-200: #3a4148;
+  --color-gray-300: #464d55;
+  --color-gray-400: #6e7781;
+  --color-gray-500: #97a0ab;
+  --color-gray-600: #c1c7d0;
+  --color-gray-700: #dde2e8;
+  --color-gray-800: #eef1f5;
+  --color-gray-900: #f8f9fb;
+  
+  /* Status Colors (slightly brighter for dark mode) */
+  --color-success: #34D37A;
+  --color-success-light: #0E3D23;
+  --color-warning: #FFBF1A;
+  --color-warning-light: #3D3010;
+  --color-error: #FF6B6D;
+  --color-error-light: #3D1A1A;
+  
+  /* Shadows for dark mode */
+  --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-dropdown: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --shadow-modal: 0 16px 48px rgba(0, 0, 0, 0.6);
+}
+
 /* ===================== RESET & BASE ===================== */
 
 *, *::before, *::after {

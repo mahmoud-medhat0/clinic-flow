@@ -1,61 +1,10 @@
 import React from 'react';
-import { Calendar, Facebook, Twitter, Linkedin, Instagram, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import { Calendar, Mail, Phone, MapPin } from 'lucide-react';
 import { useTranslation } from '../../../context/DirectionContext';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
   const { t } = useTranslation();
-
-  const footerLinks = {
-    product: {
-      titleKey: 'landing.footer.product',
-      links: [
-        { nameKey: 'landing.footer.features', href: '#features' },
-        { nameKey: 'landing.footer.pricing', href: '#pricing' },
-        { nameKey: 'landing.footer.integrations', href: '#' },
-        { nameKey: 'landing.footer.api', href: '#' },
-        { nameKey: 'landing.footer.changelog', href: '#' },
-      ]
-    },
-    company: {
-      titleKey: 'landing.footer.company',
-      links: [
-        { nameKey: 'landing.footer.aboutUs', href: '#' },
-        { nameKey: 'landing.footer.careers', href: '#' },
-        { nameKey: 'landing.footer.blog', href: '#' },
-        { nameKey: 'landing.footer.press', href: '#' },
-        { nameKey: 'landing.footer.partners', href: '#' },
-      ]
-    },
-    resources: {
-      titleKey: 'landing.footer.resources',
-      links: [
-        { nameKey: 'landing.footer.documentation', href: '#' },
-        { nameKey: 'landing.footer.helpCenter', href: '#' },
-        { nameKey: 'landing.footer.community', href: '#' },
-        { nameKey: 'landing.footer.webinars', href: '#' },
-        { nameKey: 'landing.footer.status', href: '#' },
-      ]
-    },
-    legal: {
-      titleKey: 'landing.footer.legal',
-      links: [
-        { nameKey: 'landing.footer.privacyPolicy', href: '#' },
-        { nameKey: 'landing.footer.termsOfService', href: '#' },
-        { nameKey: 'landing.footer.hipaaCompliance', href: '#' },
-        { nameKey: 'landing.footer.security', href: '#' },
-        { nameKey: 'landing.footer.cookiePolicy', href: '#' },
-      ]
-    },
-  };
-
-  const socialLinks = [
-    { name: 'Facebook', icon: Facebook, href: '#' },
-    { name: 'Twitter', icon: Twitter, href: '#' },
-    { name: 'LinkedIn', icon: Linkedin, href: '#' },
-    { name: 'Instagram', icon: Instagram, href: '#' },
-    { name: 'YouTube', icon: Youtube, href: '#' },
-  ];
 
   const scrollToSection = (e, href) => {
     if (href.startsWith('#')) {
@@ -71,7 +20,7 @@ const Footer = () => {
     <footer className="bg-gray-900 text-gray-300">
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid lg:grid-cols-6 gap-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-2">
             <a href="/" className="flex items-center gap-2 mb-6">
@@ -87,71 +36,112 @@ const Footer = () => {
                 </span>
               </div>
             </a>
-            <p className="text-gray-400 mb-6 leading-relaxed">
+            <p className="text-gray-400 mb-6 leading-relaxed max-w-md">
               {t('landing.footer.tagline')}
             </p>
             
             {/* Contact Info */}
             <div className="space-y-3">
-              <a href="mailto:hello@clinicflow.com" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+              <a href="mailto:support@a2zenon.com" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
                 <Mail className="w-5 h-5" />
-                <span>hello@clinicflow.com</span>
+                <span>support@a2zenon.com</span>
               </a>
-              <a href="tel:+1-800-CLINIC" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+              <a href="tel:+20123456789" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
                 <Phone className="w-5 h-5" />
-                <span>1-800-CLINIC</span>
+                <span>+20 123 456 789</span>
               </a>
               <div className="flex items-start gap-3 text-gray-400">
                 <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5" />
-                <span>123 Medical Drive, Suite 100<br />San Francisco, CA 94105</span>
+                <span>Cairo, Egypt</span>
               </div>
             </div>
           </div>
 
-          {/* Links Columns */}
-          {Object.entries(footerLinks).map(([key, category]) => (
-            <div key={key}>
-              <h3 className="text-white font-semibold mb-4">{t(category.titleKey)}</h3>
-              <ul className="space-y-3">
-                {category.links.map((link) => (
-                  <li key={link.nameKey}>
-                    <a
-                      href={link.href}
-                      onClick={(e) => scrollToSection(e, link.href)}
-                      className="text-gray-400 hover:text-white transition-colors duration-200"
-                    >
-                      {t(link.nameKey)}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">{t('landing.footer.product')}</h3>
+            <ul className="space-y-3">
+              <li>
+                <a
+                  href="#features"
+                  onClick={(e) => scrollToSection(e, '#features')}
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  {t('landing.footer.features')}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#how-it-works"
+                  onClick={(e) => scrollToSection(e, '#how-it-works')}
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  {t('landing.navbar.howItWorks')}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#pricing"
+                  onClick={(e) => scrollToSection(e, '#pricing')}
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  {t('landing.footer.pricing')}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#faq"
+                  onClick={(e) => scrollToSection(e, '#faq')}
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  {t('landing.navbar.faq')}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          {/* Get Started */}
+          <div>
+            <h3 className="text-white font-semibold mb-4">{t('landing.footer.resources')}</h3>
+            <ul className="space-y-3">
+              <li>
+                <a
+                  href="/login"
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  {t('landing.navbar.login')}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#cta"
+                  onClick={(e) => scrollToSection(e, '#cta')}
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  {t('landing.navbar.startFreeTrial')}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:support@a2zenon.com"
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  {t('landing.faq.contactSupport')}
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
       {/* Bottom Bar */}
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4">
             {/* Copyright */}
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 text-sm text-center">
               © {currentYear} a2zenon ClinicFlow. {t('landing.footer.allRightsReserved')}
             </p>
-
-            {/* Social Links */}
-            <div className="flex items-center gap-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-gray-400 hover:bg-gradient-to-r hover:from-primary-500 hover:to-teal-500 hover:text-white transition-all duration-300"
-                  aria-label={social.name}
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
-            </div>
           </div>
         </div>
       </div>
@@ -160,4 +150,3 @@ const Footer = () => {
 };
 
 export default Footer;
-

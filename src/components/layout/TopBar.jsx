@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Search, Bell, User, ChevronDown, Globe, X, Check, Clock } from 'lucide-react';
+import { Search, Bell, User, ChevronDown, Globe, X, Check, Clock, Sun, Moon } from 'lucide-react';
 import { useDirection, useTranslation } from '../../context/DirectionContext';
 import { useAuth } from '../../context/AuthContext';
 
@@ -22,7 +22,7 @@ function TopBar({ title }) {
   const topBarRef = useRef(null);
   const searchInputRef = useRef(null);
   
-  const { language, changeLanguage, languageConfig } = useDirection();
+  const { language, changeLanguage, languageConfig, theme, toggleTheme, isDark } = useDirection();
   const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -197,6 +197,14 @@ function TopBar({ title }) {
             </div>
           )}
         </div>
+        {/* Theme Toggle */}
+        <button 
+          className="topbar-btn theme-btn"
+          onClick={toggleTheme}
+          title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+        >
+          {isDark ? <Sun size={20} strokeWidth={1.5} /> : <Moon size={20} strokeWidth={1.5} />}
+        </button>
 
         {/* Language Switcher */}
         <div className="dropdown-wrapper">

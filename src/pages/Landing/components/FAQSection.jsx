@@ -17,24 +17,24 @@ const FAQSection = () => {
   ];
 
   return (
-    <section id="faq" className="py-20 lg:py-32 bg-gradient-to-br from-gray-50 via-white to-primary-50/20 relative overflow-hidden">
+    <section id="faq" className="py-20 lg:py-32 bg-white dark:bg-gray-950 relative overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-primary-200/20 to-teal-200/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-0 right-0 w-72 h-72 bg-gradient-to-br from-teal-200/20 to-primary-200/20 rounded-full blur-3xl" />
+      <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-primary-200/20 to-teal-200/20 dark:from-primary-600/10 dark:to-teal-600/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-gradient-to-br from-teal-200/20 to-primary-200/20 dark:from-teal-600/10 dark:to-primary-600/10 rounded-full blur-3xl" />
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* Section Header */}
         <div className="text-center mb-12">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-primary-100 to-teal-100 text-primary-700 font-medium text-sm mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-primary-100 to-teal-100 dark:from-primary-900/50 dark:to-teal-900/50 text-primary-700 dark:text-primary-300 font-medium text-sm mb-4">
             {t('landing.faq.badge')}
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
             {t('landing.faq.title')}{' '}
             <span className="bg-gradient-to-r from-primary-600 to-teal-600 bg-clip-text text-transparent">
               {t('landing.faq.titleHighlight')}
             </span>
           </h2>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-gray-600 dark:text-gray-300">
             {t('landing.faq.description')}
           </p>
         </div>
@@ -44,10 +44,10 @@ const FAQSection = () => {
           {faqs.map((faq, index) => (
             <div
               key={index}
-              className={`bg-white rounded-2xl border transition-all duration-300 ${
+              className={`bg-white dark:bg-gray-800 rounded-2xl border transition-all duration-300 ${
                 openIndex === index
-                  ? 'border-primary-200 shadow-soft-lg'
-                  : 'border-gray-100 shadow-soft hover:shadow-soft-lg'
+                  ? 'border-primary-200 dark:border-primary-700 shadow-soft-lg'
+                  : 'border-gray-100 dark:border-gray-700 shadow-soft hover:shadow-soft-lg'
               }`}
             >
               <button
@@ -58,16 +58,16 @@ const FAQSection = () => {
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors ${
                     openIndex === index
                       ? 'bg-gradient-to-br from-primary-500 to-teal-500'
-                      : 'bg-gray-100'
+                      : 'bg-gray-100 dark:bg-gray-700'
                   }`}>
-                    <HelpCircle className={`w-5 h-5 ${openIndex === index ? 'text-white' : 'text-gray-500'}`} />
+                    <HelpCircle className={`w-5 h-5 ${openIndex === index ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 pr-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white pr-4">
                     {t(faq.questionKey)}
                   </h3>
                 </div>
                 <ChevronDown
-                  className={`w-5 h-5 text-gray-500 transition-transform duration-300 flex-shrink-0 ${
+                  className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-300 flex-shrink-0 ${
                     openIndex === index ? 'rotate-180' : ''
                   }`}
                 />
@@ -78,7 +78,7 @@ const FAQSection = () => {
                 }`}
               >
                 <div className="px-6 pb-6 pl-20">
-                  <p className="text-gray-600 leading-relaxed">
+                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                     {t(faq.answerKey)}
                   </p>
                 </div>
@@ -89,10 +89,10 @@ const FAQSection = () => {
 
         {/* Contact CTA */}
         <div className="text-center mt-12">
-          <p className="text-gray-600 mb-4">{t('landing.faq.stillHaveQuestions')}</p>
+          <p className="text-gray-600 dark:text-gray-400 mb-4">{t('landing.faq.stillHaveQuestions')}</p>
           <a
             href="mailto:support@clinicflow.com"
-            className="inline-flex items-center gap-2 text-primary-600 font-semibold hover:text-primary-700 transition-colors"
+            className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 font-semibold hover:text-primary-700 dark:hover:text-primary-300 transition-colors"
           >
             {t('landing.faq.contactSupport')}
             <span aria-hidden="true">→</span>
@@ -104,4 +104,3 @@ const FAQSection = () => {
 };
 
 export default FAQSection;
-

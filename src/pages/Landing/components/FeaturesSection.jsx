@@ -12,7 +12,7 @@ const FeaturesSection = () => {
       descriptionKey: 'landing.features.appointmentManagementDesc',
       color: 'primary',
       gradient: 'from-primary-500 to-primary-600',
-      bgGradient: 'from-primary-50 to-primary-100',
+      bgGradient: 'from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/30',
     },
     {
       icon: Users,
@@ -20,7 +20,7 @@ const FeaturesSection = () => {
       descriptionKey: 'landing.features.patientRecordsDesc',
       color: 'teal',
       gradient: 'from-teal-500 to-teal-600',
-      bgGradient: 'from-teal-50 to-teal-100',
+      bgGradient: 'from-teal-50 to-teal-100 dark:from-teal-900/30 dark:to-teal-800/30',
     },
     {
       icon: FileText,
@@ -28,7 +28,7 @@ const FeaturesSection = () => {
       descriptionKey: 'landing.features.smartBillingDesc',
       color: 'green',
       gradient: 'from-green-500 to-green-600',
-      bgGradient: 'from-green-50 to-green-100',
+      bgGradient: 'from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30',
     },
     {
       icon: Bell,
@@ -36,28 +36,28 @@ const FeaturesSection = () => {
       descriptionKey: 'landing.features.automatedNotificationsDesc',
       color: 'purple',
       gradient: 'from-purple-500 to-purple-600',
-      bgGradient: 'from-purple-50 to-purple-100',
+      bgGradient: 'from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30',
     },
   ];
 
   return (
-    <section id="features" className="py-20 lg:py-32 bg-white relative overflow-hidden">
+    <section id="features" className="py-20 lg:py-32 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 via-teal-500 to-primary-500" />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-primary-100 to-teal-100 text-primary-700 font-medium text-sm mb-4">
+          <span className="inline-block px-4 py-1.5 rounded-full bg-gradient-to-r from-primary-100 to-teal-100 dark:from-primary-900/50 dark:to-teal-900/50 text-primary-700 dark:text-primary-300 font-medium text-sm mb-4">
             {t('landing.features.badge')}
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
             {t('landing.features.title')}{' '}
             <span className="bg-gradient-to-r from-primary-600 to-teal-600 bg-clip-text text-transparent">
               {t('landing.features.titleHighlight')}
             </span>
           </h2>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-gray-600 dark:text-gray-300">
             {t('landing.features.description')}
           </p>
         </div>
@@ -67,7 +67,7 @@ const FeaturesSection = () => {
           {features.map((feature, index) => (
             <div
               key={feature.titleKey}
-              className="group relative bg-white rounded-2xl p-6 lg:p-8 border border-gray-100 shadow-soft hover:shadow-soft-xl transition-all duration-500 hover:-translate-y-2"
+              className="group relative bg-white dark:bg-gray-800 rounded-2xl p-6 lg:p-8 border border-gray-100 dark:border-gray-700 shadow-soft hover:shadow-soft-xl transition-all duration-500 hover:-translate-y-2"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {/* Icon */}
@@ -76,10 +76,10 @@ const FeaturesSection = () => {
               </div>
 
               {/* Content */}
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
                 {t(feature.titleKey)}
               </h3>
-              <p className="text-gray-600 leading-relaxed mb-4">
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
                 {t(feature.descriptionKey)}
               </p>
 
@@ -103,4 +103,3 @@ const FeaturesSection = () => {
 };
 
 export default FeaturesSection;
-

@@ -13,7 +13,7 @@ import Footer from './components/Footer';
 
 const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       {/* Fixed Navigation */}
       <Navbar />
       
