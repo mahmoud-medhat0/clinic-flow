@@ -1,14 +1,21 @@
 import React from 'react';
 import { Phone, MapPin, Clock, Star, CheckCircle, Calendar, Users, Heart, Award, Shield, Stethoscope, ArrowRight } from 'lucide-react';
-import { useTranslation } from '../../context/DirectionContext';
+import { useTranslation, useDirection } from '../../context/DirectionContext';
 import { Link } from 'react-router-dom';
+import ClinicNavbar from './components/ClinicNavbar';
+import ClinicFooter from './components/ClinicFooter';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 // Hero Section
 const ClinicHero = () => {
   const { t } = useTranslation();
   
   return (
-    <section className="relative min-h-[90vh] flex items-center bg-gradient-to-br from-primary-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 overflow-hidden">
+    <section id="home" className="relative min-h-[90vh] flex items-center pt-20 bg-gradient-to-br from-primary-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 overflow-hidden">
       {/* Background decorations */}
       <div className="absolute top-20 right-10 w-64 h-64 bg-primary-200/30 dark:bg-primary-600/10 rounded-full blur-3xl" />
       <div className="absolute bottom-20 left-10 w-48 h-48 bg-teal-200/30 dark:bg-teal-600/10 rounded-full blur-3xl" />
@@ -111,12 +118,12 @@ const AboutClinic = () => {
   const { t } = useTranslation();
   
   return (
-    <section className="py-20 bg-white dark:bg-gray-900">
+    <section id="about" className="py-20 bg-white dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Image */}
-          <div className="relative">
-            <div className="aspect-[4/3] bg-gradient-to-br from-primary-100 to-teal-100 dark:from-primary-900/30 dark:to-teal-900/30 rounded-3xl flex items-center justify-center">
+          {/* Image - Hidden on mobile */}
+          <div className="relative hidden lg:block">
+            <div className="h-80 bg-gradient-to-br from-primary-100 to-teal-100 dark:from-primary-900/30 dark:to-teal-900/30 rounded-3xl flex items-center justify-center">
               <Heart className="w-24 h-24 text-primary-300 dark:text-primary-600" />
             </div>
             <div className="absolute -bottom-6 -right-6 bg-gradient-to-r from-primary-500 to-teal-500 text-white rounded-2xl p-6 shadow-glow">
@@ -140,7 +147,7 @@ const AboutClinic = () => {
               {t('clinic.about.description2')}
             </p>
             
-            <div className="grid sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               {[
                 { icon: Award, label: t('clinic.about.feature1') },
                 { icon: Users, label: t('clinic.about.feature2') },
@@ -162,9 +169,10 @@ const AboutClinic = () => {
   );
 };
 
-// Doctors Section
+// Doctors Section with Swiper
 const DoctorProfiles = () => {
   const { t } = useTranslation();
+  const { isRTL } = useDirection();
   
   const doctors = [
     { nameKey: 'clinic.doctors.doctor1Name', roleKey: 'clinic.doctors.doctor1Role', experienceKey: 'clinic.doctors.doctor1Experience' },
@@ -173,7 +181,7 @@ const DoctorProfiles = () => {
   ];
   
   return (
-    <section className="py-20 bg-gray-50 dark:bg-gray-800">
+    <section id="doctors" className="py-20 bg-gray-50 dark:bg-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 text-sm font-medium mb-4">
@@ -187,35 +195,52 @@ const DoctorProfiles = () => {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-8">
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={24}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          autoplay={{ delay: 4000, disableOnInteraction: false }}
+          dir={isRTL ? 'rtl' : 'ltr'}
+          key={isRTL ? 'rtl' : 'ltr'}
+          breakpoints={{
+            640: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+          className="doctors-swiper pb-12"
+        >
           {doctors.map((doctor, i) => (
-            <div key={i} className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-soft hover:shadow-soft-xl transition-all group">
-              <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-100 to-teal-100 dark:from-primary-900/30 dark:to-teal-900/30 flex items-center justify-center">
-                <Users className="w-10 h-10 text-primary-400" />
+            <SwiperSlide key={i}>
+              <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-soft hover:shadow-soft-xl transition-all group h-full">
+                <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary-100 to-teal-100 dark:from-primary-900/30 dark:to-teal-900/30 flex items-center justify-center">
+                  <Users className="w-10 h-10 text-primary-400" />
+                </div>
+                <div className="text-center">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{t(doctor.nameKey)}</h3>
+                  <p className="text-primary-600 dark:text-primary-400 font-medium mb-2">{t(doctor.roleKey)}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t(doctor.experienceKey)}</p>
+                  <Link
+                    to="/clinic/book"
+                    className="inline-flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400 font-medium hover:gap-3 transition-all"
+                  >
+                    {t('clinic.doctors.bookWith')}
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
               </div>
-              <div className="text-center">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{t(doctor.nameKey)}</h3>
-                <p className="text-primary-600 dark:text-primary-400 font-medium mb-2">{t(doctor.roleKey)}</p>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t(doctor.experienceKey)}</p>
-                <Link
-                  to="/clinic/book"
-                  className="inline-flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400 font-medium hover:gap-3 transition-all"
-                >
-                  {t('clinic.doctors.bookWith')}
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
       </div>
     </section>
   );
 };
 
-// Services Section
+// Services Section with Swiper
 const Services = () => {
   const { t } = useTranslation();
+  const { isRTL } = useDirection();
   
   const services = [
     { icon: Stethoscope, nameKey: 'clinic.services.service1', descKey: 'clinic.services.service1Desc' },
@@ -227,7 +252,7 @@ const Services = () => {
   ];
   
   return (
-    <section className="py-20 bg-white dark:bg-gray-900">
+    <section id="services" className="py-20 bg-white dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <span className="inline-block px-4 py-1.5 rounded-full bg-teal-100 dark:bg-teal-900/50 text-teal-700 dark:text-teal-300 text-sm font-medium mb-4">
@@ -241,17 +266,33 @@ const Services = () => {
           </p>
         </div>
         
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={24}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          autoplay={{ delay: 3500, disableOnInteraction: false }}
+          dir={isRTL ? 'rtl' : 'ltr'}
+          key={isRTL ? 'rtl-services' : 'ltr-services'}
+          breakpoints={{
+            640: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+          className="services-swiper pb-12"
+        >
           {services.map((service, i) => (
-            <div key={i} className="group p-6 rounded-2xl bg-gray-50 dark:bg-gray-800 hover:bg-gradient-to-br hover:from-primary-500 hover:to-teal-500 transition-all duration-300">
-              <div className="w-14 h-14 rounded-xl bg-primary-100 dark:bg-primary-900/50 group-hover:bg-white/20 flex items-center justify-center mb-4 transition-colors">
-                <service.icon className="w-7 h-7 text-primary-600 dark:text-primary-400 group-hover:text-white" />
+            <SwiperSlide key={i}>
+              <div className="group p-6 rounded-2xl bg-gray-50 dark:bg-gray-800 hover:bg-gradient-to-br hover:from-primary-500 hover:to-teal-500 transition-all duration-300 h-full">
+                <div className="w-14 h-14 rounded-xl bg-primary-100 dark:bg-primary-900/50 group-hover:bg-white/20 flex items-center justify-center mb-4 transition-colors">
+                  <service.icon className="w-7 h-7 text-primary-600 dark:text-primary-400 group-hover:text-white" />
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-white mb-2">{t(service.nameKey)}</h3>
+                <p className="text-gray-600 dark:text-gray-300 group-hover:text-white/80 text-sm">{t(service.descKey)}</p>
               </div>
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white group-hover:text-white mb-2">{t(service.nameKey)}</h3>
-              <p className="text-gray-600 dark:text-gray-300 group-hover:text-white/80 text-sm">{t(service.descKey)}</p>
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
         
         <div className="text-center mt-10">
           <Link
@@ -267,9 +308,10 @@ const Services = () => {
   );
 };
 
-// Testimonials Section
+// Testimonials Section with Swiper
 const PatientReviews = () => {
   const { t } = useTranslation();
+  const { isRTL } = useDirection();
   
   const reviews = [
     { nameKey: 'clinic.reviews.review1Name', textKey: 'clinic.reviews.review1Text', rating: 5 },
@@ -289,24 +331,40 @@ const PatientReviews = () => {
           </h2>
         </div>
         
-        <div className="grid md:grid-cols-3 gap-6">
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          spaceBetween={24}
+          slidesPerView={1}
+          navigation
+          pagination={{ clickable: true }}
+          autoplay={{ delay: 5000, disableOnInteraction: false }}
+          dir={isRTL ? 'rtl' : 'ltr'}
+          key={isRTL ? 'rtl-reviews' : 'ltr-reviews'}
+          breakpoints={{
+            640: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+          className="reviews-swiper pb-12"
+        >
           {reviews.map((review, i) => (
-            <div key={i} className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-soft">
-              <div className="flex gap-1 mb-4">
-                {[...Array(review.rating)].map((_, j) => (
-                  <Star key={j} className="w-5 h-5 text-amber-400 fill-amber-400" />
-                ))}
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 mb-4 italic">"{t(review.textKey)}"</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-teal-400 flex items-center justify-center text-white font-bold">
-                  {t(review.nameKey).charAt(0)}
+            <SwiperSlide key={i}>
+              <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-soft h-full">
+                <div className="flex gap-1 mb-4">
+                  {[...Array(review.rating)].map((_, j) => (
+                    <Star key={j} className="w-5 h-5 text-amber-400 fill-amber-400" />
+                  ))}
                 </div>
-                <span className="font-medium text-gray-900 dark:text-white">{t(review.nameKey)}</span>
+                <p className="text-gray-600 dark:text-gray-300 mb-4 italic">"{t(review.textKey)}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary-400 to-teal-400 flex items-center justify-center text-white font-bold">
+                    {t(review.nameKey).charAt(0)}
+                  </div>
+                  <span className="font-medium text-gray-900 dark:text-white">{t(review.nameKey)}</span>
+                </div>
               </div>
-            </div>
+            </SwiperSlide>
           ))}
-        </div>
+        </Swiper>
       </div>
     </section>
   );
@@ -317,7 +375,7 @@ const ClinicLocation = () => {
   const { t } = useTranslation();
   
   return (
-    <section className="py-20 bg-white dark:bg-gray-900">
+    <section id="contact" className="py-20 bg-white dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <span className="inline-block px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 text-sm font-medium mb-4">
@@ -380,47 +438,12 @@ const ClinicLocation = () => {
   );
 };
 
-// Footer
-const ClinicFooter = () => {
-  const { t } = useTranslation();
-  
-  return (
-    <footer className="bg-gray-900 text-white py-12">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-3 gap-8 mb-8">
-          <div>
-            <h3 className="text-xl font-bold mb-4">{t('clinic.footer.clinicName')}</h3>
-            <p className="text-gray-400 text-sm">{t('clinic.footer.tagline')}</p>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">{t('clinic.footer.quickLinks')}</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">{t('clinic.footer.aboutUs')}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{t('clinic.footer.services')}</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">{t('clinic.footer.doctors')}</a></li>
-              <li><Link to="/clinic/book" className="hover:text-white transition-colors">{t('clinic.footer.bookAppointment')}</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold mb-4">{t('clinic.footer.contact')}</h4>
-            <ul className="space-y-2 text-sm text-gray-400">
-              <li className="flex items-center gap-2"><Phone className="w-4 h-4" /> +20 123 456 7890</li>
-              <li className="flex items-center gap-2"><MapPin className="w-4 h-4" /> {t('clinic.location.addressValue')}</li>
-            </ul>
-          </div>
-        </div>
-        <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
-          <p>© 2024 {t('clinic.footer.clinicName')}. {t('clinic.footer.poweredBy')} <span className="text-primary-400">a2zenon ClinicFlow</span></p>
-        </div>
-      </div>
-    </footer>
-  );
-};
 
 // Main Clinic Home Component
 const ClinicHome = () => {
   return (
     <div className="min-h-screen">
+      <ClinicNavbar />
       <ClinicHero />
       <AboutClinic />
       <DoctorProfiles />

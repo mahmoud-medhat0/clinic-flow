@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, User, Mail, Phone, Building2, MessageSquare, CheckCircle, Loader2 } from 'lucide-react';
+import { X, Calendar, User, Mail, Phone, Building2, MessageSquare, CheckCircle, Loader2, ExternalLink } from 'lucide-react';
 import { useTranslation } from '../../../context/DirectionContext';
+import { Link } from 'react-router-dom';
 
 const DemoModal = ({ isOpen, onClose }) => {
   const { t } = useTranslation();
@@ -227,6 +228,21 @@ const DemoModal = ({ isOpen, onClose }) => {
             <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
               {t('landing.demo.privacy')}
             </p>
+            
+            {/* Try Demo Link */}
+            <div className="text-center pt-2 border-t border-gray-100 dark:border-gray-700">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
+                {t('landing.demo.orTryDemo')}
+              </p>
+              <Link
+                to="/clinic"
+                onClick={onClose}
+                className="inline-flex items-center gap-2 text-sm text-primary-600 dark:text-primary-400 font-medium hover:underline"
+              >
+                <ExternalLink className="w-4 h-4" />
+                {t('landing.demo.viewLiveDemo')}
+              </Link>
+            </div>
           </form>
         )}
       </div>

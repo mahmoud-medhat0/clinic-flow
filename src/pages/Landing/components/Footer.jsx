@@ -20,10 +20,10 @@ const Footer = () => {
     <footer className="bg-gray-900 text-gray-300">
       {/* Main Footer */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 text-center lg:text-start">
           {/* Brand Column */}
           <div className="lg:col-span-2">
-            <a href="/" className="flex items-center gap-2 mb-6">
+            <a href="/" className="inline-flex items-center gap-2 mb-6">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-teal-500 flex items-center justify-center">
                 <Calendar className="w-6 h-6 text-white" />
               </div>
@@ -36,22 +36,22 @@ const Footer = () => {
                 </span>
               </div>
             </a>
-            <p className="text-gray-400 mb-6 leading-relaxed max-w-md">
+            <p className="text-gray-400 mb-6 leading-relaxed max-w-md mx-auto lg:mx-0">
               {t('landing.footer.tagline')}
             </p>
             
             {/* Contact Info */}
             <div className="space-y-3">
-              <a href="mailto:support@a2zenon.com" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+              <a href="mailto:support@a2zenon.com" className="flex items-center justify-center lg:justify-start gap-3 text-gray-400 hover:text-white transition-colors">
                 <Mail className="w-5 h-5" />
                 <span>support@a2zenon.com</span>
               </a>
-              <a href="tel:+20123456789" className="flex items-center gap-3 text-gray-400 hover:text-white transition-colors">
+              <a href="tel:+20123456789" className="flex items-center justify-center lg:justify-start gap-3 text-gray-400 hover:text-white transition-colors">
                 <Phone className="w-5 h-5" />
                 <span>+20 123 456 789</span>
               </a>
-              <div className="flex items-start gap-3 text-gray-400">
-                <MapPin className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              <div className="flex items-center justify-center lg:justify-start gap-3 text-gray-400">
+                <MapPin className="w-5 h-5 flex-shrink-0" />
                 <span>Cairo, Egypt</span>
               </div>
             </div>
@@ -150,3 +150,4 @@ const Footer = () => {
 };
 
 export default Footer;
+

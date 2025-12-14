@@ -2095,4 +2095,152 @@ table.dataTable .icon-btn { display: flex !important; align-items: center !impor
 table.dataTable .icon-btn:hover { background: var(--color-gray-100) !important; border-color: var(--color-gray-300) !important; color: var(--color-gray-700) !important; }
 table.dataTable .icon-btn.delete-btn:hover { background: var(--color-error-light) !important; border-color: var(--color-error) !important; color: var(--color-error) !important; }
 
+/* ===================== SWIPER CUSTOM STYLES ===================== */
 
+/* Swiper Container - Add padding for arrows */
+.doctors-swiper,
+.services-swiper,
+.reviews-swiper,
+.about-swiper {
+  padding: 0 50px 60px 50px;
+  position: relative;
+}
+
+/* Swiper Navigation Arrows - Clinic Sections */
+.doctors-swiper .swiper-button-next,
+.doctors-swiper .swiper-button-prev,
+.services-swiper .swiper-button-next,
+.services-swiper .swiper-button-prev,
+.reviews-swiper .swiper-button-next,
+.reviews-swiper .swiper-button-prev,
+.about-swiper .swiper-button-next,
+.about-swiper .swiper-button-prev {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--color-primary), #18B8A0);
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(42, 124, 255, 0.3);
+  transition: all 0.3s ease;
+  top: 40%;
+}
+
+/* Position arrows outside cards */
+.doctors-swiper .swiper-button-prev,
+.services-swiper .swiper-button-prev,
+.reviews-swiper .swiper-button-prev {
+  left: 0;
+}
+
+.doctors-swiper .swiper-button-next,
+.services-swiper .swiper-button-next,
+.reviews-swiper .swiper-button-next {
+  right: 0;
+}
+
+/* Hide arrows on mobile */
+@media (max-width: 768px) {
+  .doctors-swiper,
+  .services-swiper,
+  .reviews-swiper {
+    padding: 0 0 50px 0;
+  }
+  
+  .doctors-swiper .swiper-button-next,
+  .doctors-swiper .swiper-button-prev,
+  .services-swiper .swiper-button-next,
+  .services-swiper .swiper-button-prev,
+  .reviews-swiper .swiper-button-next,
+  .reviews-swiper .swiper-button-prev {
+    display: none;
+  }
+}
+
+.doctors-swiper .swiper-button-next:hover,
+.doctors-swiper .swiper-button-prev:hover,
+.services-swiper .swiper-button-next:hover,
+.services-swiper .swiper-button-prev:hover,
+.reviews-swiper .swiper-button-next:hover,
+.reviews-swiper .swiper-button-prev:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(42, 124, 255, 0.4);
+}
+
+.doctors-swiper .swiper-button-next::after,
+.doctors-swiper .swiper-button-prev::after,
+.services-swiper .swiper-button-next::after,
+.services-swiper .swiper-button-prev::after,
+.reviews-swiper .swiper-button-next::after,
+.reviews-swiper .swiper-button-prev::after {
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+}
+
+.doctors-swiper .swiper-button-disabled,
+.services-swiper .swiper-button-disabled,
+.reviews-swiper .swiper-button-disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Swiper Pagination Dots - Position below cards */
+.doctors-swiper .swiper-pagination,
+.services-swiper .swiper-pagination,
+.reviews-swiper .swiper-pagination {
+  bottom: 0 !important;
+  position: absolute;
+}
+
+.doctors-swiper .swiper-pagination-bullet,
+.services-swiper .swiper-pagination-bullet,
+.reviews-swiper .swiper-pagination-bullet {
+  width: 10px;
+  height: 10px;
+  background: var(--color-gray-300);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.doctors-swiper .swiper-pagination-bullet-active,
+.services-swiper .swiper-pagination-bullet-active,
+.reviews-swiper .swiper-pagination-bullet-active {
+  width: 24px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, var(--color-primary), #18B8A0);
+}
+
+/* Dark mode adjustments for Swiper */
+.dark .doctors-swiper .swiper-pagination-bullet,
+.dark .services-swiper .swiper-pagination-bullet,
+.dark .reviews-swiper .swiper-pagination-bullet {
+  background: var(--color-gray-600);
+}
+
+.dark .doctors-swiper .swiper-pagination-bullet-active,
+.dark .services-swiper .swiper-pagination-bullet-active,
+.dark .reviews-swiper .swiper-pagination-bullet-active {
+  background: linear-gradient(135deg, var(--color-primary), #18B8A0);
+}
+
+/* About Section Swiper */
+.about-swiper .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: var(--color-gray-300);
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.about-swiper .swiper-pagination-bullet-active {
+  width: 20px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--color-primary), #18B8A0);
+}
+
+.dark .about-swiper .swiper-pagination-bullet {
+  background: var(--color-gray-600);
+}
+
+.dark .about-swiper .swiper-pagination-bullet-active {
+  background: linear-gradient(135deg, var(--color-primary), #18B8A0);
+}

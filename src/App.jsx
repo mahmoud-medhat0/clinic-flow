@@ -5,6 +5,8 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import Layout from './components/layout/Layout';
 import Login from './pages/Login/Login';
 import LandingPage from './pages/Landing/LandingPage';
+import ClinicHome from './pages/Clinic/ClinicHome';
+import BookingPage from './pages/Clinic/booking/BookingPage';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Appointments from './pages/Appointments/Appointments';
 import Patients from './pages/Patients/Patients';
@@ -42,6 +44,10 @@ function AppRoutes() {
     <Routes>
       {/* Landing Page - Public */}
       <Route path="/landing" element={<LandingPage />} />
+      
+      {/* Clinic Website - Public */}
+      <Route path="/clinic" element={<ClinicHome />} />
+      <Route path="/clinic/book" element={<BookingPage />} />
       
       <Route path="/login" element={
         <PublicRoute>
