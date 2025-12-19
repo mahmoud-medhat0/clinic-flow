@@ -119,7 +119,7 @@ export default function HomeScreen() {
 
         {/* Quick Actions */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+          <Text style={[styles.sectionTitle, { color: colors.text }]}>
             {t('dashboard.quickActions')}
           </Text>
           <View style={[styles.quickActions]}>
@@ -151,7 +151,7 @@ export default function HomeScreen() {
               {t('dashboard.upcomingAppointments')}
             </Text>
             <Text
-              style={[styles.viewAll, { color: colors.primary }]}
+              style={[styles.viewAll, { color: colors.primary, textAlign: isRTL ? 'left' : 'right' }]}
               onPress={() => router.push('/appointments')}
             >
               {t('common.viewAll')}
@@ -160,7 +160,7 @@ export default function HomeScreen() {
           {upcomingAppointments.length === 0 ? (
             <View style={[styles.emptyState, { backgroundColor: colors.surface }]}>
               <Ionicons name="calendar-outline" size={48} color={colors.textMuted} />
-              <Text style={[styles.emptyText, { color: colors.textMuted }]}>
+              <Text style={[styles.emptyText, { color: colors.textMuted, textAlign: 'center' }]}>
                 {t('appointments.noAppointments')}
               </Text>
             </View>
