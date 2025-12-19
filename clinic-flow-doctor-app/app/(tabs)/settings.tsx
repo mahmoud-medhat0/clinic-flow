@@ -70,7 +70,7 @@ export default function SettingsScreen() {
 
   const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <View style={styles.section}>
-      <Text style={[styles.sectionTitle, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>{title}</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textSecondary,  }]}>{title}</Text>
       <View style={[styles.sectionContent, { backgroundColor: colors.card, borderColor: colors.border }]}>
         {children}
       </View>
@@ -149,7 +149,7 @@ export default function SettingsScreen() {
               <Ionicons name="calendar-outline" size={20} color={colors.primary} />
             </View>
             <View style={styles.scheduleContent}>
-              <Text style={[styles.settingLabel, { color: colors.text, marginBottom: 10, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.settingLabel, { color: colors.text, marginBottom: 10,  }]}>
                 {t('settings.workingDays')}
               </Text>
               {doctor.schedule?.map((item) => (

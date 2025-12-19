@@ -64,8 +64,8 @@ export default function PatientProfileScreen() {
         <Ionicons name={icon} size={18} color={colors.primary} />
       </View>
       <View style={[styles.infoContent, isRTL && { alignItems: 'flex-end' }]}>
-        <Text style={[styles.infoLabel, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>{label}</Text>
-        <Text style={[styles.infoValue, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{value}</Text>
+        <Text style={[styles.infoLabel, { color: colors.textMuted,  }]}>{label}</Text>
+        <Text style={[styles.infoValue, { color: colors.text,  }]}>{value}</Text>
       </View>
     </View>
   );
@@ -142,7 +142,7 @@ export default function PatientProfileScreen() {
 
           {/* Visit History */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text,  }]}>
               {t('patients.visitHistory')}
             </Text>
             {patient.visits && patient.visits.length > 0 ? (
@@ -153,12 +153,12 @@ export default function PatientProfileScreen() {
                     <View style={[styles.visitDot, { backgroundColor: colors.primary }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]} />
                     <View style={[styles.visitContent, isRTL && { alignItems: 'flex-end' }]}>
                       <View style={[styles.visitHeader, isRTL && styles.rtlRow]}>
-                        <Text style={[styles.visitType, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{visit.type}</Text>
-                        <Text style={[styles.visitDate, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>
+                        <Text style={[styles.visitType, { color: colors.text,  }]}>{visit.type}</Text>
+                        <Text style={[styles.visitDate, { color: colors.textMuted,  }]}>
                           {formatDate(visit.date)}
                         </Text>
                       </View>
-                      <Text style={[styles.visitNotes, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
+                      <Text style={[styles.visitNotes, { color: colors.textSecondary,  }]}>
                         {visit.notes}
                       </Text>
                       {visit.diagnosis && (
@@ -185,10 +185,10 @@ export default function PatientProfileScreen() {
           {/* Quick Notes */}
           {patient.notes && (
             <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.sectionTitle, { color: colors.text,  }]}>
                 {t('patients.quickNotes')}
               </Text>
-              <Text style={[styles.notesText, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.notesText, { color: colors.textSecondary,  }]}>
                 {patient.notes}
               </Text>
             </View>

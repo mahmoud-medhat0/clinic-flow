@@ -60,11 +60,11 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={[styles.header]}>
           <View style={styles.greetingContainer}>
-            <Text style={[styles.greeting, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
+            <Text style={[styles.greeting, { color: colors.textSecondary  }]}>
               {getGreeting()},
             </Text>
-            <Text style={[styles.doctorName, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{doctorName}</Text>
-            <Text style={[styles.date, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>{formatDate()}</Text>
+            <Text style={[styles.doctorName, { color: colors.text  }]}>{doctorName}</Text>
+            <Text style={[styles.date, { color: colors.textMuted }]}>{formatDate()}</Text>
           </View>
           <View style={[styles.headerActions]}>
             <TouchableOpacity 
@@ -147,7 +147,7 @@ export default function HomeScreen() {
         {/* Upcoming Appointments */}
         <View style={styles.section}>
           <View style={[styles.sectionHeader]}>
-            <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text,  }]}>
               {t('dashboard.upcomingAppointments')}
             </Text>
             <Text

@@ -210,10 +210,10 @@ export default function AppointmentDetailsScreen() {
           {/* Notes Card */}
           {appointment.notes && (
             <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.notesTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.notesTitle, { color: colors.text,  }]}>
                 {t('appointments.notes')}
               </Text>
-              <Text style={[styles.notesText, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.notesText, { color: colors.textSecondary,  }]}>
                 {appointment.notes}
               </Text>
             </View>
