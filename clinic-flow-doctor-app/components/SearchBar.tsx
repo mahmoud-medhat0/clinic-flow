@@ -2,6 +2,7 @@ import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface SearchBarProps {
   value: string;
@@ -11,12 +12,13 @@ interface SearchBarProps {
 
 export function SearchBar({ value, onChangeText, placeholder }: SearchBarProps) {
   const { colors } = useTheme();
+  const { isRTL } = useLanguage();
 
   return (
-    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }, isRTL && styles.rtlContainer]}>
       <Ionicons name="search-outline" size={20} color={colors.textMuted} />
       <TextInput
-        style={[styles.input, { color: colors.text }]}
+        style={[styles.input, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
@@ -43,6 +45,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     gap: 12,
+  },
+  rtlContainer: {
+    flexDirection: 'row-reverse',
   },
   input: {
     flex: 1,

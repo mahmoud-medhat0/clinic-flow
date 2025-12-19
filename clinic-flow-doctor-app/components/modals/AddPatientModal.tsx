@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useTranslation } from '../../contexts/LanguageContext';
+import { useTranslation, useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
 import { BloodType, PatientStatus } from '../../data/patients';
 
@@ -25,6 +25,7 @@ interface AddPatientModalProps {
 export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   const { addPatient } = useApp();
 
   const [name, setName] = useState('');
@@ -73,7 +74,11 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
         <View style={[styles.modalWrapper, { marginBottom: 90 }]}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             {/* Header */}
-            <View style={[styles.header, { borderBottomColor: colors.border }]}>
+            <View style={[
+              styles.header, 
+              { borderBottomColor: colors.border },
+              isRTL && styles.rtlHeader
+            ]}>
               <Text style={[styles.title, { color: colors.text }]}>{t('patients.addPatient')}</Text>
               <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
                 <Ionicons name="close" size={24} color={colors.textSecondary} />
@@ -86,9 +91,11 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
               contentContainerStyle={styles.scrollContent}
               showsVerticalScrollIndicator={true}
             >
-              <Text style={[styles.label, { color: colors.text }]}>{t('patients.name')} *</Text>
+              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                {t('patients.name')} *
+              </Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border }]}
+                style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
                 value={name}
                 onChangeText={setName}
                 placeholder={t('patients.name')}
@@ -116,11 +123,13 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
                 autoCapitalize="none"
               />
 
-              <View style={styles.row}>
+              <View style={[styles.row, isRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
-                  <Text style={[styles.label, { color: colors.text }]}>{t('patients.age')}</Text>
+                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                    {t('patients.age')}
+                  </Text>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border }]}
+                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
                     value={age}
                     onChangeText={setAge}
                     placeholder="25"
@@ -129,9 +138,11 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
                   />
                 </View>
                 <View style={styles.halfField}>
-                  <Text style={[styles.label, { color: colors.text }]}>{t('patients.dob')}</Text>
+                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                    {t('patients.dob')}
+                  </Text>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border }]}
+                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
                     value={dob}
                     onChangeText={setDob}
                     placeholder="YYYY-MM-DD"
@@ -140,8 +151,10 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
                 </View>
               </View>
 
-              <Text style={[styles.label, { color: colors.text }]}>{t('patients.bloodType')}</Text>
-              <View style={styles.chipContainer}>
+              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                {t('patients.bloodType')}
+              </Text>
+              <View style={[styles.chipContainer, isRTL && styles.rtlChipContainer]}>
                 {bloodTypes.map((bt) => (
                   <TouchableOpacity
                     key={bt}
@@ -166,7 +179,11 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
             </ScrollView>
 
             {/* Footer */}
-            <View style={[styles.footer, { borderTopColor: colors.border }]}>
+            <View style={[
+              styles.footer, 
+              { borderTopColor: colors.border },
+              isRTL && styles.rtlFooter
+            ]}>
               <TouchableOpacity style={[styles.cancelBtn, { borderColor: colors.border }]} onPress={onClose}>
                 <Text style={[styles.cancelText, { color: colors.textSecondary }]}>{t('common.cancel')}</Text>
               </TouchableOpacity>
@@ -191,6 +208,7 @@ const styles = StyleSheet.create({
   modalWrapper: { maxHeight: SCREEN_HEIGHT * 0.75 },
   modalContent: { borderTopLeftRadius: 24, borderTopRightRadius: 24, overflow: 'hidden' },
   header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 20, borderBottomWidth: 1 },
+  rtlHeader: { flexDirection: 'row-reverse' },
   title: { fontSize: 18, fontWeight: '700' },
   scrollView: { maxHeight: SCREEN_HEIGHT * 0.5 },
   scrollContent: { padding: 20 },
@@ -198,11 +216,14 @@ const styles = StyleSheet.create({
   input: { borderWidth: 1, borderRadius: 10, padding: 12, fontSize: 15 },
   textArea: { height: 60, textAlignVertical: 'top' },
   row: { flexDirection: 'row', gap: 12 },
+  rtlRow: { flexDirection: 'row-reverse' },
   halfField: { flex: 1 },
   chipContainer: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  rtlChipContainer: { flexDirection: 'row-reverse' },
   chip: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 14, borderWidth: 1 },
   chipText: { fontSize: 13, fontWeight: '600' },
   footer: { flexDirection: 'row', padding: 16, gap: 12, borderTopWidth: 1 },
+  rtlFooter: { flexDirection: 'row-reverse' },
   cancelBtn: { flex: 1, paddingVertical: 12, borderRadius: 10, borderWidth: 1, alignItems: 'center' },
   cancelText: { fontSize: 15, fontWeight: '600' },
   saveBtn: { flex: 1, paddingVertical: 12, borderRadius: 10, alignItems: 'center' },

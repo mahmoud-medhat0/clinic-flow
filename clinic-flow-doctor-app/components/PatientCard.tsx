@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
-import { useTranslation } from '../contexts/LanguageContext';
+import { useTranslation, useLanguage } from '../contexts/LanguageContext';
 import { StatusBadge } from './ui/StatusBadge';
 import { Patient } from '../data/patients';
 
@@ -14,6 +14,7 @@ interface PatientCardProps {
 export function PatientCard({ patient, onPress }: PatientCardProps) {
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
 
   const getInitials = (name: string) => {
     return name
@@ -33,27 +34,27 @@ export function PatientCard({ patient, onPress }: PatientCardProps) {
         { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadow },
       ]}
     >
-      <View style={styles.row}>
-        <View style={[styles.avatar, { backgroundColor: colors.primaryLight }]}>
+      <View style={[styles.row, isRTL && styles.rtlRow]}>
+        <View style={[styles.avatar, { backgroundColor: colors.primaryLight }, isRTL ? {marginLeft: 14, marginRight: 0} : {marginRight: 14}]}>
           <Text style={[styles.initials, { color: colors.primary }]}>
             {getInitials(patient.name)}
           </Text>
         </View>
-        <View style={styles.info}>
-          <View style={styles.nameRow}>
-            <Text style={[styles.name, { color: colors.text }]} numberOfLines={1}>
+        <View style={[styles.info, isRTL && { alignItems: 'flex-end' }]}>
+          <View style={[styles.nameRow, isRTL && styles.rtlRow]}>
+            <Text style={[styles.name, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]} numberOfLines={1}>
               {patient.name}
             </Text>
             <StatusBadge status={patient.status} size="sm" />
           </View>
-          <View style={styles.details}>
-            <View style={styles.detailItem}>
+          <View style={[styles.details, isRTL && styles.rtlRow]}>
+            <View style={[styles.detailItem, isRTL && styles.rtlRow]}>
               <Ionicons name="call-outline" size={14} color={colors.textMuted} />
               <Text style={[styles.detailText, { color: colors.textSecondary }]}>
                 {patient.phone}
               </Text>
             </View>
-            <View style={styles.detailItem}>
+            <View style={[styles.detailItem, isRTL && styles.rtlRow]}>
               <Ionicons name="water-outline" size={14} color={colors.textMuted} />
               <Text style={[styles.detailText, { color: colors.textSecondary }]}>
                 {patient.bloodType}
@@ -61,7 +62,7 @@ export function PatientCard({ patient, onPress }: PatientCardProps) {
             </View>
           </View>
         </View>
-        <Ionicons name="chevron-forward" size={20} color={colors.textMuted} />
+        <Ionicons name={isRTL ? "chevron-back" : "chevron-forward"} size={20} color={colors.textMuted} />
       </View>
     </TouchableOpacity>
   );
@@ -81,6 +82,9 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  rtlRow: {
+    flexDirection: 'row-reverse',
   },
   avatar: {
     width: 50,

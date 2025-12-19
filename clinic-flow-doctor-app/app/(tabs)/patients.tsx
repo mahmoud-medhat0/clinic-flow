@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useTranslation } from '../../contexts/LanguageContext';
+import { useTranslation, useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
 import { PatientCard } from '../../components/PatientCard';
 import { SearchBar } from '../../components/SearchBar';
@@ -14,6 +14,7 @@ export default function PatientsScreen() {
   const router = useRouter();
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   const { patients, searchPatients } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -51,7 +52,7 @@ export default function PatientsScreen() {
               {t('common.noData')}
             </Text>
             <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
-              {searchQuery ? 'No patients match your search' : 'Add your first patient'}
+              {searchQuery ? t('patients.noSearchResults') : t('patients.addFirst')}
             </Text>
           </View>
         )}
@@ -59,7 +60,7 @@ export default function PatientsScreen() {
 
       {/* FAB */}
       <TouchableOpacity
-        style={[styles.fab, { backgroundColor: colors.teal }]}
+        style={[styles.fab, { backgroundColor: colors.teal }, isRTL ? { left: 20 } : { right: 20 }]}
         onPress={() => setShowAddModal(true)}
       >
         <Ionicons name="person-add" size={24} color="#fff" />
@@ -102,7 +103,6 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    right: 20,
     bottom: 20,
     width: 56,
     height: 56,

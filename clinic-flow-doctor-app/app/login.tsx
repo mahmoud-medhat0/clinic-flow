@@ -14,7 +14,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
-import { useTranslation } from '../contexts/LanguageContext';
+import { useTranslation, useLanguage } from '../contexts/LanguageContext';
 
 const { width } = Dimensions.get('window');
 
@@ -22,6 +22,7 @@ export default function LoginScreen() {
   const router = useRouter();
   const { colors, isDark } = useTheme();
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -60,11 +61,22 @@ export default function LoginScreen() {
           {/* Form */}
           <View style={styles.form}>
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>{t('auth.email')}</Text>
-              <View style={[styles.inputContainer, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }]}>
-                <Ionicons name="mail-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
+              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                {t('auth.email')}
+              </Text>
+              <View style={[
+                styles.inputContainer, 
+                { backgroundColor: colors.surfaceSecondary, borderColor: colors.border },
+                isRTL && styles.rtlInputContainer
+              ]}>
+                <Ionicons 
+                  name="mail-outline" 
+                  size={20} 
+                  color={colors.textMuted} 
+                  style={[styles.inputIcon, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]} 
+                />
                 <TextInput
-                  style={[styles.input, { color: colors.text }]}
+                  style={[styles.input, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}
                   placeholder="doctor@clinic.com"
                   placeholderTextColor={colors.textMuted}
                   value={email}
@@ -76,11 +88,22 @@ export default function LoginScreen() {
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={[styles.label, { color: colors.text }]}>{t('auth.password')}</Text>
-              <View style={[styles.inputContainer, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }]}>
-                <Ionicons name="lock-closed-outline" size={20} color={colors.textMuted} style={styles.inputIcon} />
+              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                {t('auth.password')}
+              </Text>
+              <View style={[
+                styles.inputContainer, 
+                { backgroundColor: colors.surfaceSecondary, borderColor: colors.border },
+                isRTL && styles.rtlInputContainer
+              ]}>
+                <Ionicons 
+                  name="lock-closed-outline" 
+                  size={20} 
+                  color={colors.textMuted} 
+                  style={[styles.inputIcon, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]} 
+                />
                 <TextInput
-                  style={[styles.input, { color: colors.text }]}
+                  style={[styles.input, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}
                   placeholder="••••••••"
                   placeholderTextColor={colors.textMuted}
                   value={password}
@@ -97,7 +120,7 @@ export default function LoginScreen() {
               </View>
             </View>
 
-            <TouchableOpacity style={styles.forgotPassword}>
+            <TouchableOpacity style={[styles.forgotPassword, isRTL && { alignSelf: 'flex-start' }]}>
               <Text style={[styles.forgotPasswordText, { color: colors.primary }]}>
                 {t('auth.forgotPassword')}
               </Text>
@@ -120,7 +143,7 @@ export default function LoginScreen() {
           </View>
 
           {/* Footer */}
-          <View style={styles.footer}>
+          <View style={[styles.footer, isRTL && styles.rtlFooter]}>
             <Text style={[styles.footerText, { color: colors.textSecondary }]}>
               {t('auth.noAccount')}
             </Text>
@@ -188,8 +211,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 56,
   },
+  rtlInputContainer: {
+    flexDirection: 'row-reverse',
+  },
   inputIcon: {
-    marginRight: 12,
+    // margin handling done inline
   },
   input: {
     flex: 1,
@@ -225,6 +251,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 40,
     gap: 6,
+  },
+  rtlFooter: {
+    flexDirection: 'row-reverse',
   },
   footerText: {
     fontSize: 14,

@@ -1,11 +1,13 @@
-import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { I18nManager } from 'react-native';
+import React, { createContext, useContext, useState, useCallback, ReactNode, useMemo, useEffect } from 'react';
+import { I18nManager, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Updates from 'expo-updates';
 import en from '../i18n/en.json';
 import ar from '../i18n/ar.json';
 import fr from '../i18n/fr.json';
 
 type Language = 'en' | 'ar' | 'fr';
-type Translations = typeof en;
+type Translations = typeof en | typeof ar | typeof fr;
 
 interface LanguageContextType {
   language: Language;
@@ -20,17 +22,66 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>('en');
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Load saved language on mount
+  useEffect(() => {
+    const loadLanguage = async () => {
+      try {
+        const savedLang = await AsyncStorage.getItem('user-language');
+        if (savedLang && (savedLang === 'en' || savedLang === 'ar' || savedLang === 'fr')) {
+          setLanguage(savedLang as Language);
+        }
+      } catch (error) {
+        console.error('Failed to load language', error);
+      } finally {
+        setIsInitialized(true);
+      }
+    };
+    loadLanguage();
+  }, []);
 
   const isRTL = language === 'ar';
 
-  const changeLanguage = useCallback((lang: Language) => {
-    setLanguage(lang);
-    const rtl = lang === 'ar';
-    if (I18nManager.isRTL !== rtl) {
-      I18nManager.allowRTL(rtl);
-      I18nManager.forceRTL(rtl);
+  const changeLanguage = useCallback(async (lang: Language) => {
+    const currentIsRTL = language === 'ar';
+    const newIsRTL = lang === 'ar';
+    
+    // Save to storage first
+    try {
+      await AsyncStorage.setItem('user-language', lang);
+    } catch (error) {
+      console.error('Failed to save language', error);
     }
-  }, []);
+
+    // Check if RTL direction is changing
+    if (currentIsRTL !== newIsRTL) {
+      // Apply RTL settings
+      I18nManager.allowRTL(newIsRTL);
+      I18nManager.forceRTL(newIsRTL);
+      
+      // Update language state immediately so UI reflects change
+      setLanguage(lang);
+      
+      // Try to reload, with fallback message for dev mode
+      try {
+        await Updates.reloadAsync();
+      } catch (e) {
+        // In development mode, Updates.reloadAsync() won't work
+        // Show alert asking user to restart manually
+        Alert.alert(
+          lang === 'ar' ? 'إعادة التشغيل مطلوبة' : 'Restart Required',
+          lang === 'ar' 
+            ? 'يرجى إغلاق التطبيق وإعادة فتحه لتطبيق تخطيط RTL بشكل صحيح'
+            : 'Please close and reopen the app to properly apply the RTL layout',
+          [{ text: 'OK' }]
+        );
+      }
+    } else {
+      // Same RTL direction, just update language
+      setLanguage(lang);
+    }
+  }, [language]);
 
   const t = useCallback((key: string): string => {
     const keys = key.split('.');
@@ -45,8 +96,20 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     return typeof value === 'string' ? value : key;
   }, [language]);
 
+  const value = useMemo(() => ({
+    language,
+    isRTL,
+    changeLanguage,
+    t
+  }), [language, isRTL, changeLanguage, t]);
+
+  // Don't render until language is loaded to prevent flash
+  if (!isInitialized) {
+    return null;
+  }
+
   return (
-    <LanguageContext.Provider value={{ language, isRTL, changeLanguage, t }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );

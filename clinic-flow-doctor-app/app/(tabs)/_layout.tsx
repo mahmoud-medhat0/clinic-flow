@@ -32,6 +32,7 @@ export default function TabLayout() {
           fontWeight: '600',
           fontSize: 18,
         },
+        headerTitleAlign: 'center',
         headerShadowVisible: false,
       }}
     >

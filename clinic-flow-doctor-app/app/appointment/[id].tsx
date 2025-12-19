@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
@@ -8,6 +8,7 @@ import { useTranslation, useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { AppointmentType } from '../../data/appointments';
+import { ConfirmationModal } from '../../components/modals/ConfirmationModal';
 
 export default function AppointmentDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -75,6 +76,56 @@ export default function AppointmentDetailsScreen() {
     router.back();
   };
 
+  const [confirmModal, setConfirmModal] = useState<{
+    visible: boolean;
+    title: string;
+    message: string;
+    type: 'success' | 'danger' | 'warning';
+    action: () => void;
+  }>({
+    visible: false,
+    title: '',
+    message: '',
+    type: 'success',
+    action: () => {},
+  });
+
+  const showConfirmAppointment = () => {
+    setConfirmModal({
+      visible: true,
+      title: t('appointments.confirmAppointment'),
+      message: language === 'ar' 
+        ? `هل تريد تأكيد موعد ${appointment.patientName}؟`
+        : `Confirm appointment with ${appointment.patientName}?`,
+      type: 'success',
+      action: handleConfirm,
+    });
+  };
+
+  const showCancelAppointment = () => {
+    setConfirmModal({
+      visible: true,
+      title: t('appointments.cancelAppointment'),
+      message: language === 'ar' 
+        ? `هل أنت متأكد من إلغاء موعد ${appointment.patientName}؟`
+        : `Are you sure you want to cancel appointment with ${appointment.patientName}?`,
+      type: 'danger',
+      action: handleCancel,
+    });
+  };
+
+  const showCompleteAppointment = () => {
+    setConfirmModal({
+      visible: true,
+      title: t('common.markAsDone'),
+      message: language === 'ar' 
+        ? `هل تريد وضع علامة مكتمل على موعد ${appointment.patientName}؟`
+        : `Mark appointment with ${appointment.patientName} as completed?`,
+      type: 'success',
+      action: handleComplete,
+    });
+  };
+
   const InfoRow = ({
     icon,
     label,
@@ -85,10 +136,10 @@ export default function AppointmentDetailsScreen() {
     value: string;
   }) => (
     <View style={[styles.infoRow, isRTL && styles.rtlRow]}>
-      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }]}>
+      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
         <Ionicons name={icon} size={18} color={colors.primary} />
       </View>
-      <View style={styles.infoContent}>
+      <View style={[styles.infoContent, isRTL && { alignItems: 'flex-end' }]}>
         <Text style={[styles.infoLabel, { color: colors.textMuted }]}>{label}</Text>
         <Text style={[styles.infoValue, { color: colors.text }]}>{value}</Text>
       </View>
@@ -113,7 +164,7 @@ export default function AppointmentDetailsScreen() {
           {/* Header Card */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <View style={[styles.headerRow, isRTL && styles.rtlRow]}>
-              <View style={[styles.avatar, { backgroundColor: colors.primaryLight }]}>
+              <View style={[styles.avatar, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 14, marginRight: 0 } : { marginRight: 14 }]}>
                 <Text style={[styles.initials, { color: colors.primary }]}>
                   {appointment.patientName
                     .split(' ')
@@ -123,7 +174,7 @@ export default function AppointmentDetailsScreen() {
                     .slice(0, 2)}
                 </Text>
               </View>
-              <View style={styles.headerInfo}>
+              <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-end' }]}>
                 <Text style={[styles.patientName, { color: colors.text }]}>
                   {appointment.patientName}
                 </Text>
@@ -159,10 +210,10 @@ export default function AppointmentDetailsScreen() {
           {/* Notes Card */}
           {appointment.notes && (
             <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.notesTitle, { color: colors.text }]}>
+              <Text style={[styles.notesTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('appointments.notes')}
               </Text>
-              <Text style={[styles.notesText, { color: colors.textSecondary }]}>
+              <Text style={[styles.notesText, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
                 {appointment.notes}
               </Text>
             </View>
@@ -174,11 +225,11 @@ export default function AppointmentDetailsScreen() {
               <Text style={[styles.sectionTitle, { color: colors.text }]}>
                 {t('patients.contactInfo')}
               </Text>
-              <View style={styles.contactRow}>
-                <TouchableOpacity style={[styles.contactButton, { backgroundColor: colors.primaryLight }]}>
+              <View style={[styles.contactRow, isRTL && styles.rtlRow]}>
+                <TouchableOpacity style={[styles.contactButton, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
                   <Ionicons name="call" size={20} color={colors.primary} />
                 </TouchableOpacity>
-                <View style={styles.contactInfo}>
+                <View style={[styles.contactInfo, isRTL && { alignItems: 'flex-end' }]}>
                   <Text style={[styles.contactLabel, { color: colors.textMuted }]}>
                     {t('patients.phone')}
                   </Text>
@@ -197,7 +248,7 @@ export default function AppointmentDetailsScreen() {
             <>
               <TouchableOpacity
                 style={[styles.actionButton, { backgroundColor: colors.successLight }]}
-                onPress={handleConfirm}
+                onPress={showConfirmAppointment}
               >
                 <Ionicons name="checkmark" size={22} color={colors.success} />
                 <Text style={[styles.actionText, { color: colors.success }]}>
@@ -206,7 +257,7 @@ export default function AppointmentDetailsScreen() {
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.actionButton, { backgroundColor: colors.dangerLight }]}
-                onPress={handleCancel}
+                onPress={showCancelAppointment}
               >
                 <Ionicons name="close" size={22} color={colors.danger} />
                 <Text style={[styles.actionText, { color: colors.danger }]}>
@@ -218,7 +269,7 @@ export default function AppointmentDetailsScreen() {
           {appointment.status === 'confirmed' && (
             <TouchableOpacity
               style={[styles.actionButton, styles.fullButton, { backgroundColor: colors.primary }]}
-              onPress={handleComplete}
+              onPress={showCompleteAppointment}
             >
               <Ionicons name="checkmark-done" size={22} color="#fff" />
               <Text style={[styles.actionText, { color: '#fff' }]}>
@@ -227,6 +278,15 @@ export default function AppointmentDetailsScreen() {
             </TouchableOpacity>
           )}
         </View>
+
+        <ConfirmationModal
+          visible={confirmModal.visible}
+          title={confirmModal.title}
+          message={confirmModal.message}
+          type={confirmModal.type}
+          onConfirm={confirmModal.action}
+          onClose={() => setConfirmModal(prev => ({ ...prev, visible: false }))}
+        />
       </SafeAreaView>
     </>
   );

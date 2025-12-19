@@ -87,7 +87,9 @@
     "noVisits": "No visits yet",
     "quickNotes": "Quick Notes",
     "medicalInfo": "Medical Information",
-    "contactInfo": "Contact Information"
+    "contactInfo": "Contact Information",
+    "noSearchResults": "No patients match your search",
+    "addFirst": "Add your first patient"
   },
   "inventory": {
     "title": "Inventory",
@@ -117,6 +119,8 @@
     "currentStock": "Current Stock",
     "recordMovement": "Record Movement",
     "movementType": "Movement Type",
+    "confirmStockInMessage": "Are you sure you want to stock in {{qty}} {{unit}} of \"{{name}}\"?",
+    "confirmStockOutMessage": "Are you sure you want to stock out {{qty}} {{unit}} of \"{{name}}\"?",
     "noItems": "No items found",
     "noCategories": "No categories",
     "noMovements": "No movements recorded"

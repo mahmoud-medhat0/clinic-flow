@@ -60,11 +60,11 @@ export default function HomeScreen() {
         {/* Header */}
         <View style={[styles.header, isRTL && styles.rtlRow]}>
           <View style={styles.greetingContainer}>
-            <Text style={[styles.greeting, { color: colors.textSecondary }]}>
+            <Text style={[styles.greeting, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
               {getGreeting()},
             </Text>
-            <Text style={[styles.doctorName, { color: colors.text }]}>{doctorName}</Text>
-            <Text style={[styles.date, { color: colors.textMuted }]}>{formatDate()}</Text>
+            <Text style={[styles.doctorName, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{doctorName}</Text>
+            <Text style={[styles.date, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>{formatDate()}</Text>
           </View>
           <View style={[styles.headerActions, isRTL && styles.rtlRow]}>
             <TouchableOpacity 
@@ -84,7 +84,7 @@ export default function HomeScreen() {
 
         {/* Stats Cards */}
         <View style={styles.statsGrid}>
-          <View style={styles.statsRow}>
+          <View style={[styles.statsRow, isRTL && styles.rtlRow]}>
             <StatCard
               title={t('dashboard.appointmentsToday')}
               value={todayAppointments.length}
@@ -100,7 +100,7 @@ export default function HomeScreen() {
               trend={{ value: 8, isPositive: true }}
             />
           </View>
-          <View style={styles.statsRow}>
+          <View style={[styles.statsRow, isRTL && styles.rtlRow]}>
             <StatCard
               title={t('dashboard.newPatients')}
               value={newPatients}
@@ -119,7 +119,7 @@ export default function HomeScreen() {
 
         {/* Quick Actions */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.text }]}>
+          <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
             {t('dashboard.quickActions')}
           </Text>
           <View style={[styles.quickActions, isRTL && styles.rtlRow]}>
@@ -147,7 +147,7 @@ export default function HomeScreen() {
         {/* Upcoming Appointments */}
         <View style={styles.section}>
           <View style={[styles.sectionHeader, isRTL && styles.rtlRow]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
               {t('dashboard.upcomingAppointments')}
             </Text>
             <Text

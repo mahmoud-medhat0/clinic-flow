@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
-import { useTranslation } from '../contexts/LanguageContext';
+import { useTranslation, useLanguage } from '../contexts/LanguageContext';
 import { StatusBadge } from './ui/StatusBadge';
 import { Appointment, AppointmentType } from '../data/appointments';
 
@@ -15,6 +15,7 @@ interface AppointmentCardProps {
 export function AppointmentCard({ appointment, onPress, compact = false }: AppointmentCardProps) {
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
 
   const getTypeIcon = (type: AppointmentType): keyof typeof Ionicons.glyphMap => {
     switch (type) {
@@ -49,6 +50,7 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
         style={[
           styles.compactContainer,
           { backgroundColor: colors.card, borderColor: colors.border },
+          isRTL && styles.rtlRow,
         ]}
       >
         <View style={[styles.timeContainer, { backgroundColor: colors.primaryLight }]}>
@@ -76,30 +78,30 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
         { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadow },
       ]}
     >
-      <View style={styles.header}>
-        <View style={styles.row}>
-          <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }]}>
+      <View style={[styles.header, isRTL && styles.rtlRow]}>
+        <View style={[styles.row, isRTL && styles.rtlRow]}>
+          <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
             <Ionicons name={getTypeIcon(appointment.type)} size={20} color={colors.primary} />
           </View>
-          <View style={styles.headerInfo}>
-            <Text style={[styles.patientName, { color: colors.text }]}>
+          <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-end' }]}>
+            <Text style={[styles.patientName, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
               {appointment.patientName}
             </Text>
-            <Text style={[styles.type, { color: colors.textSecondary }]}>
+            <Text style={[styles.type, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
               {getTypeLabel(appointment.type)}
             </Text>
           </View>
         </View>
         <StatusBadge status={appointment.status} />
       </View>
-      <View style={[styles.footer, { borderTopColor: colors.border }]}>
-        <View style={styles.footerItem}>
+      <View style={[styles.footer, { borderTopColor: colors.border }, isRTL && styles.rtlRow]}>
+        <View style={[styles.footerItem, isRTL && styles.rtlRow]}>
           <Ionicons name="time-outline" size={16} color={colors.textMuted} />
           <Text style={[styles.footerText, { color: colors.textSecondary }]}>
             {formatTime(appointment.time)}
           </Text>
         </View>
-        <View style={styles.footerItem}>
+        <View style={[styles.footerItem, isRTL && styles.rtlRow]}>
           <Ionicons name="hourglass-outline" size={16} color={colors.textMuted} />
           <Text style={[styles.footerText, { color: colors.textSecondary }]}>
             {appointment.duration} {t('appointments.minutes')}
@@ -140,13 +142,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
+  rtlRow: {
+    flexDirection: 'row-reverse',
+  },
   iconBox: {
     width: 44,
     height: 44,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
   },
   headerInfo: {
     flex: 1,

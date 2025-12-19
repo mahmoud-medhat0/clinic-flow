@@ -60,12 +60,12 @@ export default function PatientProfileScreen() {
     value: string;
   }) => (
     <View style={[styles.infoRow, isRTL && styles.rtlRow]}>
-      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }]}>
+      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
         <Ionicons name={icon} size={18} color={colors.primary} />
       </View>
-      <View style={styles.infoContent}>
-        <Text style={[styles.infoLabel, { color: colors.textMuted }]}>{label}</Text>
-        <Text style={[styles.infoValue, { color: colors.text }]}>{value}</Text>
+      <View style={[styles.infoContent, isRTL && { alignItems: 'flex-end' }]}>
+        <Text style={[styles.infoLabel, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>{label}</Text>
+        <Text style={[styles.infoValue, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{value}</Text>
       </View>
     </View>
   );
@@ -142,27 +142,27 @@ export default function PatientProfileScreen() {
 
           {/* Visit History */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
               {t('patients.visitHistory')}
             </Text>
             {patient.visits && patient.visits.length > 0 ? (
               patient.visits.map((visit, index) => (
                 <React.Fragment key={visit.id}>
-                  {index > 0 && <View style={[styles.divider, { backgroundColor: colors.border }]} />}
-                  <View style={styles.visitItem}>
-                    <View style={[styles.visitDot, { backgroundColor: colors.primary }]} />
-                    <View style={styles.visitContent}>
+                  {index > 0 && <View style={[styles.divider, { backgroundColor: colors.border  }]} />}
+                  <View style={[styles.visitItem, isRTL && styles.rtlRow]}>
+                    <View style={[styles.visitDot, { backgroundColor: colors.primary }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]} />
+                    <View style={[styles.visitContent, isRTL && { alignItems: 'flex-end' }]}>
                       <View style={[styles.visitHeader, isRTL && styles.rtlRow]}>
-                        <Text style={[styles.visitType, { color: colors.text }]}>{visit.type}</Text>
-                        <Text style={[styles.visitDate, { color: colors.textMuted }]}>
+                        <Text style={[styles.visitType, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{visit.type}</Text>
+                        <Text style={[styles.visitDate, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>
                           {formatDate(visit.date)}
                         </Text>
                       </View>
-                      <Text style={[styles.visitNotes, { color: colors.textSecondary }]}>
+                      <Text style={[styles.visitNotes, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
                         {visit.notes}
                       </Text>
                       {visit.diagnosis && (
-                        <View style={[styles.diagnosisBadge, { backgroundColor: colors.primaryLight }]}>
+                        <View style={[styles.diagnosisBadge, { backgroundColor: colors.primaryLight }, isRTL && { alignSelf: 'flex-end' }]}>
                           <Text style={[styles.diagnosisText, { color: colors.primary }]}>
                             {visit.diagnosis}
                           </Text>
@@ -175,7 +175,7 @@ export default function PatientProfileScreen() {
             ) : (
               <View style={styles.emptyVisits}>
                 <Ionicons name="document-text-outline" size={32} color={colors.textMuted} />
-                <Text style={[styles.emptyText, { color: colors.textMuted }]}>
+                <Text style={[styles.emptyText, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'center' }]}>
                   {t('patients.noVisits')}
                 </Text>
               </View>
@@ -185,10 +185,10 @@ export default function PatientProfileScreen() {
           {/* Quick Notes */}
           {patient.notes && (
             <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('patients.quickNotes')}
               </Text>
-              <Text style={[styles.notesText, { color: colors.textSecondary }]}>
+              <Text style={[styles.notesText, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
                 {patient.notes}
               </Text>
             </View>
@@ -196,7 +196,7 @@ export default function PatientProfileScreen() {
         </ScrollView>
 
         {/* Action Buttons */}
-        <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
+        <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }, isRTL && { flexDirection: 'row-reverse' }]}>
           <TouchableOpacity 
             style={[styles.actionButton, { backgroundColor: colors.primaryLight }]}
             onPress={handleCall}
@@ -210,7 +210,7 @@ export default function PatientProfileScreen() {
             <Ionicons name="chatbubble" size={22} color={colors.teal} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.mainActionButton, { backgroundColor: colors.primary }]}
+            style={[styles.mainActionButton, { backgroundColor: colors.primary }, isRTL && { flexDirection: 'row-reverse' }]}
             onPress={() => setShowAppointmentModal(true)}
           >
             <Ionicons name="calendar" size={22} color="#fff" />
@@ -328,7 +328,6 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     marginTop: 6,
-    marginRight: 12,
   },
   visitContent: {
     flex: 1,

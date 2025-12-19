@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface StatCardProps {
   title: string;
@@ -17,6 +18,7 @@ interface StatCardProps {
 
 export function StatCard({ title, value, icon, color, trend, onPress }: StatCardProps) {
   const { colors, isDark } = useTheme();
+  const { isRTL } = useLanguage();
   const iconColor = color || colors.primary;
 
   const content = (
@@ -30,7 +32,7 @@ export function StatCard({ title, value, icon, color, trend, onPress }: StatCard
         },
       ]}
     >
-      <View style={styles.header}>
+      <View style={[styles.header, isRTL && styles.rtlHeader]}>
         <View
           style={[
             styles.iconContainer,
@@ -40,7 +42,7 @@ export function StatCard({ title, value, icon, color, trend, onPress }: StatCard
           <Ionicons name={icon} size={22} color={iconColor} />
         </View>
         {trend && (
-          <View style={styles.trendContainer}>
+          <View style={[styles.trendContainer, isRTL && styles.rtlTrendContainer]}>
             <Ionicons
               name={trend.isPositive ? 'arrow-up' : 'arrow-down'}
               size={12}
@@ -57,8 +59,8 @@ export function StatCard({ title, value, icon, color, trend, onPress }: StatCard
           </View>
         )}
       </View>
-      <Text style={[styles.value, { color: colors.text }]}>{value}</Text>
-      <Text style={[styles.title, { color: colors.textSecondary }]}>{title}</Text>
+      <Text style={[styles.value, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{value}</Text>
+      <Text style={[styles.title, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>{title}</Text>
     </View>
   );
 
@@ -93,6 +95,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
+  rtlHeader: {
+    flexDirection: 'row-reverse',
+  },
   iconContainer: {
     width: 44,
     height: 44,
@@ -104,6 +109,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 2,
+  },
+  rtlTrendContainer: {
+    flexDirection: 'row-reverse',
   },
   trendText: {
     fontSize: 12,

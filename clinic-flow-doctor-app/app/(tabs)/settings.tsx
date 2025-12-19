@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useTranslation, useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
+import { ConfirmationModal } from '../../components/modals/ConfirmationModal';
 
 type Language = 'en' | 'ar' | 'fr';
 
@@ -32,6 +33,33 @@ export default function SettingsScreen() {
   const doctorName = language === 'ar' && doctor.nameAr ? doctor.nameAr : doctor.name;
   const clinicName = language === 'ar' && doctor.clinicNameAr ? doctor.clinicNameAr : doctor.clinicName;
 
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [pendingLanguage, setPendingLanguage] = useState<Language | null>(null);
+
+  const handleLogout = () => {
+    router.replace('/login');
+  };
+
+  const handleLanguageChange = (lang: Language) => {
+    const currentIsRTL = language === 'ar';
+    const newIsRTL = lang === 'ar';
+    
+    // If RTL direction will change, show confirmation
+    if (currentIsRTL !== newIsRTL) {
+      setPendingLanguage(lang);
+    } else {
+      // Same direction, change immediately
+      changeLanguage(lang);
+    }
+  };
+
+  const   confirmLanguageChange = () => {
+    if (pendingLanguage) {
+      changeLanguage(pendingLanguage);
+      setPendingLanguage(null);
+    }
+  };
+
   // Format 24h time to 12h AM/PM
   const formatTime = (time: string) => {
     const [hours, minutes] = time.split(':').map(Number);
@@ -42,7 +70,7 @@ export default function SettingsScreen() {
 
   const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <View style={styles.section}>
-      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>{title}</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>{title}</Text>
       <View style={[styles.sectionContent, { backgroundColor: colors.card, borderColor: colors.border }]}>
         {children}
       </View>
@@ -98,11 +126,11 @@ export default function SettingsScreen() {
       >
         {/* Doctor Info */}
         <Section title={t('settings.doctorInfo')}>
-          <View style={styles.profileHeader}>
-            <View style={[styles.avatar, { backgroundColor: colors.primaryLight }]}>
+          <View style={[styles.profileHeader, isRTL && styles.rtlRow]}>
+            <View style={[styles.avatar, { backgroundColor: colors.primaryLight }, isRTL ? {marginLeft: 16, marginRight: 0} : {marginRight: 16}]}>
               <Ionicons name="person" size={32} color={colors.primary} />
             </View>
-            <View style={styles.profileInfo}>
+            <View style={[styles.profileInfo, isRTL && { alignItems: 'flex-end' }]}>
               <Text style={[styles.profileName, { color: colors.text }]}>{doctorName}</Text>
               <Text style={[styles.profileEmail, { color: colors.textSecondary }]}>
                 {doctor.email}
@@ -116,12 +144,12 @@ export default function SettingsScreen() {
           <SettingRow icon="business-outline" label={clinicName || 'Clinic'} showChevron={false} />
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
           {/* Working Schedule */}
-          <View style={styles.scheduleContainer}>
-            <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }]}>
+          <View style={[styles.scheduleContainer, isRTL && styles.rtlRow]}>
+            <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }, isRTL ? {marginLeft: 12, marginRight: 0} : {marginRight: 12}]}>
               <Ionicons name="calendar-outline" size={20} color={colors.primary} />
             </View>
             <View style={styles.scheduleContent}>
-              <Text style={[styles.settingLabel, { color: colors.text, marginBottom: 10 }]}>
+              <Text style={[styles.settingLabel, { color: colors.text, marginBottom: 10, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('settings.workingDays')}
               </Text>
               {doctor.schedule?.map((item) => (
@@ -129,7 +157,8 @@ export default function SettingsScreen() {
                   key={item.day} 
                   style={[
                     styles.scheduleRow,
-                    { opacity: item.isActive ? 1 : 0.4 }
+                    { opacity: item.isActive ? 1 : 0.4 },
+                    isRTL && styles.rtlRow
                   ]}
                 >
                   <Text style={[styles.scheduleDay, { color: colors.text }]}>
@@ -165,7 +194,7 @@ export default function SettingsScreen() {
               {index > 0 && <View style={[styles.divider, { backgroundColor: colors.border }]} />}
               <TouchableOpacity
                 style={[styles.settingRow, isRTL && styles.rtlRow]}
-                onPress={() => changeLanguage(lang.code)}
+                onPress={() => handleLanguageChange(lang.code)}
               >
                 <Text style={[styles.settingLabel, { color: colors.text }]}>{lang.label}</Text>
                 {language === lang.code && (
@@ -175,6 +204,21 @@ export default function SettingsScreen() {
             </React.Fragment>
           ))}
         </Section>
+
+        <ConfirmationModal
+          visible={pendingLanguage !== null}
+          title={t('settings.language')}
+          message={
+            pendingLanguage === 'ar'
+              ? 'Changing to Arabic requires app restart to apply RTL layout. Continue?'
+              : language === 'ar' 
+                ? 'تغيير اللغة يتطلب إعادة تشغيل التطبيق. هل تريد المتابعة؟'
+                : 'Changing language requires app restart. Continue?'
+          }
+          type="warning"
+          onConfirm={confirmLanguageChange}
+          onClose={() => setPendingLanguage(null)}
+        />
 
         {/* Theme */}
         <Section title={t('settings.theme')}>
@@ -202,16 +246,23 @@ export default function SettingsScreen() {
 
         {/* Logout */}
         <TouchableOpacity
-          style={[styles.logoutButton, { backgroundColor: colors.dangerLight }]}
-          onPress={() => {
-            router.replace('/login');
-          }}
+          style={[styles.logoutButton, { backgroundColor: colors.dangerLight }, isRTL && styles.rtlRow]}
+          onPress={() => setShowLogoutModal(true)}
         >
           <Ionicons name="log-out-outline" size={22} color={colors.danger} />
           <Text style={[styles.logoutText, { color: colors.danger }]}>
             {t('settings.logout')}
           </Text>
         </TouchableOpacity>
+
+        <ConfirmationModal
+          visible={showLogoutModal}
+          title={t('settings.logout')}
+          message={language === 'ar' ? 'هل أنت متأكد من تسجيل الخروج؟' : 'Are you sure you want to logout?'}
+          type="danger"
+          onConfirm={handleLogout}
+          onClose={() => setShowLogoutModal(false)}
+        />
 
         {/* App Version */}
         <Text style={[styles.version, { color: colors.textMuted }]}>
@@ -301,7 +352,8 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   settingLabel: {
-    fontSize: 16,
+    width: '80%',
+    fontSize: 15,
   },
   settingValue: {
     fontSize: 14,

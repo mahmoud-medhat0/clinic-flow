@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
-import { useTranslation } from '../../contexts/LanguageContext';
+import { useTranslation, useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
 import { AppointmentType, AppointmentStatus } from '../../data/appointments';
 import { Patient } from '../../data/patients';
@@ -27,6 +27,7 @@ interface AddAppointmentModalProps {
 export function AddAppointmentModal({ visible, onClose, initialPatient }: AddAppointmentModalProps) {
   const { colors } = useTheme();
   const { t } = useTranslation();
+  const { isRTL } = useLanguage();
   const { patients, addAppointment } = useApp();
 
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(initialPatient || null);
@@ -114,7 +115,11 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
         <View style={[styles.modalWrapper, { marginBottom: 90 }]}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
             {/* Header */}
-            <View style={[styles.header, { borderBottomColor: colors.border }]}>
+            <View style={[
+              styles.header, 
+              { borderBottomColor: colors.border },
+              isRTL && styles.rtlHeader
+            ]}>
               <Text style={[styles.title, { color: colors.text }]}>
                 {t('dashboard.addAppointment')}
               </Text>
@@ -131,12 +136,18 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
               keyboardShouldPersistTaps="handled"
             >
               {/* Patient Search */}
-              <Text style={[styles.label, { color: colors.text }]}>{t('appointments.patient')} *</Text>
+              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                {t('appointments.patient')} *
+              </Text>
               <View style={styles.searchWrapper}>
-                <View style={[styles.searchBox, { backgroundColor: colors.surfaceSecondary, borderColor: showPatientDropdown ? colors.primary : colors.border }]}>
+                <View style={[
+                  styles.searchBox, 
+                  { backgroundColor: colors.surfaceSecondary, borderColor: showPatientDropdown ? colors.primary : colors.border },
+                  isRTL && styles.rtlSearchBox
+                ]}>
                   <Ionicons name="search-outline" size={18} color={colors.textMuted} />
                   <TextInput
-                    style={[styles.searchInput, { color: colors.text }]}
+                    style={[styles.searchInput, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}
                     value={patientSearch}
                     onChangeText={(text) => {
                       setPatientSearch(text);
@@ -157,13 +168,17 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
                 {showPatientDropdown && filteredPatients.length > 0 && (
                   <View style={[styles.dropdown, { backgroundColor: colors.surface, borderColor: colors.border }]}>
                     {filteredPatients.map((p) => (
-                      <TouchableOpacity key={p.id} style={styles.dropdownItem} onPress={() => handleSelectPatient(p)}>
+                      <TouchableOpacity 
+                        key={p.id} 
+                        style={[styles.dropdownItem, isRTL && styles.rtlDropdownItem]} 
+                        onPress={() => handleSelectPatient(p)}
+                      >
                         <View style={[styles.avatar, { backgroundColor: colors.primaryLight }]}>
                           <Text style={[styles.avatarText, { color: colors.primary }]}>
                             {p.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
                           </Text>
                         </View>
-                        <View style={styles.patientInfo}>
+                        <View style={[styles.patientInfo, isRTL && { alignItems: 'flex-end' }]}>
                           <Text style={[styles.patientName, { color: colors.text }]}>{p.name}</Text>
                           <Text style={[styles.patientPhone, { color: colors.textSecondary }]}>{p.phone}</Text>
                         </View>
@@ -174,7 +189,11 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
               </View>
 
               {selectedPatient && (
-                <View style={[styles.selectedBadge, { backgroundColor: colors.primaryLight }]}>
+                <View style={[
+                  styles.selectedBadge, 
+                  { backgroundColor: colors.primaryLight },
+                  isRTL ? { alignSelf: 'flex-end', flexDirection: 'row-reverse' } : { alignSelf: 'flex-start' }
+                ]}>
                   <Text style={[styles.selectedText, { color: colors.primary }]}>{selectedPatient.name}</Text>
                   <TouchableOpacity onPress={() => { setSelectedPatient(null); setPatientSearch(''); }}>
                     <Ionicons name="close-circle" size={16} color={colors.primary} />
@@ -183,11 +202,11 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
               )}
 
               {/* Date & Time */}
-              <View style={styles.row}>
+              <View style={[styles.row, isRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
-                  <Text style={[styles.label, { color: colors.text }]}>Date</Text>
+                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>Date</Text>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border }]}
+                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
                     value={date}
                     onChangeText={setDate}
                     placeholder="YYYY-MM-DD"
@@ -195,9 +214,11 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
                   />
                 </View>
                 <View style={styles.halfField}>
-                  <Text style={[styles.label, { color: colors.text }]}>{t('appointments.time')}</Text>
+                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                    {t('appointments.time')}
+                  </Text>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border }]}
+                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
                     value={time}
                     onChangeText={setTime}
                     placeholder="HH:MM"
@@ -207,8 +228,10 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
               </View>
 
               {/* Type */}
-              <Text style={[styles.label, { color: colors.text }]}>{t('appointments.type')}</Text>
-              <View style={styles.chipContainer}>
+              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                {t('appointments.type')}
+              </Text>
+              <View style={[styles.chipContainer, isRTL && styles.rtlChipContainer]}>
                 {appointmentTypes.map((apt) => (
                   <TouchableOpacity
                     key={apt.key}
@@ -221,9 +244,11 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
               </View>
 
               {/* Duration */}
-              <Text style={[styles.label, { color: colors.text }]}>{t('appointments.duration')} (min)</Text>
+              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                {t('appointments.duration')} (min)
+              </Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border }]}
+                style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
                 value={duration}
                 onChangeText={setDuration}
                 keyboardType="numeric"
@@ -232,9 +257,11 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
               />
 
               {/* Notes */}
-              <Text style={[styles.label, { color: colors.text }]}>{t('appointments.notes')}</Text>
+              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                {t('appointments.notes')}
+              </Text>
               <TextInput
-                style={[styles.input, styles.textArea, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border }]}
+                style={[styles.input, styles.textArea, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
                 value={notes}
                 onChangeText={setNotes}
                 multiline
@@ -245,7 +272,7 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
             </ScrollView>
 
             {/* Footer */}
-            <View style={[styles.footer, { borderTopColor: colors.border }]}>
+            <View style={[styles.footer, { borderTopColor: colors.border }, isRTL && styles.rtlFooter]}>
               <TouchableOpacity style={[styles.cancelBtn, { borderColor: colors.border }]} onPress={handleClose}>
                 <Text style={[styles.cancelText, { color: colors.textSecondary }]}>{t('common.cancel')}</Text>
               </TouchableOpacity>
@@ -288,6 +315,9 @@ const styles = StyleSheet.create({
     padding: 20,
     borderBottomWidth: 1,
   },
+  rtlHeader: {
+    flexDirection: 'row-reverse',
+  },
   title: {
     fontSize: 18,
     fontWeight: '700',
@@ -318,6 +348,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 12,
   },
+  rtlRow: {
+    flexDirection: 'row-reverse',
+  },
   halfField: {
     flex: 1,
   },
@@ -333,6 +366,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 10,
     gap: 8,
+  },
+  rtlSearchBox: {
+    flexDirection: 'row-reverse',
   },
   searchInput: {
     flex: 1,
@@ -355,6 +391,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     gap: 10,
+  },
+  rtlDropdownItem: {
+    flexDirection: 'row-reverse',
   },
   avatar: {
     width: 36,
@@ -396,6 +435,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 8,
   },
+  rtlChipContainer: {
+    flexDirection: 'row-reverse',
+  },
   chip: {
     paddingHorizontal: 12,
     paddingVertical: 6,
@@ -411,6 +453,9 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 12,
     borderTopWidth: 1,
+  },
+  rtlFooter: {
+    flexDirection: 'row-reverse',
   },
   cancelBtn: {
     flex: 1,

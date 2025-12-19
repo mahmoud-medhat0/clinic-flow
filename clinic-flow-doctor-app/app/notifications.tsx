@@ -152,7 +152,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     flex: 1,
-    marginRight: 8,
   },
   time: {
     fontSize: 12,

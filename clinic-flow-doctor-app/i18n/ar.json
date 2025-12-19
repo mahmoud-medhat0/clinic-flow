@@ -87,7 +87,9 @@
     "noVisits": "لا توجد زيارات",
     "quickNotes": "ملاحظات سريعة",
     "medicalInfo": "المعلومات الطبية",
-    "contactInfo": "معلومات الاتصال"
+    "contactInfo": "معلومات الاتصال",
+    "noSearchResults": "لا يوجد مريض مطابق للبحث",
+    "addFirst": "أضف أول مريض"
   },
   "inventory": {
     "title": "المخزون",
@@ -117,6 +119,8 @@
     "currentStock": "المخزون الحالي",
     "recordMovement": "تسجيل حركة",
     "movementType": "نوع الحركة",
+    "confirmStockInMessage": "هل أنت متأكد أنك تريد إضافة {{qty}} {{unit}} من \"{{name}}\"؟",
+    "confirmStockOutMessage": "هل أنت متأكد أنك تريد سحب {{qty}} {{unit}} من \"{{name}}\"؟",
     "noItems": "لا توجد أصناف",
     "noCategories": "لا توجد فئات",
     "noMovements": "لا توجد حركات"
@@ -136,6 +140,10 @@
     "english": "English",
     "arabic": "العربية",
     "french": "Français"
+  },
+  "notifications": {
+    "title": "الإشعارات",
+    "description": ""
   },
   "status": {
     "confirmed": "مؤكد",

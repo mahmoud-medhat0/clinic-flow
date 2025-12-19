@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput, Alert, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -8,6 +8,7 @@ import { useTranslation, useLanguage } from '../../../contexts/LanguageContext';
 import { useApp } from '../../../contexts/AppContext';
 import { StatusBadge } from '../../../components/ui/StatusBadge';
 import { getStockStatus } from '../../../data/inventory';
+import { ConfirmationModal } from '../../../components/modals/ConfirmationModal';
 
 export default function InventoryItemDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -18,6 +19,21 @@ export default function InventoryItemDetailsScreen() {
   const { getItem, getCategory, addMovement } = useApp();
 
   const item = getItem(Number(id));
+
+  const [stockQty, setStockQty] = useState(1);
+  const [confirmModal, setConfirmModal] = useState<{
+    visible: boolean;
+    title: string;
+    message: string;
+    type: 'success' | 'danger';
+    action: () => void;
+  }>({
+    visible: false,
+    title: '',
+    message: '',
+    type: 'success',
+    action: () => {},
+  });
 
   if (!item) {
     return (
@@ -34,33 +50,6 @@ export default function InventoryItemDetailsScreen() {
   const stockStatus = getStockStatus(item);
   const displayName = language === 'ar' && item.nameAr ? item.nameAr : item.name;
   const categoryName = language === 'ar' && category?.nameAr ? category.nameAr : category?.name;
-
-  const [stockQty, setStockQty] = useState(1);
-
-  const confirmStockIn = () => {
-    const itemName = language === 'ar' && item.nameAr ? item.nameAr : item.name;
-    Alert.alert(
-      t('inventory.stockIn'),
-      `${t('common.confirm')} ${t('inventory.stockIn').toLowerCase()} ${stockQty} ${t(`inventory.${item.unit}`)} ${t('common.of')} "${itemName}"?`,
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        { text: t('common.confirm'), onPress: handleStockIn },
-      ]
-    );
-  };
-
-  const confirmStockOut = () => {
-    const itemName = language === 'ar' && item.nameAr ? item.nameAr : item.name;
-    const qty = Math.min(stockQty, item.quantity);
-    Alert.alert(
-      t('inventory.stockOut'),
-      `${t('common.confirm')} ${t('inventory.stockOut').toLowerCase()} ${qty} ${t(`inventory.${item.unit}`)} ${t('common.of')} "${itemName}"?`,
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        { text: t('common.confirm'), style: 'destructive', onPress: handleStockOut },
-      ]
-    );
-  };
 
   const handleStockIn = () => {
     addMovement({
@@ -86,6 +75,39 @@ export default function InventoryItemDetailsScreen() {
     }
   };
 
+  const confirmStockIn = () => {
+    const itemName = language === 'ar' && item.nameAr ? item.nameAr : item.name;
+    const message = t('inventory.confirmStockInMessage')
+      .replace('{{qty}}', stockQty.toString())
+      .replace('{{unit}}', t(`inventory.${item.unit}`))
+      .replace('{{name}}', itemName);
+    
+    setConfirmModal({
+      visible: true,
+      title: t('inventory.stockIn'),
+      message,
+      type: 'success',
+      action: handleStockIn,
+    });
+  };
+
+  const confirmStockOut = () => {
+    const itemName = language === 'ar' && item.nameAr ? item.nameAr : item.name;
+    const qty = Math.min(stockQty, item.quantity);
+    const message = t('inventory.confirmStockOutMessage')
+      .replace('{{qty}}', qty.toString())
+      .replace('{{unit}}', t(`inventory.${item.unit}`))
+      .replace('{{name}}', itemName);
+
+    setConfirmModal({
+      visible: true,
+      title: t('inventory.stockOut'),
+      message,
+      type: 'danger',
+      action: handleStockOut,
+    });
+  };
+
   const InfoRow = ({
     icon,
     label,
@@ -98,12 +120,12 @@ export default function InventoryItemDetailsScreen() {
     valueColor?: string;
   }) => (
     <View style={[styles.infoRow, isRTL && styles.rtlRow]}>
-      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }]}>
+      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }, isRTL ? {marginLeft: 12, marginRight: 0} : {marginRight: 12}]}>
         <Ionicons name={icon} size={18} color={colors.primary} />
       </View>
-      <View style={styles.infoContent}>
-        <Text style={[styles.infoLabel, { color: colors.textMuted }]}>{label}</Text>
-        <Text style={[styles.infoValue, { color: valueColor || colors.text }]}>{value}</Text>
+      <View style={[styles.infoContent, isRTL && { alignItems: 'flex-end' }]}>
+        <Text style={[styles.infoLabel, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>{label}</Text>
+        <Text style={[styles.infoValue, { color: valueColor || colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{value}</Text>
       </View>
     </View>
   );
@@ -131,14 +153,14 @@ export default function InventoryItemDetailsScreen() {
           >
           {/* Header Card */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <View style={styles.headerRow}>
-              <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }]}>
+            <View style={[styles.headerRow, isRTL && styles.rtlRow]}>
+              <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 16, marginRight: 0 } : { marginRight: 16 }]}>
                 <Ionicons name="cube" size={32} color={colors.primary} />
               </View>
-              <View style={styles.headerInfo}>
-                <Text style={[styles.itemName, { color: colors.text }]}>{displayName}</Text>
+              <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-start',marginLeft: 16 }]}>
+                <Text style={[styles.itemName, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{displayName}</Text>
                 {categoryName && (
-                  <Text style={[styles.categoryText, { color: colors.textSecondary }]}>
+                  <Text style={[styles.categoryText, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
                     {categoryName}
                   </Text>
                 )}
@@ -149,11 +171,11 @@ export default function InventoryItemDetailsScreen() {
 
           {/* Stock Info Card */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <View style={styles.stockHeader}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+            <View style={[styles.stockHeader, isRTL && styles.rtlRow]}>
+              <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('inventory.currentStock')}
               </Text>
-              <View style={styles.stockBadge}>
+              <View style={[styles.stockBadge, isRTL && styles.rtlRow]}>
                 <Text
                   style={[
                     styles.stockValue,
@@ -187,10 +209,11 @@ export default function InventoryItemDetailsScreen() {
                         ? colors.warning
                         : colors.success,
                   },
+                  isRTL && { alignSelf: 'flex-end' } 
                 ]}
               />
             </View>
-            <Text style={[styles.minStockText, { color: colors.textMuted }]}>
+            <Text style={[styles.minStockText, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>
               {t('inventory.minStock')}: {item.minStock} {t(`inventory.${item.unit}`)}
             </Text>
           </View>
@@ -235,8 +258,8 @@ export default function InventoryItemDetailsScreen() {
 
         {/* Quantity Input & Action Buttons */}
         <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
-          <View style={styles.quantityRow}>
-            <Text style={[styles.quantityLabel, { color: colors.text }]}>
+          <View style={[styles.quantityRow, isRTL && styles.rtlRow]}>
+            <Text style={[styles.quantityLabel, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
               {t('inventory.quantity')}:
             </Text>
             <View style={styles.quantityControls}>
@@ -261,9 +284,9 @@ export default function InventoryItemDetailsScreen() {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.actionRow}>
+          <View style={[styles.actionRow, isRTL && styles.rtlRow]}>
             <TouchableOpacity
-              style={[styles.actionButton, { backgroundColor: colors.successLight }]}
+              style={[styles.actionButton, { backgroundColor: colors.successLight }, isRTL && { flexDirection: 'row-reverse' }]}
               onPress={confirmStockIn}
             >
               <Ionicons name="add-circle" size={22} color={colors.success} />
@@ -275,6 +298,7 @@ export default function InventoryItemDetailsScreen() {
               style={[
                 styles.actionButton,
                 { backgroundColor: item.quantity > 0 ? colors.dangerLight : colors.surfaceSecondary },
+                isRTL && { flexDirection: 'row-reverse' }
               ]}
               onPress={confirmStockOut}
               disabled={item.quantity === 0}
@@ -296,6 +320,15 @@ export default function InventoryItemDetailsScreen() {
           </View>
         </View>
         </KeyboardAvoidingView>
+
+        <ConfirmationModal
+          visible={confirmModal.visible}
+          title={confirmModal.title}
+          message={confirmModal.message}
+          type={confirmModal.type}
+          onConfirm={confirmModal.action}
+          onClose={() => setConfirmModal(prev => ({ ...prev, visible: false }))}
+        />
       </SafeAreaView>
     </>
   );

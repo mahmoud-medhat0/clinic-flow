@@ -85,7 +85,7 @@ export default function AppointmentsScreen() {
 
       {/* Tab Switcher - Hide when searching */}
       {!searchQuery && (
-        <View style={[styles.tabContainer, { backgroundColor: colors.surface }]}>
+        <View style={[styles.tabContainer, { backgroundColor: colors.surface }, isRTL && styles.rtlTabContainer]}>
           {tabs.map((tab) => (
             <TouchableOpacity
               key={tab.key}
@@ -134,7 +134,11 @@ export default function AppointmentsScreen() {
 
       {/* FAB */}
       <TouchableOpacity
-        style={[styles.fab, { backgroundColor: colors.primary }]}
+        style={[
+          styles.fab, 
+          { backgroundColor: colors.primary },
+          isRTL ? { left: 20 } : { right: 20 }
+        ]}
         onPress={() => setShowAddModal(true)}
       >
         <Ionicons name="add" size={28} color="#fff" />
@@ -158,6 +162,9 @@ const styles = StyleSheet.create({
     margin: 16,
     padding: 4,
     borderRadius: 12,
+  },
+  rtlTabContainer: {
+    flexDirection: 'row-reverse',
   },
   tab: {
     flex: 1,
@@ -189,7 +196,6 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: 'absolute',
-    right: 20,
     bottom: 20,
     width: 56,
     height: 56,
