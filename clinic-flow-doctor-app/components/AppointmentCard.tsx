@@ -78,8 +78,8 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
         { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadow },
       ]}
     >
-      <View style={[styles.header, isRTL && styles.rtlRow]}>
-        <View style={[styles.row, isRTL && styles.rtlRow]}>
+      <View style={[styles.header]}>
+        <View style={[styles.row]}>
           <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
             <Ionicons name={getTypeIcon(appointment.type)} size={20} color={colors.primary} />
           </View>
@@ -94,14 +94,14 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
         </View>
         <StatusBadge status={appointment.status} />
       </View>
-      <View style={[styles.footer, { borderTopColor: colors.border }, isRTL && styles.rtlRow]}>
-        <View style={[styles.footerItem, isRTL && styles.rtlRow]}>
+      <View style={[styles.footer, { borderTopColor: colors.border }]}>
+        <View style={[styles.footerItem]}>
           <Ionicons name="time-outline" size={16} color={colors.textMuted} />
           <Text style={[styles.footerText, { color: colors.textSecondary }]}>
             {formatTime(appointment.time)}
           </Text>
         </View>
-        <View style={[styles.footerItem, isRTL && styles.rtlRow]}>
+        <View style={[styles.footerItem]}>
           <Ionicons name="hourglass-outline" size={16} color={colors.textMuted} />
           <Text style={[styles.footerText, { color: colors.textSecondary }]}>
             {appointment.duration} {t('appointments.minutes')}

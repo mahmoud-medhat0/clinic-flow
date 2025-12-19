@@ -59,8 +59,8 @@ export function StatCard({ title, value, icon, color, trend, onPress }: StatCard
           </View>
         )}
       </View>
-      <Text style={[styles.value, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{value}</Text>
-      <Text style={[styles.title, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>{title}</Text>
+      <Text style={[styles.value, { color: colors.text  }]}>{value}</Text>
+      <Text style={[styles.title, { color: colors.textSecondary  }]}>{title}</Text>
     </View>
   );
 
