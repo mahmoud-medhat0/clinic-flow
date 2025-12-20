@@ -2,24 +2,28 @@
   "expo": {
     "name": "clinic-flow-doctor",
     "slug": "clinic-flow-doctor",
-    "version": "1.0.5",
+    "version": "1.0.6",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "clinicflowdoctor",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "CFBundleAllowMixedLocalizations": true
+      }
     },
     "android": {
       "package": "com.clinicflow.doctor",
+      "supportsRTL": true,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "versionCode": 3,
+      "versionCode": 6,
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },

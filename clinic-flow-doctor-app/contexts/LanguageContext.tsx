@@ -24,13 +24,29 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>('en');
   const [isInitialized, setIsInitialized] = useState(false);
 
-  // Load saved language on mount
+  // Load saved language on mount and apply RTL settings
   useEffect(() => {
     const loadLanguage = async () => {
       try {
         const savedLang = await AsyncStorage.getItem('user-language');
         if (savedLang && (savedLang === 'en' || savedLang === 'ar' || savedLang === 'fr')) {
+          const shouldBeRTL = savedLang === 'ar';
+          
+          // Apply RTL settings on startup if needed
+          if (I18nManager.isRTL !== shouldBeRTL) {
+            I18nManager.allowRTL(shouldBeRTL);
+            I18nManager.forceRTL(shouldBeRTL);
+            // Note: This will require app restart to take effect
+            // but we set the language so UI can adapt manually
+          }
+          
           setLanguage(savedLang as Language);
+        } else {
+          // No saved language, ensure RTL matches default (English = LTR)
+          if (I18nManager.isRTL) {
+            I18nManager.allowRTL(false);
+            I18nManager.forceRTL(false);
+          }
         }
       } catch (error) {
         console.error('Failed to load language', error);
@@ -41,7 +57,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     loadLanguage();
   }, []);
 
-  const isRTL = language === 'ar';
+  // Use I18nManager.isRTL as source of truth for native components,
+  // but also check language for immediate UI updates before restart
+  const isRTL = I18nManager.isRTL || language === 'ar';
 
   const changeLanguage = useCallback(async (lang: Language) => {
     const currentIsRTL = language === 'ar';
