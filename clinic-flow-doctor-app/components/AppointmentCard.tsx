@@ -49,8 +49,7 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
         onPress={onPress}
         style={[
           styles.compactContainer,
-          { backgroundColor: colors.card, borderColor: colors.border },
-          isRTL && styles.rtlRow,
+          { backgroundColor: colors.card, borderColor: colors.border }
         ]}
       >
         <View style={[styles.timeContainer, { backgroundColor: colors.primaryLight }]}>
@@ -78,30 +77,30 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
         { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadow },
       ]}
     >
-      <View style={[styles.header, isRTL && styles.rtlRow]}>
-        <View style={[styles.row, isRTL && styles.rtlRow]}>
-          <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
+      <View style={styles.header}>
+        <View style={[styles.row]}>
+          <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }]}>
             <Ionicons name={getTypeIcon(appointment.type)} size={20} color={colors.primary} />
           </View>
-          <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-end' }]}>
-            <Text style={[styles.patientName, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+          <View style={[styles.headerInfo]}>
+            <Text style={[styles.patientName, { color: colors.text }]}>
               {appointment.patientName}
             </Text>
-            <Text style={[styles.type, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
+            <Text style={[styles.type, { color: colors.textSecondary }]}>
               {getTypeLabel(appointment.type)}
             </Text>
           </View>
         </View>
         <StatusBadge status={appointment.status} />
       </View>
-      <View style={[styles.footer, { borderTopColor: colors.border }, isRTL && styles.rtlRow]}>
-        <View style={[styles.footerItem, isRTL && styles.rtlRow]}>
+      <View style={styles.footer}>
+        <View style={[styles.footerItem]}>
           <Ionicons name="time-outline" size={16} color={colors.textMuted} />
           <Text style={[styles.footerText, { color: colors.textSecondary }]}>
             {formatTime(appointment.time)}
           </Text>
         </View>
-        <View style={[styles.footerItem, isRTL && styles.rtlRow]}>
+        <View style={[styles.footerItem]}>
           <Ionicons name="hourglass-outline" size={16} color={colors.textMuted} />
           <Text style={[styles.footerText, { color: colors.textSecondary }]}>
             {appointment.duration} {t('appointments.minutes')}
