@@ -52,7 +52,7 @@ export default function SettingsScreen() {
 
   const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <View style={styles.section}>
-      <Text style={[styles.sectionTitle, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>{title}</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textSecondary, textAlign: needsManualRTL ? 'right' : 'left' }]}>{title}</Text>
       <View style={[styles.sectionContent, { backgroundColor: colors.card, borderColor: colors.border }]}>
         {children}
       </View>
@@ -83,14 +83,14 @@ export default function SettingsScreen() {
         <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }]}>
           <Ionicons name={icon} size={20} color={colors.primary} />
         </View>
-        <Text style={[styles.settingLabel, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{label}</Text>
+        <Text style={[styles.settingLabel, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>{label}</Text>
       </View>
       <View style={[styles.settingRight, needsManualRTL && styles.rtlRow]}>
         {value && <Text style={[styles.settingValue, { color: colors.textSecondary }]}>{value}</Text>}
         {rightContent}
         {showChevron && onPress && (
           <Ionicons
-            name={isRTL ? 'chevron-back' : 'chevron-forward'}
+            name={needsManualRTL ? 'chevron-back' : 'chevron-forward'}
             size={20}
             color={colors.textMuted}
           />
@@ -111,9 +111,9 @@ export default function SettingsScreen() {
             <View style={[styles.avatar, { backgroundColor: colors.primaryLight }]}>
               <Ionicons name="person" size={32} color={colors.primary} />
             </View>
-            <View style={[styles.profileInfo, isRTL && { alignItems: 'flex-end' }]}>
-              <Text style={[styles.profileName, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{doctorName}</Text>
-              <Text style={[styles.profileEmail, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
+            <View style={[styles.profileInfo, needsManualRTL && { alignItems: 'flex-end' }]}>
+              <Text style={[styles.profileName, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>{doctorName}</Text>
+              <Text style={[styles.profileEmail, { color: colors.textSecondary, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {doctor.email}
               </Text>
             </View>
@@ -130,7 +130,7 @@ export default function SettingsScreen() {
               <Ionicons name="calendar-outline" size={20} color={colors.primary} />
             </View>
             <View style={styles.scheduleContent}>
-              <Text style={[styles.settingLabel, { color: colors.text, marginBottom: 10, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.settingLabel, { color: colors.text, marginBottom: 10, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('settings.workingDays')}
               </Text>
               {doctor.schedule?.map((item) => (
@@ -198,7 +198,7 @@ export default function SettingsScreen() {
                   color={colors.primary}
                 />
               </View>
-              <Text style={[styles.settingLabel, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.settingLabel, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {isDark ? t('settings.darkMode') : t('settings.lightMode')}
               </Text>
             </View>
