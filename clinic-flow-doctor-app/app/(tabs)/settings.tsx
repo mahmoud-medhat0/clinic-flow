@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Switch,
+  I18nManager,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -23,6 +24,8 @@ export default function SettingsScreen() {
   const { t } = useTranslation();
   const { language, changeLanguage, isRTL } = useLanguage();
   const { doctor, unreadNotificationsCount } = useApp();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const languages: { code: Language; label: string }[] = [
     { code: 'en', label: t('settings.english') },
@@ -72,17 +75,17 @@ export default function SettingsScreen() {
     showChevron?: boolean;
   }) => (
     <TouchableOpacity
-      style={[styles.settingRow, isRTL && styles.rtlRow]}
+      style={[styles.settingRow, needsManualRTL && styles.rtlRow]}
       onPress={onPress}
       disabled={!onPress && !rightContent}
     >
-      <View style={[styles.settingLeft, isRTL && styles.rtlRow]}>
-        <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
+      <View style={[styles.settingLeft, needsManualRTL && styles.rtlRow]}>
+        <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }]}>
           <Ionicons name={icon} size={20} color={colors.primary} />
         </View>
         <Text style={[styles.settingLabel, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{label}</Text>
       </View>
-      <View style={[styles.settingRight, isRTL && styles.rtlRow]}>
+      <View style={[styles.settingRight, needsManualRTL && styles.rtlRow]}>
         {value && <Text style={[styles.settingValue, { color: colors.textSecondary }]}>{value}</Text>}
         {rightContent}
         {showChevron && onPress && (
@@ -103,10 +106,9 @@ export default function SettingsScreen() {
         contentContainerStyle={styles.content}
         showsVerticalScrollIndicator={false}
       >
-        {/* Doctor Info */}
         <Section title={t('settings.doctorInfo')}>
-          <View style={[styles.profileHeader, isRTL && styles.rtlRow]}>
-            <View style={[styles.avatar, { backgroundColor: colors.primaryLight }, isRTL ? {marginLeft: 16, marginRight: 0} : {marginRight: 16}]}>
+          <View style={[styles.profileHeader, needsManualRTL && styles.rtlRow]}>
+            <View style={[styles.avatar, { backgroundColor: colors.primaryLight }]}>
               <Ionicons name="person" size={32} color={colors.primary} />
             </View>
             <View style={[styles.profileInfo, isRTL && { alignItems: 'flex-end' }]}>
@@ -123,8 +125,8 @@ export default function SettingsScreen() {
           <SettingRow icon="business-outline" label={clinicName || 'Clinic'} showChevron={false} />
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
           {/* Working Schedule */}
-          <View style={[styles.scheduleContainer, isRTL && styles.rtlRow]}>
-            <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }, isRTL ? {marginLeft: 12, marginRight: 0} : {marginRight: 12}]}>
+          <View style={[styles.scheduleContainer, needsManualRTL && styles.rtlRow]}>
+            <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }]}>
               <Ionicons name="calendar-outline" size={20} color={colors.primary} />
             </View>
             <View style={styles.scheduleContent}>
@@ -137,7 +139,7 @@ export default function SettingsScreen() {
                   style={[
                     styles.scheduleRow,
                     { opacity: item.isActive ? 1 : 0.4 },
-                    isRTL && styles.rtlRow
+                    needsManualRTL && styles.rtlRow
                   ]}
                 >
                   <Text style={[styles.scheduleDay, { color: colors.text }]}>
@@ -172,7 +174,7 @@ export default function SettingsScreen() {
             <React.Fragment key={lang.code}>
               {index > 0 && <View style={[styles.divider, { backgroundColor: colors.border }]} />}
               <TouchableOpacity
-                style={[styles.settingRow, isRTL && styles.rtlRow]}
+                style={[styles.settingRow, needsManualRTL && styles.rtlRow]}
                 onPress={() => changeLanguage(lang.code)}
               >
                 <Text style={[styles.settingLabel, { color: colors.text }]}>{lang.label}</Text>
@@ -186,11 +188,10 @@ export default function SettingsScreen() {
 
 
 
-        {/* Theme */}
         <Section title={t('settings.theme')}>
-          <View style={[styles.settingRow, isRTL && styles.rtlRow]}>
-            <View style={[styles.settingLeft, isRTL && styles.rtlRow]}>
-              <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
+          <View style={[styles.settingRow, needsManualRTL && styles.rtlRow]}>
+            <View style={[styles.settingLeft, needsManualRTL && styles.rtlRow]}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }]}>
                 <Ionicons
                   name={isDark ? 'moon' : 'sunny'}
                   size={20}
@@ -210,9 +211,8 @@ export default function SettingsScreen() {
           </View>
         </Section>
 
-        {/* Logout */}
         <TouchableOpacity
-          style={[styles.logoutButton, { backgroundColor: colors.dangerLight }, isRTL && styles.rtlRow]}
+          style={[styles.logoutButton, { backgroundColor: colors.dangerLight }, needsManualRTL && styles.rtlRow]}
           onPress={() => setShowLogoutModal(true)}
         >
           <Ionicons name="log-out-outline" size={22} color={colors.danger} />
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     borderRadius: 32,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginEnd: 16,
   },
   profileInfo: {
     flex: 1,
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginEnd: 12,
   },
   settingLabel: {
     width: '80%',

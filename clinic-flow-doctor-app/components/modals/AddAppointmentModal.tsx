@@ -8,6 +8,7 @@ import {
   TextInput,
   ScrollView,
   Dimensions,
+  I18nManager,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -29,6 +30,8 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
   const { t } = useTranslation();
   const { isRTL } = useLanguage();
   const { patients, addAppointment } = useApp();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(initialPatient || null);
   const [patientSearch, setPatientSearch] = useState(initialPatient?.name || '');
@@ -114,11 +117,10 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
         {/* Modal Container - positioned above tab bar */}
         <View style={[styles.modalWrapper, { marginBottom: 90 }]}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
-            {/* Header */}
             <View style={[
               styles.header, 
               { borderBottomColor: colors.border },
-              isRTL && styles.rtlHeader
+              needsManualRTL && styles.rtlHeader
             ]}>
               <Text style={[styles.title, { color: colors.text }]}>
                 {t('dashboard.addAppointment')}
@@ -143,7 +145,7 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
                 <View style={[
                   styles.searchBox, 
                   { backgroundColor: colors.surfaceSecondary, borderColor: showPatientDropdown ? colors.primary : colors.border },
-                  isRTL && styles.rtlSearchBox
+                  needsManualRTL && styles.rtlSearchBox
                 ]}>
                   <Ionicons name="search-outline" size={18} color={colors.textMuted} />
                   <TextInput
@@ -170,7 +172,7 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
                     {filteredPatients.map((p) => (
                       <TouchableOpacity 
                         key={p.id} 
-                        style={[styles.dropdownItem, isRTL && styles.rtlDropdownItem]} 
+                        style={[styles.dropdownItem, needsManualRTL && styles.rtlDropdownItem]} 
                         onPress={() => handleSelectPatient(p)}
                       >
                         <View style={[styles.avatar, { backgroundColor: colors.primaryLight }]}>
@@ -202,7 +204,7 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
               )}
 
               {/* Date & Time */}
-              <View style={[styles.row, isRTL && styles.rtlRow]}>
+              <View style={[styles.row, needsManualRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
                   <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{t('appointments.date')}</Text>
                   <TextInput
@@ -231,7 +233,7 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
               <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('appointments.type')}
               </Text>
-              <View style={[styles.chipContainer, isRTL && styles.rtlChipContainer]}>
+              <View style={[styles.chipContainer, needsManualRTL && styles.rtlChipContainer]}>
                 {appointmentTypes.map((apt) => (
                   <TouchableOpacity
                     key={apt.key}
@@ -272,7 +274,7 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
             </ScrollView>
 
             {/* Footer */}
-            <View style={[styles.footer, { borderTopColor: colors.border }, isRTL && styles.rtlFooter]}>
+            <View style={[styles.footer, { borderTopColor: colors.border }, needsManualRTL && styles.rtlFooter]}>
               <TouchableOpacity style={[styles.cancelBtn, { borderColor: colors.border }]} onPress={handleClose}>
                 <Text style={[styles.cancelText, { color: colors.textSecondary }]}>{t('common.cancel')}</Text>
               </TouchableOpacity>

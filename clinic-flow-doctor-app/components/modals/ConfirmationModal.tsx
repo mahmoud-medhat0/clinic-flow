@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, Modal, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, I18nManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useLanguage } from '../../contexts/LanguageContext';
@@ -29,6 +29,8 @@ export function ConfirmationModal({
 }: ConfirmationModalProps) {
   const { colors, isDark } = useTheme();
   const { isRTL, t } = useLanguage();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const getThemeColor = () => {
     switch (type) {
@@ -61,7 +63,7 @@ export function ConfirmationModal({
         <View style={styles.overlay}>
           <TouchableWithoutFeedback>
             <View style={[styles.container, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <View style={[styles.header, isRTL && styles.rtlHeader]}>
+              <View style={[styles.header, needsManualRTL && styles.rtlHeader]}>
                 <View style={[styles.iconContainer, { backgroundColor: isDark ? `${themeColor}20` : `${themeColor}15` }]}>
                   <Ionicons name={icon || defaultIcon} size={28} color={themeColor} />
                 </View>
@@ -74,7 +76,7 @@ export function ConfirmationModal({
                 {message}
               </Text>
 
-              <View style={[styles.actions, isRTL && styles.rtlRow]}>
+              <View style={[styles.actions, needsManualRTL && styles.rtlRow]}>
                 <TouchableOpacity
                   style={[styles.button, styles.cancelButton, { borderColor: colors.border }]}
                   onPress={onClose}

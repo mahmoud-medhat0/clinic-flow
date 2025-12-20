@@ -8,6 +8,7 @@ import {
   TextInput,
   ScrollView,
   Dimensions,
+  I18nManager,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -27,6 +28,8 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
   const { t } = useTranslation();
   const { isRTL } = useLanguage();
   const { addPatient } = useApp();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -73,11 +76,10 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
         
         <View style={[styles.modalWrapper, { marginBottom: 90 }]}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
-            {/* Header */}
             <View style={[
               styles.header, 
               { borderBottomColor: colors.border },
-              isRTL && styles.rtlHeader
+              needsManualRTL && styles.rtlHeader
             ]}>
               <Text style={[styles.title, { color: colors.text }]}>{t('patients.addPatient')}</Text>
               <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
@@ -123,7 +125,7 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
                 autoCapitalize="none"
               />
 
-              <View style={[styles.row, isRTL && styles.rtlRow]}>
+              <View style={[styles.row, needsManualRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
                   <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                     {t('patients.age')}
@@ -154,7 +156,7 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
               <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('patients.bloodType')}
               </Text>
-              <View style={[styles.chipContainer, isRTL && styles.rtlChipContainer]}>
+              <View style={[styles.chipContainer, needsManualRTL && styles.rtlChipContainer]}>
                 {bloodTypes.map((bt) => (
                   <TouchableOpacity
                     key={bt}
@@ -178,11 +180,10 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
               />
             </ScrollView>
 
-            {/* Footer */}
             <View style={[
               styles.footer, 
               { borderTopColor: colors.border },
-              isRTL && styles.rtlFooter
+              needsManualRTL && styles.rtlFooter
             ]}>
               <TouchableOpacity style={[styles.cancelBtn, { borderColor: colors.border }]} onPress={onClose}>
                 <Text style={[styles.cancelText, { color: colors.textSecondary }]}>{t('common.cancel')}</Text>

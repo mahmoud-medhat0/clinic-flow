@@ -144,7 +144,12 @@
   },
   "notifications": {
     "title": "الإشعارات",
-    "description": ""
+    "empty": "لا توجد إشعارات",
+    "emptySubtitle": "أنت على اطلاع بكل شيء!",
+    "markAllRead": "تحديد الكل كمقروء",
+    "appointment": "موعد",
+    "inventory": "مخزون",
+    "system": "النظام"
   },
   "status": {
     "confirmed": "مؤكد",
@@ -160,5 +165,16 @@
     "thursday": "الخميس",
     "friday": "الجمعة",
     "saturday": "السبت"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "welcomeBack": "مرحباً بعودتك",
+    "loginSubtitle": "سجل دخول إلى حسابك",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "loginButton": "تسجيل الدخول",
+    "noAccount": "ليس لديك حساب؟",
+    "signUp": "إنشاء حساب"
   }
 }

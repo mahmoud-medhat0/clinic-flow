@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, I18nManager } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,6 +17,9 @@ export default function AppointmentDetailsScreen() {
   const { t } = useTranslation();
   const { language, isRTL } = useLanguage();
   const { getAppointment, getPatient, updateAppointmentStatus } = useApp();
+
+  // Only apply manual RTL for flex direction if native RTL is NOT handling it
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const appointment = getAppointment(Number(id));
 
@@ -135,8 +138,8 @@ export default function AppointmentDetailsScreen() {
     label: string;
     value: string;
   }) => (
-    <View style={[styles.infoRow, isRTL && styles.rtlRow]}>
-      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
+    <View style={[styles.infoRow, needsManualRTL && styles.rtlRow]}>
+      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }]}>
         <Ionicons name={icon} size={18} color={colors.primary} />
       </View>
       <View style={[styles.infoContent, isRTL && { alignItems: 'flex-end' }]}>
@@ -163,8 +166,8 @@ export default function AppointmentDetailsScreen() {
         >
           {/* Header Card */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <View style={[styles.headerRow, isRTL && styles.rtlRow]}>
-              <View style={[styles.avatar, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 14, marginRight: 0 } : { marginRight: 14 }]}>
+            <View style={[styles.headerRow, needsManualRTL && styles.rtlRow]}>
+              <View style={[styles.avatar, { backgroundColor: colors.primaryLight }]}>
                 <Text style={[styles.initials, { color: colors.primary }]}>
                   {appointment.patientName
                     .split(' ')
@@ -225,8 +228,8 @@ export default function AppointmentDetailsScreen() {
               <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('patients.contactInfo')}
               </Text>
-              <View style={[styles.contactRow, isRTL && styles.rtlRow]}>
-                <TouchableOpacity style={[styles.contactButton, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
+              <View style={[styles.contactRow, needsManualRTL && styles.rtlRow]}>
+                <TouchableOpacity style={[styles.contactButton, { backgroundColor: colors.primaryLight }]}>
                   <Ionicons name="call" size={20} color={colors.primary} />
                 </TouchableOpacity>
                 <View style={[styles.contactInfo, isRTL && { alignItems: 'flex-end' }]}>
@@ -243,11 +246,11 @@ export default function AppointmentDetailsScreen() {
         </ScrollView>
 
         {/* Action Buttons */}
-        <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }, isRTL && styles.rtlRow]}>
+        <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }, needsManualRTL && styles.rtlRow]}>
           {appointment.status === 'pending' && (
             <>
               <TouchableOpacity
-                style={[styles.actionButton, { backgroundColor: colors.successLight }, isRTL && styles.rtlRow]}
+                style={[styles.actionButton, { backgroundColor: colors.successLight }, needsManualRTL && styles.rtlRow]}
                 onPress={showConfirmAppointment}
               >
                 <Ionicons name="checkmark" size={22} color={colors.success} />
@@ -256,7 +259,7 @@ export default function AppointmentDetailsScreen() {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.actionButton, { backgroundColor: colors.dangerLight }, isRTL && styles.rtlRow]}
+                style={[styles.actionButton, { backgroundColor: colors.dangerLight }, needsManualRTL && styles.rtlRow]}
                 onPress={showCancelAppointment}
               >
                 <Ionicons name="close" size={22} color={colors.danger} />
@@ -268,7 +271,7 @@ export default function AppointmentDetailsScreen() {
           )}
           {appointment.status === 'confirmed' && (
             <TouchableOpacity
-              style={[styles.actionButton, styles.fullButton, { backgroundColor: colors.primary }, isRTL && styles.rtlRow]}
+              style={[styles.actionButton, styles.fullButton, { backgroundColor: colors.primary }, needsManualRTL && styles.rtlRow]}
               onPress={showCompleteAppointment}
             >
               <Ionicons name="checkmark-done" size={22} color="#fff" />
@@ -330,7 +333,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 14,
+    marginEnd: 14,
   },
   initials: {
     fontSize: 20,
@@ -359,7 +362,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginEnd: 12,
   },
   infoContent: {
     flex: 1,
@@ -400,7 +403,7 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginEnd: 12,
   },
   contactInfo: {
     flex: 1,

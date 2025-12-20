@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TouchableOpacity, I18nManager } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
@@ -13,6 +13,8 @@ export default function NotificationsScreen() {
   const { isRTL } = useLanguage();
   const router = useRouter();
   const { notifications, markNotificationAsRead, markAllNotificationsAsRead } = useApp();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const handlePress = (notification: Notification) => {
     // Mark as read
@@ -69,22 +71,22 @@ export default function NotificationsScreen() {
                 backgroundColor: item.read ? colors.background : colors.surface,
                 borderColor: colors.border,
               },
-              isRTL && styles.rtlItem
+              needsManualRTL && styles.rtlItem
             ]}
             onPress={() => handlePress(item)}
           >
             <View style={[styles.iconContainer, { backgroundColor: `${getColor(item.type)}20` }]}>
               <Ionicons name={getIcon(item.type)} size={24} color={getColor(item.type)} />
             </View>
-            <View style={styles.content}>
-              <View style={[styles.header, isRTL && styles.rtlHeader]}>
-                <Text style={[styles.title, { color: colors.text, fontWeight: item.read ? '500' : '700' }]}>
+            <View style={[styles.content, isRTL && { alignItems: 'flex-end' }]}>
+              <View style={[styles.header, needsManualRTL && styles.rtlHeader]}>
+                <Text style={[styles.title, { color: colors.text, fontWeight: item.read ? '500' : '700', textAlign: isRTL ? 'right' : 'left' }]}>
                   {item.title}
                 </Text>
                 <Text style={[styles.time, { color: colors.textMuted }]}>{item.time}</Text>
               </View>
               <Text 
-                style={[styles.message, { color: colors.textSecondary }]}
+                style={[styles.message, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}
                 numberOfLines={2}
               >
                 {item.message}

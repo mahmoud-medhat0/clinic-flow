@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput, KeyboardAvoidingView, Platform, I18nManager } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, Stack, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -17,6 +17,9 @@ export default function InventoryItemDetailsScreen() {
   const { t } = useTranslation();
   const { language, isRTL } = useLanguage();
   const { getItem, getCategory, addMovement } = useApp();
+
+  // Only apply manual RTL for flex direction if native RTL is NOT handling it
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const item = getItem(Number(id));
 
@@ -119,8 +122,8 @@ export default function InventoryItemDetailsScreen() {
     value: string;
     valueColor?: string;
   }) => (
-    <View style={[styles.infoRow, isRTL && styles.rtlRow]}>
-      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }, isRTL ? {marginLeft: 12, marginRight: 0} : {marginRight: 12}]}>
+    <View style={[styles.infoRow, needsManualRTL && styles.rtlRow]}>
+      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }]}>
         <Ionicons name={icon} size={18} color={colors.primary} />
       </View>
       <View style={[styles.infoContent, isRTL && { alignItems: 'flex-end' }]}>
@@ -153,11 +156,11 @@ export default function InventoryItemDetailsScreen() {
           >
           {/* Header Card */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <View style={[styles.headerRow, isRTL && styles.rtlRow]}>
-              <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 16, marginRight: 0 } : { marginRight: 16 }]}>
+            <View style={[styles.headerRow, needsManualRTL && styles.rtlRow]}>
+              <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }]}>
                 <Ionicons name="cube" size={32} color={colors.primary} />
               </View>
-              <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-end', marginLeft: 16 }]}>
+              <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-end' }]}>
                 <Text style={[styles.itemName, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{displayName}</Text>
                 {categoryName && (
                   <Text style={[styles.categoryText, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
@@ -171,11 +174,11 @@ export default function InventoryItemDetailsScreen() {
 
           {/* Stock Info Card */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <View style={[styles.stockHeader, isRTL && styles.rtlRow]}>
+            <View style={[styles.stockHeader, needsManualRTL && styles.rtlRow]}>
               <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('inventory.currentStock')}
               </Text>
-              <View style={[styles.stockBadge, isRTL && styles.rtlRow]}>
+              <View style={[styles.stockBadge, needsManualRTL && styles.rtlRow]}>
                 <Text
                   style={[
                     styles.stockValue,
@@ -258,7 +261,7 @@ export default function InventoryItemDetailsScreen() {
 
         {/* Quantity Input & Action Buttons */}
         <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
-          <View style={[styles.quantityRow, isRTL && styles.rtlRow]}>
+          <View style={[styles.quantityRow, needsManualRTL && styles.rtlRow]}>
             <Text style={[styles.quantityLabel, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
               {t('inventory.quantity')}:
             </Text>
@@ -284,9 +287,9 @@ export default function InventoryItemDetailsScreen() {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={[styles.actionRow, isRTL && styles.rtlRow]}>
+          <View style={[styles.actionRow, needsManualRTL && styles.rtlRow]}>
             <TouchableOpacity
-              style={[styles.actionButton, { backgroundColor: colors.successLight }, isRTL && { flexDirection: 'row-reverse' }]}
+              style={[styles.actionButton, { backgroundColor: colors.successLight }, needsManualRTL && styles.rtlRow]}
               onPress={confirmStockIn}
             >
               <Ionicons name="add-circle" size={22} color={colors.success} />
@@ -298,7 +301,7 @@ export default function InventoryItemDetailsScreen() {
               style={[
                 styles.actionButton,
                 { backgroundColor: item.quantity > 0 ? colors.dangerLight : colors.surfaceSecondary },
-                isRTL && { flexDirection: 'row-reverse' }
+                needsManualRTL && styles.rtlRow
               ]}
               onPress={confirmStockOut}
               disabled={item.quantity === 0}
@@ -369,7 +372,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginEnd: 16,
   },
   headerInfo: {
     flex: 1,
@@ -431,7 +434,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginEnd: 12,
   },
   infoContent: {
     flex: 1,

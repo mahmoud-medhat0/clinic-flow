@@ -60,7 +60,7 @@ export default function PatientsScreen() {
 
       {/* FAB */}
       <TouchableOpacity
-        style={[styles.fab, { backgroundColor: colors.teal }, isRTL ? { left: 20 } : { right: 20 }]}
+        style={[styles.fab, { backgroundColor: colors.teal }]}
         onPress={() => setShowAddModal(true)}
       >
         <Ionicons name="person-add" size={24} color="#fff" />
@@ -104,6 +104,7 @@ const styles = StyleSheet.create({
   fab: {
     position: 'absolute',
     bottom: 20,
+    end: 20,
     width: 56,
     height: 56,
     borderRadius: 28,

@@ -60,11 +60,11 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
         <View style={[styles.timeContainer, { backgroundColor: colors.primaryLight }]}>
           <Text style={[styles.time, { color: colors.primary }]}>{formatTime(appointment.time)}</Text>
         </View>
-        <View style={[styles.compactInfo, isRTL && { alignItems: 'flex-end' }]}>
-          <Text style={[styles.patientName, { color: colors.text }, isRTL && { textAlign: 'right' }]} numberOfLines={1}>
+        <View style={[styles.compactInfo, needsManualRTL && { alignItems: 'flex-end' }]}>
+          <Text style={[styles.patientName, { color: colors.text }, needsManualRTL && { textAlign: 'right' }]} numberOfLines={1}>
             {appointment.patientName}
           </Text>
-          <Text style={[styles.type, { color: colors.textSecondary }, isRTL && { textAlign: 'right' }]}>
+          <Text style={[styles.type, { color: colors.textSecondary }, needsManualRTL && { textAlign: 'right' }]}>
             {getTypeLabel(appointment.type)}
           </Text>
         </View>
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginEnd: 12,
   },
   headerInfo: {
     flex: 1,

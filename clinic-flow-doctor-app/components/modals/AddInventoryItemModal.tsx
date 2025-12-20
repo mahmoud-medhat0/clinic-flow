@@ -8,6 +8,7 @@ import {
   TextInput,
   ScrollView,
   Dimensions,
+  I18nManager,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -27,6 +28,8 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
   const { t } = useTranslation();
   const { isRTL } = useLanguage();
   const { categories, addItem } = useApp();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [name, setName] = useState('');
   const [nameAr, setNameAr] = useState('');
@@ -82,11 +85,10 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
         
         <View style={[styles.modalWrapper, { marginBottom: 90 }]}>
           <View style={[styles.modalContent, { backgroundColor: colors.surface }]}>
-            {/* Header */}
             <View style={[
               styles.header, 
               { borderBottomColor: colors.border },
-              isRTL && styles.rtlHeader
+              needsManualRTL && styles.rtlHeader
             ]}>
               <Text style={[styles.title, { color: colors.text }]}>{t('inventory.addItem')}</Text>
               <TouchableOpacity onPress={onClose} hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
@@ -136,7 +138,7 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
               <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('inventory.category')} *
               </Text>
-              <View style={[styles.chipContainer, isRTL && styles.rtlChipContainer]}>
+              <View style={[styles.chipContainer, needsManualRTL && styles.rtlChipContainer]}>
                 {categories.map((cat) => (
                   <TouchableOpacity
                     key={cat.id}
@@ -148,7 +150,7 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
                 ))}
               </View>
 
-              <View style={[styles.row, isRTL && styles.rtlRow]}>
+              <View style={[styles.row, needsManualRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
                   <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                     {t('inventory.quantity')}
@@ -180,7 +182,7 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
               <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('inventory.unit')}
               </Text>
-              <View style={[styles.chipContainer, isRTL && styles.rtlChipContainer]}>
+              <View style={[styles.chipContainer, needsManualRTL && styles.rtlChipContainer]}>
                 {units.map((u) => (
                   <TouchableOpacity
                     key={u.key}
@@ -192,7 +194,7 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
                 ))}
               </View>
 
-              <View style={[styles.row, isRTL && styles.rtlRow]}>
+              <View style={[styles.row, needsManualRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
                   <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                     {t('inventory.costPrice')}
@@ -223,7 +225,7 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
             </ScrollView>
 
             {/* Footer */}
-            <View style={[styles.footer, { borderTopColor: colors.border }, isRTL && styles.rtlFooter]}>
+            <View style={[styles.footer, { borderTopColor: colors.border }, needsManualRTL && styles.rtlFooter]}>
               <TouchableOpacity style={[styles.cancelBtn, { borderColor: colors.border }]} onPress={onClose}>
                 <Text style={[styles.cancelText, { color: colors.textSecondary }]}>{t('common.cancel')}</Text>
               </TouchableOpacity>
