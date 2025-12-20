@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, I18nManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useTranslation, useLanguage } from '../contexts/LanguageContext';
@@ -16,6 +16,10 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
   const { colors } = useTheme();
   const { t } = useTranslation();
   const { isRTL } = useLanguage();
+  
+  // Only apply manual RTL styles if native RTL is NOT handling it
+  // (i.e., in dev mode where I18nManager.isRTL is false but language is Arabic)
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const getTypeIcon = (type: AppointmentType): keyof typeof Ionicons.glyphMap => {
     switch (type) {
@@ -49,17 +53,18 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
         onPress={onPress}
         style={[
           styles.compactContainer,
-          { backgroundColor: colors.card, borderColor: colors.border }
+          { backgroundColor: colors.card, borderColor: colors.border },
+          needsManualRTL && styles.rtlRow
         ]}
       >
         <View style={[styles.timeContainer, { backgroundColor: colors.primaryLight }]}>
           <Text style={[styles.time, { color: colors.primary }]}>{formatTime(appointment.time)}</Text>
         </View>
-        <View style={styles.compactInfo}>
-          <Text style={[styles.patientName, { color: colors.text }]} numberOfLines={1}>
+        <View style={[styles.compactInfo, isRTL && { alignItems: 'flex-end' }]}>
+          <Text style={[styles.patientName, { color: colors.text }, isRTL && { textAlign: 'right' }]} numberOfLines={1}>
             {appointment.patientName}
           </Text>
-          <Text style={[styles.type, { color: colors.textSecondary }]}>
+          <Text style={[styles.type, { color: colors.textSecondary }, isRTL && { textAlign: 'right' }]}>
             {getTypeLabel(appointment.type)}
           </Text>
         </View>
@@ -77,9 +82,9 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
         { backgroundColor: colors.card, borderColor: colors.border, shadowColor: colors.shadow },
       ]}
     >
-      <View style={[styles.header, isRTL && styles.rtlRow]}>
-        <View style={[styles.row, isRTL && styles.rtlRow]}>
-          <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }, isRTL && { marginLeft: 12, marginRight: 0 }]}>
+      <View style={[styles.header, needsManualRTL && styles.rtlRow]}>
+        <View style={[styles.row, needsManualRTL && styles.rtlRow]}>
+          <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }]}>
             <Ionicons name={getTypeIcon(appointment.type)} size={20} color={colors.primary} />
           </View>
           <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-end' }]}>
@@ -93,14 +98,14 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
         </View>
         <StatusBadge status={appointment.status} />
       </View>
-      <View style={[styles.footer, { borderTopColor: colors.border }, isRTL && styles.rtlRow]}>
-        <View style={[styles.footerItem, isRTL && styles.rtlRow]}>
+      <View style={[styles.footer, { borderTopColor: colors.border }, needsManualRTL && styles.rtlRow]}>
+        <View style={[styles.footerItem, needsManualRTL && styles.rtlRow]}>
           <Ionicons name="time-outline" size={16} color={colors.textMuted} />
           <Text style={[styles.footerText, { color: colors.textSecondary }]}>
             {formatTime(appointment.time)}
           </Text>
         </View>
-        <View style={[styles.footerItem, isRTL && styles.rtlRow]}>
+        <View style={[styles.footerItem, needsManualRTL && styles.rtlRow]}>
           <Ionicons name="hourglass-outline" size={16} color={colors.textMuted} />
           <Text style={[styles.footerText, { color: colors.textSecondary }]}>
             {appointment.duration} {t('appointments.minutes')}
