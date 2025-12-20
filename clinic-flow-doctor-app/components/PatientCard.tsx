@@ -53,7 +53,7 @@ export function PatientCard({ patient, onPress }: PatientCardProps) {
           <View style={[styles.details, needsManualRTL && styles.rtlRow]}>
             <View style={[styles.detailItem, needsManualRTL && styles.rtlRow]}>
               <Ionicons name="call-outline" size={14} color={colors.textMuted} />
-              <Text style={[styles.detailText, { color: colors.textSecondary }]}>
+              <Text style={[styles.detailText, { color: colors.textSecondary, textAlign: 'left' }]}>
                 {patient.phone}
               </Text>
             </View>

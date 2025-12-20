@@ -55,10 +55,12 @@ export default function PatientProfileScreen() {
     icon,
     label,
     value,
+    forceLeftAlign = false,
   }: {
     icon: keyof typeof Ionicons.glyphMap;
     label: string;
     value: string;
+    forceLeftAlign?: boolean;
   }) => (
     <View style={[styles.infoRow, needsManualRTL && styles.rtlRow]}>
       <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }, needsManualRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
@@ -66,7 +68,7 @@ export default function PatientProfileScreen() {
       </View>
       <View style={[styles.infoContent, needsManualRTL && { alignItems: 'flex-end' }]}>
         <Text style={[styles.infoLabel, { color: colors.textMuted, textAlign: needsManualRTL ? 'right' : 'left' }]}>{label}</Text>
-        <Text style={[styles.infoValue, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>{value}</Text>
+        <Text style={[styles.infoValue, { color: colors.text, textAlign: forceLeftAlign ? 'left' : (needsManualRTL ? 'right' : 'left') }]}>{value}</Text>
       </View>
     </View>
   );
@@ -114,7 +116,7 @@ export default function PatientProfileScreen() {
             <Text style={[styles.sectionTitle, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
               {t('patients.contactInfo')}
             </Text>
-            <InfoRow icon="call-outline" label={t('patients.phone')} value={patient.phone} />
+            <InfoRow icon="call-outline" label={t('patients.phone')} value={patient.phone} forceLeftAlign />
             <View style={[styles.divider, { backgroundColor: colors.border }]} />
             <InfoRow icon="mail-outline" label={t('patients.email')} value={patient.email} />
             <View style={[styles.divider, { backgroundColor: colors.border }]} />

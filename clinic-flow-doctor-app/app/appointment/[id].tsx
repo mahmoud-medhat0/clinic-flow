@@ -236,7 +236,7 @@ export default function AppointmentDetailsScreen() {
                   <Text style={[styles.contactLabel, { color: colors.textMuted, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {t('patients.phone')}
                   </Text>
-                  <Text style={[styles.contactValue, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
+                  <Text style={[styles.contactValue, { color: colors.text, textAlign: 'left' }]}>
                     {patient.phone}
                   </Text>
                 </View>
