@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
   },
   type: {
     fontSize: 13,
+    width: '100%',
   },
   footer: {
     flexDirection: 'row',

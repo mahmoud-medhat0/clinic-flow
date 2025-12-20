@@ -204,7 +204,7 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
               {/* Date & Time */}
               <View style={[styles.row, isRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
-                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>Date</Text>
+                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{t('appointments.date')}</Text>
                   <TextInput
                     style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
                     value={date}

@@ -63,7 +63,8 @@
     "previous": "Previous",
     "noPrevious": "No past appointments",
     "noToday": "No appointments for today",
-    "noUpcoming": "No upcoming appointments"
+    "noUpcoming": "No upcoming appointments",
+    "date": "Date"
   },
   "patients": {
     "title": "Patients",
