@@ -126,9 +126,9 @@ export default function InventoryItemDetailsScreen() {
       <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }]}>
         <Ionicons name={icon} size={18} color={colors.primary} />
       </View>
-      <View style={[styles.infoContent, isRTL && { alignItems: 'flex-end' }]}>
-        <Text style={[styles.infoLabel, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>{label}</Text>
-        <Text style={[styles.infoValue, { color: valueColor || colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{value}</Text>
+      <View style={[styles.infoContent, needsManualRTL && { alignItems: 'flex-end' }]}>
+        <Text style={[styles.infoLabel, { color: colors.textMuted, textAlign: needsManualRTL ? 'right' : 'left' }]}>{label}</Text>
+        <Text style={[styles.infoValue, { color: valueColor || colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>{value}</Text>
       </View>
     </View>
   );
@@ -160,10 +160,10 @@ export default function InventoryItemDetailsScreen() {
               <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }]}>
                 <Ionicons name="cube" size={32} color={colors.primary} />
               </View>
-              <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-end' }]}>
-                <Text style={[styles.itemName, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{displayName}</Text>
+              <View style={[styles.headerInfo, needsManualRTL && { alignItems: 'flex-end' }]}>
+                <Text style={[styles.itemName, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>{displayName}</Text>
                 {categoryName && (
-                  <Text style={[styles.categoryText, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
+                  <Text style={[styles.categoryText, { color: colors.textSecondary, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {categoryName}
                   </Text>
                 )}
@@ -175,7 +175,7 @@ export default function InventoryItemDetailsScreen() {
           {/* Stock Info Card */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <View style={[styles.stockHeader, needsManualRTL && styles.rtlRow]}>
-              <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.sectionTitle, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('inventory.currentStock')}
               </Text>
               <View style={[styles.stockBadge, needsManualRTL && styles.rtlRow]}>
@@ -212,11 +212,11 @@ export default function InventoryItemDetailsScreen() {
                         ? colors.warning
                         : colors.success,
                   },
-                  isRTL && { alignSelf: 'flex-end' } 
+                  needsManualRTL && { alignSelf: 'flex-end' } 
                 ]}
               />
             </View>
-            <Text style={[styles.minStockText, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>
+            <Text style={[styles.minStockText, { color: colors.textMuted, textAlign: needsManualRTL ? 'right' : 'left' }]}>
               {t('inventory.minStock')}: {item.minStock} {t(`inventory.${item.unit}`)}
             </Text>
           </View>
@@ -262,7 +262,7 @@ export default function InventoryItemDetailsScreen() {
         {/* Quantity Input & Action Buttons */}
         <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
           <View style={[styles.quantityRow, needsManualRTL && styles.rtlRow]}>
-            <Text style={[styles.quantityLabel, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+            <Text style={[styles.quantityLabel, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
               {t('inventory.quantity')}:
             </Text>
             <View style={styles.quantityControls}>

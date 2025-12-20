@@ -93,11 +93,11 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
               contentContainerStyle={styles.scrollContent}
               showsVerticalScrollIndicator={true}
             >
-              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('patients.name')} *
               </Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
+                style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
                 value={name}
                 onChangeText={setName}
                 placeholder={t('patients.name')}
@@ -127,11 +127,11 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
 
               <View style={[styles.row, needsManualRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
-                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                  <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {t('patients.age')}
                   </Text>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
+                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
                     value={age}
                     onChangeText={setAge}
                     placeholder="25"
@@ -140,11 +140,11 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
                   />
                 </View>
                 <View style={styles.halfField}>
-                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                  <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {t('patients.dob')}
                   </Text>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
+                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
                     value={dob}
                     onChangeText={setDob}
                     placeholder="YYYY-MM-DD"
@@ -153,7 +153,7 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
                 </View>
               </View>
 
-              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('patients.bloodType')}
               </Text>
               <View style={[styles.chipContainer, needsManualRTL && styles.rtlChipContainer]}>

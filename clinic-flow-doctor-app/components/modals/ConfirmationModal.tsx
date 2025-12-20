@@ -67,12 +67,12 @@ export function ConfirmationModal({
                 <View style={[styles.iconContainer, { backgroundColor: isDark ? `${themeColor}20` : `${themeColor}15` }]}>
                   <Ionicons name={icon || defaultIcon} size={28} color={themeColor} />
                 </View>
-                <Text style={[styles.title, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                <Text style={[styles.title, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                   {title}
                 </Text>
               </View>
 
-              <Text style={[styles.message, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.message, { color: colors.textSecondary, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {message}
               </Text>
 

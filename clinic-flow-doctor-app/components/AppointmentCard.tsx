@@ -87,11 +87,11 @@ export function AppointmentCard({ appointment, onPress, compact = false }: Appoi
           <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }]}>
             <Ionicons name={getTypeIcon(appointment.type)} size={20} color={colors.primary} />
           </View>
-          <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-end' }]}>
-            <Text style={[styles.patientName, { color: colors.text }, isRTL && { textAlign: 'right' }]}>
+          <View style={[styles.headerInfo, needsManualRTL && { alignItems: 'flex-end' }]}>
+            <Text style={[styles.patientName, { color: colors.text }, needsManualRTL && { textAlign: 'right' }]}>
               {appointment.patientName}
             </Text>
-            <Text style={[styles.type, { color: colors.textSecondary }, isRTL && { textAlign: 'right' }]}>
+            <Text style={[styles.type, { color: colors.textSecondary }, needsManualRTL && { textAlign: 'right' }]}>
               {getTypeLabel(appointment.type)}
             </Text>
           </View>

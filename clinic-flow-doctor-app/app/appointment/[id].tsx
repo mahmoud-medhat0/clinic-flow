@@ -142,7 +142,7 @@ export default function AppointmentDetailsScreen() {
       <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }]}>
         <Ionicons name={icon} size={18} color={colors.primary} />
       </View>
-      <View style={[styles.infoContent, isRTL && { alignItems: 'flex-end' }]}>
+      <View style={[styles.infoContent, needsManualRTL && { alignItems: 'flex-end' }]}>
         <Text style={[styles.infoLabel, { color: colors.textMuted }]}>{label}</Text>
         <Text style={[styles.infoValue, { color: colors.text }]}>{value}</Text>
       </View>
@@ -177,7 +177,7 @@ export default function AppointmentDetailsScreen() {
                     .slice(0, 2)}
                 </Text>
               </View>
-              <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-end' }]}>
+              <View style={[styles.headerInfo, needsManualRTL && { alignItems: 'flex-end' }]}>
                 <Text style={[styles.patientName, { color: colors.text }]}>
                   {appointment.patientName}
                 </Text>
@@ -213,10 +213,10 @@ export default function AppointmentDetailsScreen() {
           {/* Notes Card */}
           {appointment.notes && (
             <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.notesTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.notesTitle, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('appointments.notes')}
               </Text>
-              <Text style={[styles.notesText, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.notesText, { color: colors.textSecondary, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {appointment.notes}
               </Text>
             </View>
@@ -225,18 +225,18 @@ export default function AppointmentDetailsScreen() {
           {/* Patient Contact */}
           {patient && (
             <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.sectionTitle, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('patients.contactInfo')}
               </Text>
               <View style={[styles.contactRow, needsManualRTL && styles.rtlRow]}>
                 <TouchableOpacity style={[styles.contactButton, { backgroundColor: colors.primaryLight }]}>
                   <Ionicons name="call" size={20} color={colors.primary} />
                 </TouchableOpacity>
-                <View style={[styles.contactInfo, isRTL && { alignItems: 'flex-end' }]}>
-                  <Text style={[styles.contactLabel, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>
+                <View style={[styles.contactInfo, needsManualRTL && { alignItems: 'flex-end' }]}>
+                  <Text style={[styles.contactLabel, { color: colors.textMuted, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {t('patients.phone')}
                   </Text>
-                  <Text style={[styles.contactValue, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                  <Text style={[styles.contactValue, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {patient.phone}
                   </Text>
                 </View>

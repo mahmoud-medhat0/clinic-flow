@@ -90,7 +90,7 @@ export default function SettingsScreen() {
         {rightContent}
         {showChevron && onPress && (
           <Ionicons
-            name={needsManualRTL ? 'chevron-back' : 'chevron-forward'}
+            name={needsManualRTL ? 'chevron-forward' : 'chevron-back'}
             size={20}
             color={colors.textMuted}
           />

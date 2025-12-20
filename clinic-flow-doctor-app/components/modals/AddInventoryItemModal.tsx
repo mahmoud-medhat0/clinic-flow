@@ -102,18 +102,18 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
               contentContainerStyle={styles.scrollContent}
               showsVerticalScrollIndicator={true}
             >
-              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('inventory.itemName')} (EN) *
               </Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
+                style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
                 value={name}
                 onChangeText={setName}
                 placeholder="Item name"
                 placeholderTextColor={colors.textMuted}
               />
 
-              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('inventory.itemName')} (AR)
               </Text>
               <TextInput
@@ -124,18 +124,18 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
                 placeholderTextColor={colors.textMuted}
               />
 
-              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('inventory.barcode')}
               </Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
+                style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
                 value={barcode}
                 onChangeText={setBarcode}
                 placeholder="Auto-generated if empty"
                 placeholderTextColor={colors.textMuted}
               />
 
-              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('inventory.category')} *
               </Text>
               <View style={[styles.chipContainer, needsManualRTL && styles.rtlChipContainer]}>
@@ -152,11 +152,11 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
 
               <View style={[styles.row, needsManualRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
-                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                  <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {t('inventory.quantity')}
                   </Text>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
+                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
                     value={quantity}
                     onChangeText={setQuantity}
                     keyboardType="numeric"
@@ -165,11 +165,11 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
                   />
                 </View>
                 <View style={styles.halfField}>
-                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                  <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {t('inventory.minStock')}
                   </Text>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
+                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
                     value={minStock}
                     onChangeText={setMinStock}
                     keyboardType="numeric"
@@ -179,7 +179,7 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
                 </View>
               </View>
 
-              <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('inventory.unit')}
               </Text>
               <View style={[styles.chipContainer, needsManualRTL && styles.rtlChipContainer]}>
@@ -196,11 +196,11 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
 
               <View style={[styles.row, needsManualRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
-                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                  <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {t('inventory.costPrice')}
                   </Text>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
+                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
                     value={costPrice}
                     onChangeText={setCostPrice}
                     keyboardType="numeric"
@@ -209,11 +209,11 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
                   />
                 </View>
                 <View style={styles.halfField}>
-                  <Text style={[styles.label, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+                  <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {t('inventory.sellPrice')}
                   </Text>
                   <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: isRTL ? 'right' : 'left' }]}
+                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
                     value={sellPrice}
                     onChangeText={setSellPrice}
                     keyboardType="numeric"

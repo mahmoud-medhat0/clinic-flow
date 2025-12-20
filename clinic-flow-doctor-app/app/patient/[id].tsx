@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Linking, I18nManager } from 'react-native';
 import { AddAppointmentModal } from '../../components/modals/AddAppointmentModal';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, Stack } from 'expo-router';
@@ -17,6 +17,7 @@ export default function PatientProfileScreen() {
   const { getPatient } = useApp();
 
   const patient = getPatient(Number(id));
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [showAppointmentModal, setShowAppointmentModal] = useState(false);
 
@@ -59,13 +60,13 @@ export default function PatientProfileScreen() {
     label: string;
     value: string;
   }) => (
-    <View style={[styles.infoRow, isRTL && styles.rtlRow]}>
-      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
+    <View style={[styles.infoRow, needsManualRTL && styles.rtlRow]}>
+      <View style={[styles.infoIcon, { backgroundColor: colors.primaryLight }, needsManualRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
         <Ionicons name={icon} size={18} color={colors.primary} />
       </View>
-      <View style={[styles.infoContent, isRTL && { alignItems: 'flex-end' }]}>
-        <Text style={[styles.infoLabel, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>{label}</Text>
-        <Text style={[styles.infoValue, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{value}</Text>
+      <View style={[styles.infoContent, needsManualRTL && { alignItems: 'flex-end' }]}>
+        <Text style={[styles.infoLabel, { color: colors.textMuted, textAlign: needsManualRTL ? 'right' : 'left' }]}>{label}</Text>
+        <Text style={[styles.infoValue, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>{value}</Text>
       </View>
     </View>
   );
@@ -110,7 +111,7 @@ export default function PatientProfileScreen() {
 
           {/* Contact Info */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
               {t('patients.contactInfo')}
             </Text>
             <InfoRow icon="call-outline" label={t('patients.phone')} value={patient.phone} />
@@ -122,7 +123,7 @@ export default function PatientProfileScreen() {
 
           {/* Medical Info */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
               {t('patients.medicalInfo')}
             </Text>
             <InfoRow icon="calendar-outline" label={t('patients.dob')} value={formatDate(patient.dob)} />
@@ -142,27 +143,27 @@ export default function PatientProfileScreen() {
 
           {/* Visit History */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-            <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+            <Text style={[styles.sectionTitle, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
               {t('patients.visitHistory')}
             </Text>
             {patient.visits && patient.visits.length > 0 ? (
               patient.visits.map((visit, index) => (
                 <React.Fragment key={visit.id}>
                   {index > 0 && <View style={[styles.divider, { backgroundColor: colors.border  }]} />}
-                  <View style={[styles.visitItem, isRTL && styles.rtlRow]}>
-                    <View style={[styles.visitDot, { backgroundColor: colors.primary }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]} />
-                    <View style={[styles.visitContent, isRTL && { alignItems: 'flex-end' }]}>
-                      <View style={[styles.visitHeader, isRTL && styles.rtlRow]}>
-                        <Text style={[styles.visitType, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{visit.type}</Text>
-                        <Text style={[styles.visitDate, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>
+                  <View style={[styles.visitItem, needsManualRTL && styles.rtlRow]}>
+                    <View style={[styles.visitDot, { backgroundColor: colors.primary }, needsManualRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]} />
+                    <View style={[styles.visitContent, needsManualRTL && { alignItems: 'flex-end' }]}>
+                      <View style={[styles.visitHeader, needsManualRTL && styles.rtlRow]}>
+                        <Text style={[styles.visitType, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>{visit.type}</Text>
+                        <Text style={[styles.visitDate, { color: colors.textMuted, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                           {formatDate(visit.date)}
                         </Text>
                       </View>
-                      <Text style={[styles.visitNotes, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
+                      <Text style={[styles.visitNotes, { color: colors.textSecondary, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                         {visit.notes}
                       </Text>
                       {visit.diagnosis && (
-                        <View style={[styles.diagnosisBadge, { backgroundColor: colors.primaryLight }, isRTL && { alignSelf: 'flex-end' }]}>
+                        <View style={[styles.diagnosisBadge, { backgroundColor: colors.primaryLight }, needsManualRTL && { alignSelf: 'flex-end' }]}>
                           <Text style={[styles.diagnosisText, { color: colors.primary }]}>
                             {visit.diagnosis}
                           </Text>
@@ -175,7 +176,7 @@ export default function PatientProfileScreen() {
             ) : (
               <View style={styles.emptyVisits}>
                 <Ionicons name="document-text-outline" size={32} color={colors.textMuted} />
-                <Text style={[styles.emptyText, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'center' }]}>
+                <Text style={[styles.emptyText, { color: colors.textMuted, textAlign: needsManualRTL ? 'right' : 'center' }]}>
                   {t('patients.noVisits')}
                 </Text>
               </View>
@@ -185,10 +186,10 @@ export default function PatientProfileScreen() {
           {/* Quick Notes */}
           {patient.notes && (
             <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.sectionTitle, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('patients.quickNotes')}
               </Text>
-              <Text style={[styles.notesText, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
+              <Text style={[styles.notesText, { color: colors.textSecondary, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {patient.notes}
               </Text>
             </View>
@@ -196,7 +197,7 @@ export default function PatientProfileScreen() {
         </ScrollView>
 
         {/* Action Buttons */}
-        <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }, isRTL && { flexDirection: 'row-reverse' }]}>
+        <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }, needsManualRTL && { flexDirection: 'row-reverse' }]}>
           <TouchableOpacity 
             style={[styles.actionButton, { backgroundColor: colors.primaryLight }]}
             onPress={handleCall}
@@ -210,7 +211,7 @@ export default function PatientProfileScreen() {
             <Ionicons name="chatbubble" size={22} color={colors.teal} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.mainActionButton, { backgroundColor: colors.primary }, isRTL && { flexDirection: 'row-reverse' }]}
+            style={[styles.mainActionButton, { backgroundColor: colors.primary }, needsManualRTL && { flexDirection: 'row-reverse' }]}
             onPress={() => setShowAppointmentModal(true)}
           >
             <Ionicons name="calendar" size={22} color="#fff" />
