@@ -34,30 +34,9 @@ export default function SettingsScreen() {
   const clinicName = language === 'ar' && doctor.clinicNameAr ? doctor.clinicNameAr : doctor.clinicName;
 
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [pendingLanguage, setPendingLanguage] = useState<Language | null>(null);
 
   const handleLogout = () => {
     router.replace('/login');
-  };
-
-  const handleLanguageChange = (lang: Language) => {
-    const currentIsRTL = language === 'ar';
-    const newIsRTL = lang === 'ar';
-    
-    // If RTL direction will change, show confirmation
-    if (currentIsRTL !== newIsRTL) {
-      setPendingLanguage(lang);
-    } else {
-      // Same direction, change immediately
-      changeLanguage(lang);
-    }
-  };
-
-  const   confirmLanguageChange = () => {
-    if (pendingLanguage) {
-      changeLanguage(pendingLanguage);
-      setPendingLanguage(null);
-    }
   };
 
   // Format 24h time to 12h AM/PM
@@ -194,7 +173,7 @@ export default function SettingsScreen() {
               {index > 0 && <View style={[styles.divider, { backgroundColor: colors.border }]} />}
               <TouchableOpacity
                 style={[styles.settingRow, isRTL && styles.rtlRow]}
-                onPress={() => handleLanguageChange(lang.code)}
+                onPress={() => changeLanguage(lang.code)}
               >
                 <Text style={[styles.settingLabel, { color: colors.text }]}>{lang.label}</Text>
                 {language === lang.code && (
@@ -205,20 +184,7 @@ export default function SettingsScreen() {
           ))}
         </Section>
 
-        <ConfirmationModal
-          visible={pendingLanguage !== null}
-          title={t('settings.language')}
-          message={
-            pendingLanguage === 'ar'
-              ? 'Changing to Arabic requires app restart to apply RTL layout. Continue?'
-              : language === 'ar' 
-                ? 'تغيير اللغة يتطلب إعادة تشغيل التطبيق. هل تريد المتابعة؟'
-                : 'Changing language requires app restart. Continue?'
-          }
-          type="warning"
-          onConfirm={confirmLanguageChange}
-          onClose={() => setPendingLanguage(null)}
-        />
+
 
         {/* Theme */}
         <Section title={t('settings.theme')}>

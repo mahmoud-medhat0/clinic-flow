@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode, useMemo, useEffect } from 'react';
-import { I18nManager, Alert } from 'react-native';
+import { I18nManager } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Updates from 'expo-updates';
 import en from '../i18n/en.json';
@@ -36,8 +36,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
           if (I18nManager.isRTL !== shouldBeRTL) {
             I18nManager.allowRTL(shouldBeRTL);
             I18nManager.forceRTL(shouldBeRTL);
-            // Note: This will require app restart to take effect
-            // but we set the language so UI can adapt manually
           }
           
           setLanguage(savedLang as Language);
@@ -72,32 +70,23 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       console.error('Failed to save language', error);
     }
 
+    // Update language state immediately
+    setLanguage(lang);
+
     // Check if RTL direction is changing
     if (currentIsRTL !== newIsRTL) {
       // Apply RTL settings
       I18nManager.allowRTL(newIsRTL);
       I18nManager.forceRTL(newIsRTL);
       
-      // Update language state immediately so UI reflects change
-      setLanguage(lang);
-      
-      // Try to reload, with fallback message for dev mode
+      // Auto reload the app (silently fails in dev mode)
       try {
         await Updates.reloadAsync();
       } catch (e) {
         // In development mode, Updates.reloadAsync() won't work
-        // Show alert asking user to restart manually
-        Alert.alert(
-          lang === 'ar' ? 'إعادة التشغيل مطلوبة' : 'Restart Required',
-          lang === 'ar' 
-            ? 'يرجى إغلاق التطبيق وإعادة فتحه لتطبيق تخطيط RTL بشكل صحيح'
-            : 'Please close and reopen the app to properly apply the RTL layout',
-          [{ text: 'OK' }]
-        );
+        // The UI will still update via the isRTL state
+        console.log('Dev mode: Manual restart needed for full RTL effect');
       }
-    } else {
-      // Same RTL direction, just update language
-      setLanguage(lang);
     }
   }, [language]);
 
