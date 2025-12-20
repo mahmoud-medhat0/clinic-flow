@@ -124,8 +124,8 @@ export default function InventoryItemDetailsScreen() {
         <Ionicons name={icon} size={18} color={colors.primary} />
       </View>
       <View style={[styles.infoContent, isRTL && { alignItems: 'flex-end' }]}>
-        <Text style={[styles.infoLabel, { color: colors.textMuted,  }]}>{label}</Text>
-        <Text style={[styles.infoValue, { color: valueColor || colors.text,  }]}>{value}</Text>
+        <Text style={[styles.infoLabel, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>{label}</Text>
+        <Text style={[styles.infoValue, { color: valueColor || colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{value}</Text>
       </View>
     </View>
   );
@@ -157,10 +157,10 @@ export default function InventoryItemDetailsScreen() {
               <View style={[styles.iconBox, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 16, marginRight: 0 } : { marginRight: 16 }]}>
                 <Ionicons name="cube" size={32} color={colors.primary} />
               </View>
-              <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-start',marginLeft: 16 }]}>
-                <Text style={[styles.itemName, { color: colors.text,  }]}>{displayName}</Text>
+              <View style={[styles.headerInfo, isRTL && { alignItems: 'flex-end', marginLeft: 16 }]}>
+                <Text style={[styles.itemName, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{displayName}</Text>
                 {categoryName && (
-                  <Text style={[styles.categoryText, { color: colors.textSecondary,  }]}>
+                  <Text style={[styles.categoryText, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
                     {categoryName}
                   </Text>
                 )}
@@ -172,7 +172,7 @@ export default function InventoryItemDetailsScreen() {
           {/* Stock Info Card */}
           <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
             <View style={[styles.stockHeader, isRTL && styles.rtlRow]}>
-              <Text style={[styles.sectionTitle, { color: colors.text,  }]}>
+              <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('inventory.currentStock')}
               </Text>
               <View style={[styles.stockBadge, isRTL && styles.rtlRow]}>
@@ -213,7 +213,7 @@ export default function InventoryItemDetailsScreen() {
                 ]}
               />
             </View>
-            <Text style={[styles.minStockText, { color: colors.textMuted,  }]}>
+            <Text style={[styles.minStockText, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>
               {t('inventory.minStock')}: {item.minStock} {t(`inventory.${item.unit}`)}
             </Text>
           </View>
@@ -259,7 +259,7 @@ export default function InventoryItemDetailsScreen() {
         {/* Quantity Input & Action Buttons */}
         <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
           <View style={[styles.quantityRow, isRTL && styles.rtlRow]}>
-            <Text style={[styles.quantityLabel, { color: colors.text,  }]}>
+            <Text style={[styles.quantityLabel, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
               {t('inventory.quantity')}:
             </Text>
             <View style={styles.quantityControls}>

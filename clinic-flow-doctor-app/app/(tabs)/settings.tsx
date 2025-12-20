@@ -70,7 +70,7 @@ export default function SettingsScreen() {
 
   const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <View style={styles.section}>
-      <Text style={[styles.sectionTitle, { color: colors.textSecondary,  }]}>{title}</Text>
+      <Text style={[styles.sectionTitle, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>{title}</Text>
       <View style={[styles.sectionContent, { backgroundColor: colors.card, borderColor: colors.border }]}>
         {children}
       </View>
@@ -98,10 +98,10 @@ export default function SettingsScreen() {
       disabled={!onPress && !rightContent}
     >
       <View style={[styles.settingLeft, isRTL && styles.rtlRow]}>
-        <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }]}>
+        <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
           <Ionicons name={icon} size={20} color={colors.primary} />
         </View>
-        <Text style={[styles.settingLabel, { color: colors.text }]}>{label}</Text>
+        <Text style={[styles.settingLabel, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{label}</Text>
       </View>
       <View style={[styles.settingRight, isRTL && styles.rtlRow]}>
         {value && <Text style={[styles.settingValue, { color: colors.textSecondary }]}>{value}</Text>}
@@ -131,8 +131,8 @@ export default function SettingsScreen() {
               <Ionicons name="person" size={32} color={colors.primary} />
             </View>
             <View style={[styles.profileInfo, isRTL && { alignItems: 'flex-end' }]}>
-              <Text style={[styles.profileName, { color: colors.text }]}>{doctorName}</Text>
-              <Text style={[styles.profileEmail, { color: colors.textSecondary }]}>
+              <Text style={[styles.profileName, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>{doctorName}</Text>
+              <Text style={[styles.profileEmail, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
                 {doctor.email}
               </Text>
             </View>
@@ -149,7 +149,7 @@ export default function SettingsScreen() {
               <Ionicons name="calendar-outline" size={20} color={colors.primary} />
             </View>
             <View style={styles.scheduleContent}>
-              <Text style={[styles.settingLabel, { color: colors.text, marginBottom: 10,  }]}>
+              <Text style={[styles.settingLabel, { color: colors.text, marginBottom: 10, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('settings.workingDays')}
               </Text>
               {doctor.schedule?.map((item) => (
@@ -224,14 +224,14 @@ export default function SettingsScreen() {
         <Section title={t('settings.theme')}>
           <View style={[styles.settingRow, isRTL && styles.rtlRow]}>
             <View style={[styles.settingLeft, isRTL && styles.rtlRow]}>
-              <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }]}>
+              <View style={[styles.iconContainer, { backgroundColor: colors.primaryLight }, isRTL ? { marginLeft: 12, marginRight: 0 } : { marginRight: 12 }]}>
                 <Ionicons
                   name={isDark ? 'moon' : 'sunny'}
                   size={20}
                   color={colors.primary}
                 />
               </View>
-              <Text style={[styles.settingLabel, { color: colors.text }]}>
+              <Text style={[styles.settingLabel, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {isDark ? t('settings.darkMode') : t('settings.lightMode')}
               </Text>
             </View>

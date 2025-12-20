@@ -42,7 +42,7 @@ export function PatientCard({ patient, onPress }: PatientCardProps) {
         </View>
         <View style={[styles.info, isRTL && { alignItems: 'flex-end' }]}>
           <View style={[styles.nameRow, isRTL && styles.rtlRow]}>
-            <Text style={[styles.name, { color: colors.text,  }]} numberOfLines={1}>
+            <Text style={[styles.name, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]} numberOfLines={1}>
               {patient.name}
             </Text>
             <StatusBadge status={patient.status} size="sm" />

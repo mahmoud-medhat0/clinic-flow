@@ -210,10 +210,10 @@ export default function AppointmentDetailsScreen() {
           {/* Notes Card */}
           {appointment.notes && (
             <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.notesTitle, { color: colors.text,  }]}>
+              <Text style={[styles.notesTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('appointments.notes')}
               </Text>
-              <Text style={[styles.notesText, { color: colors.textSecondary,  }]}>
+              <Text style={[styles.notesText, { color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }]}>
                 {appointment.notes}
               </Text>
             </View>
@@ -222,7 +222,7 @@ export default function AppointmentDetailsScreen() {
           {/* Patient Contact */}
           {patient && (
             <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+              <Text style={[styles.sectionTitle, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                 {t('patients.contactInfo')}
               </Text>
               <View style={[styles.contactRow, isRTL && styles.rtlRow]}>
@@ -230,10 +230,10 @@ export default function AppointmentDetailsScreen() {
                   <Ionicons name="call" size={20} color={colors.primary} />
                 </TouchableOpacity>
                 <View style={[styles.contactInfo, isRTL && { alignItems: 'flex-end' }]}>
-                  <Text style={[styles.contactLabel, { color: colors.textMuted }]}>
+                  <Text style={[styles.contactLabel, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}>
                     {t('patients.phone')}
                   </Text>
-                  <Text style={[styles.contactValue, { color: colors.text }]}>
+                  <Text style={[styles.contactValue, { color: colors.text, textAlign: isRTL ? 'right' : 'left' }]}>
                     {patient.phone}
                   </Text>
                 </View>
@@ -243,11 +243,11 @@ export default function AppointmentDetailsScreen() {
         </ScrollView>
 
         {/* Action Buttons */}
-        <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }]}>
+        <View style={[styles.actions, { backgroundColor: colors.surface, borderTopColor: colors.border }, isRTL && styles.rtlRow]}>
           {appointment.status === 'pending' && (
             <>
               <TouchableOpacity
-                style={[styles.actionButton, { backgroundColor: colors.successLight }]}
+                style={[styles.actionButton, { backgroundColor: colors.successLight }, isRTL && styles.rtlRow]}
                 onPress={showConfirmAppointment}
               >
                 <Ionicons name="checkmark" size={22} color={colors.success} />
@@ -256,7 +256,7 @@ export default function AppointmentDetailsScreen() {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={[styles.actionButton, { backgroundColor: colors.dangerLight }]}
+                style={[styles.actionButton, { backgroundColor: colors.dangerLight }, isRTL && styles.rtlRow]}
                 onPress={showCancelAppointment}
               >
                 <Ionicons name="close" size={22} color={colors.danger} />
@@ -268,7 +268,7 @@ export default function AppointmentDetailsScreen() {
           )}
           {appointment.status === 'confirmed' && (
             <TouchableOpacity
-              style={[styles.actionButton, styles.fullButton, { backgroundColor: colors.primary }]}
+              style={[styles.actionButton, styles.fullButton, { backgroundColor: colors.primary }, isRTL && styles.rtlRow]}
               onPress={showCompleteAppointment}
             >
               <Ionicons name="checkmark-done" size={22} color="#fff" />
@@ -346,6 +346,7 @@ const styles = StyleSheet.create({
   },
   appointmentType: {
     fontSize: 14,
+    width: '100%',
   },
   infoRow: {
     flexDirection: 'row',

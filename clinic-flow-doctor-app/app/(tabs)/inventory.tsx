@@ -169,13 +169,13 @@ export default function InventoryScreen() {
                     <StatusBadge status={movement.type} size="sm" />
                   </View>
                   <View style={[styles.movementDetails, isRTL && styles.rtlRow]}>
-                    <View style={styles.movementDetail}>
+                    <View style={[styles.movementDetail, isRTL && styles.rtlRow]}>
                       <Ionicons name="cube-outline" size={14} color={colors.textMuted} />
                       <Text style={[styles.movementText, { color: colors.textSecondary }]}>
                         {movement.quantity}
                       </Text>
                     </View>
-                    <View style={styles.movementDetail}>
+                    <View style={[styles.movementDetail, isRTL && styles.rtlRow]}>
                       <Ionicons name="calendar-outline" size={14} color={colors.textMuted} />
                       <Text style={[styles.movementText, { color: colors.textSecondary }]}>
                         {movement.date}
@@ -184,7 +184,7 @@ export default function InventoryScreen() {
                   </View>
                   {movement.notes && (
                     <Text
-                      style={[styles.movementNotes, { color: colors.textMuted }]}
+                      style={[styles.movementNotes, { color: colors.textMuted, textAlign: isRTL ? 'right' : 'left' }]}
                       numberOfLines={1}
                     >
                       {movement.notes}
