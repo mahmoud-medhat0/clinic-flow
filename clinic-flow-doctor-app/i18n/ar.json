@@ -18,12 +18,15 @@
     "markAsDone": "تحديد كمكتمل",
     "viewAll": "عرض الكل",
     "closed": "مغلق",
-    "of": "من"
+    "of": "من",
+    "filter": "تصفية",
+    "allStatus": "الكل"
   },
   "tabs": {
     "home": "الرئيسية",
     "appointments": "المواعيد",
     "patients": "المرضى",
+    "invoices": "الفواتير",
     "inventory": "المخزون",
     "settings": "الإعدادات"
   },
@@ -124,7 +127,8 @@
     "confirmStockOutMessage": "هل أنت متأكد أنك تريد سحب {{qty}} {{unit}} من \"{{name}}\"؟",
     "noItems": "لا توجد أصناف",
     "noCategories": "لا توجد فئات",
-    "noMovements": "لا توجد حركات"
+    "noMovements": "لا توجد حركات",
+    "allItems": "كل الأصناف"
   },
   "settings": {
     "title": "الإعدادات",
@@ -176,5 +180,27 @@
     "loginButton": "تسجيل الدخول",
     "noAccount": "ليس لديك حساب؟",
     "signUp": "إنشاء حساب"
+  },
+  "invoices": {
+    "title": "الفواتير",
+    "createInvoice": "إنشاء فاتورة",
+    "invoiceNumber": "رقم الفاتورة",
+    "patient": "المريض",
+    "selectPatient": "اختر المريض",
+    "date": "التاريخ",
+    "dueDate": "تاريخ الاستحقاق",
+    "amount": "المبلغ",
+    "service": "الخدمة",
+    "enterService": "أدخل وصف الخدمة",
+    "status": "الحالة",
+    "paid": "مدفوعة",
+    "pending": "معلقة",
+    "overdue": "متأخرة",
+    "total": "الإجمالي",
+    "noInvoices": "لا توجد فواتير",
+    "addFirst": "أنشئ أول فاتورة",
+    "markAsPaid": "تحديد كمدفوعة",
+    "details": "تفاصيل الفاتورة",
+    "all": "الكل"
   }
 }

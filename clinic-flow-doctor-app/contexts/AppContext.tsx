@@ -11,6 +11,7 @@ import {
 } from '../data/inventory';
 import { notificationsData, Notification } from '../data/notifications';
 import { doctorData } from '../data/doctor';
+import { invoicesData, Invoice, InvoiceStatus } from '../data/invoices';
 
 interface AppContextType {
   // Doctor
@@ -50,6 +51,14 @@ interface AppContextType {
   markNotificationAsRead: (id: string) => void;
   markAllNotificationsAsRead: () => void;
   unreadNotificationsCount: number;
+
+  // Invoices
+  invoices: Invoice[];
+  getInvoice: (id: number) => Invoice | undefined;
+  getInvoicesByStatus: (status: InvoiceStatus) => Invoice[];
+  addInvoice: (invoice: Omit<Invoice, 'id' | 'invoiceNumber'>) => void;
+  updateInvoiceStatus: (id: number, status: InvoiceStatus) => void;
+  deleteInvoice: (id: number) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -61,6 +70,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [categories, setCategories] = useState<Category[]>(categoriesData);
   const [movements, setMovements] = useState<StockMovement[]>(stockMovementsData);
   const [notifications, setNotifications] = useState<Notification[]>(notificationsData);
+  const [invoices, setInvoices] = useState<Invoice[]>(invoicesData);
 
   // Appointments
   const getAppointment = useCallback((id: number) => 
@@ -164,6 +174,29 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const unreadNotificationsCount = notifications.filter(n => !n.read).length;
 
+  // Invoices
+  const getInvoice = useCallback((id: number) => 
+    invoices.find(i => i.id === id), [invoices]);
+
+  const getInvoicesByStatus = useCallback((status: InvoiceStatus) => 
+    invoices.filter(i => i.status === status), [invoices]);
+
+  const addInvoice = useCallback((invoice: Omit<Invoice, 'id' | 'invoiceNumber'>) => {
+    const newId = Math.max(...invoices.map(i => i.id), 0) + 1;
+    const invoiceNumber = `INV-${String(newId).padStart(3, '0')}`;
+    setInvoices(prev => [...prev, { ...invoice, id: newId, invoiceNumber }]);
+  }, [invoices]);
+
+  const updateInvoiceStatus = useCallback((id: number, status: InvoiceStatus) => {
+    setInvoices(prev => 
+      prev.map(i => i.id === id ? { ...i, status } : i)
+    );
+  }, []);
+
+  const deleteInvoice = useCallback((id: number) => {
+    setInvoices(prev => prev.filter(i => i.id !== id));
+  }, []);
+
   return (
     <AppContext.Provider value={{
       doctor: doctorData,
@@ -192,6 +225,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
       markNotificationAsRead,
       markAllNotificationsAsRead,
       unreadNotificationsCount,
+      invoices,
+      getInvoice,
+      getInvoicesByStatus,
+      addInvoice,
+      updateInvoiceStatus,
+      deleteInvoice,
     }}>
       {children}
     </AppContext.Provider>

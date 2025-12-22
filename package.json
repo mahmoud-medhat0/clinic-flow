@@ -12,6 +12,7 @@
     "datatables.net-dt": "^2.3.5",
     "datatables.net-react": "^1.0.1",
     "expo": "^54.0.29",
+    "expo-linear-gradient": "^15.0.8",
     "lucide-react": "^0.560.0",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",

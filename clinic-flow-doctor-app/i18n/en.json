@@ -18,12 +18,15 @@
     "markAsDone": "Mark as Done",
     "viewAll": "View All",
     "closed": "Closed",
-    "of": "of"
+    "of": "of",
+    "filter": "Filter",
+    "allStatus": "All"
   },
   "tabs": {
     "home": "Home",
     "appointments": "Appointments",
     "patients": "Patients",
+    "invoices": "Invoices",
     "inventory": "Inventory",
     "settings": "Settings"
   },
@@ -124,7 +127,8 @@
     "confirmStockOutMessage": "Are you sure you want to stock out {{qty}} {{unit}} of \"{{name}}\"?",
     "noItems": "No items found",
     "noCategories": "No categories",
-    "noMovements": "No movements recorded"
+    "noMovements": "No movements recorded",
+    "allItems": "All Items"
   },
   "settings": {
     "title": "Settings",
@@ -176,5 +180,27 @@
     "appointment": "Appointment",
     "inventory": "Inventory",
     "system": "System"
+  },
+  "invoices": {
+    "title": "Invoices",
+    "createInvoice": "Create Invoice",
+    "invoiceNumber": "Invoice #",
+    "patient": "Patient",
+    "selectPatient": "Select patient",
+    "date": "Date",
+    "dueDate": "Due Date",
+    "amount": "Amount",
+    "service": "Service",
+    "enterService": "Enter service description",
+    "status": "Status",
+    "paid": "Paid",
+    "pending": "Pending",
+    "overdue": "Overdue",
+    "total": "Total",
+    "noInvoices": "No invoices found",
+    "addFirst": "Create your first invoice",
+    "markAsPaid": "Mark as Paid",
+    "details": "Invoice Details",
+    "all": "All"
   }
 }

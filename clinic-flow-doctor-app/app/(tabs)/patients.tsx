@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -9,6 +8,8 @@ import { useApp } from '../../contexts/AppContext';
 import { PatientCard } from '../../components/PatientCard';
 import { SearchBar } from '../../components/SearchBar';
 import { AddPatientModal } from '../../components/modals/AddPatientModal';
+import { FilterPanel, FilterOption } from '../../components/FilterPanel';
+import { PageHeader } from '../../components/PageHeader';
 
 export default function PatientsScreen() {
   const router = useRouter();
@@ -18,13 +19,33 @@ export default function PatientsScreen() {
   const { patients, searchPatients } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddModal, setShowAddModal] = useState(false);
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+
+  // Status filter options with counts
+  const statusOptions: FilterOption[] = [
+    { key: 'all', label: t('common.allStatus'), count: patients.length },
+    { key: 'active', label: t('patients.active'), count: patients.filter(p => p.status === 'active').length },
+    { key: 'inactive', label: t('patients.inactive'), count: patients.filter(p => p.status === 'inactive').length },
+  ];
 
   const filteredPatients = useMemo(() => {
-    return searchPatients(searchQuery);
-  }, [searchQuery, searchPatients]);
+    let result = searchPatients(searchQuery);
+    
+    // Apply status filter
+    if (statusFilter !== 'all') {
+      result = result.filter(p => p.status === statusFilter);
+    }
+    
+    return result;
+  }, [searchQuery, searchPatients, statusFilter]);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <PageHeader
+        title={t('tabs.patients')}
+        icon="people"
+      />
+
       {/* Search Bar */}
       <View style={styles.searchContainer}>
         <SearchBar
@@ -33,6 +54,13 @@ export default function PatientsScreen() {
           placeholder={t('patients.searchPlaceholder')}
         />
       </View>
+
+      {/* Status Filter */}
+      <FilterPanel
+        options={statusOptions}
+        selectedKey={statusFilter}
+        onSelect={setStatusFilter}
+      />
 
       {/* Patients List */}
       <FlatList
@@ -71,7 +99,7 @@ export default function PatientsScreen() {
         visible={showAddModal}
         onClose={() => setShowAddModal(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

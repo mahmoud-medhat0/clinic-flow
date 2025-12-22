@@ -24,16 +24,7 @@ export default function TabLayout() {
           fontSize: 11,
           fontWeight: '500',
         },
-        headerStyle: {
-          backgroundColor: colors.surface,
-        },
-        headerTintColor: colors.text,
-        headerTitleStyle: {
-          fontWeight: '600',
-          fontSize: 18,
-        },
-        headerTitleAlign: 'center',
-        headerShadowVisible: false,
+        headerShown: false,
       }}
     >
       <Tabs.Screen
@@ -57,6 +48,23 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'calendar' : 'calendar-outline'}
+              size={24}
+              color={color}
+            />
+          ),
+          tabBarLabelStyle: {
+            fontSize: 10,
+            fontWeight: '600',
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="invoices"
+        options={{
+          title: t('tabs.invoices'),
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons
+              name={focused ? 'receipt' : 'receipt-outline'}
               size={24}
               color={color}
             />

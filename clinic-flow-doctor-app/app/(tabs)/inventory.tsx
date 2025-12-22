@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   I18nManager
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -16,6 +15,9 @@ import { useApp } from '../../contexts/AppContext';
 import { InventoryItemCard } from '../../components/InventoryItemCard';
 import { StatusBadge } from '../../components/ui/StatusBadge';
 import { AddInventoryItemModal } from '../../components/modals/AddInventoryItemModal';
+import { FilterPanel, FilterOption } from '../../components/FilterPanel';
+import { SearchBar } from '../../components/SearchBar';
+import { PageHeader } from '../../components/PageHeader';
 
 type TabType = 'items' | 'categories' | 'movements';
 
@@ -28,19 +30,61 @@ export default function InventoryScreen() {
   const [activeTab, setActiveTab] = useState<TabType>('items');
   const [showAddModal, setShowAddModal] = useState(false);
   const [expandedCategory, setExpandedCategory] = useState<number | null>(null);
+  const [stockFilter, setStockFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const needsManualRTL = isRTL && !I18nManager.isRTL;
+
   const tabs: { key: TabType; label: string }[] = [
     { key: 'items', label: t('inventory.items') },
     { key: 'categories', label: t('inventory.categories') },
     { key: 'movements', label: t('inventory.movements') },
   ];
 
+  // Count items by stock status
+  const inStockCount = inventoryItems.filter(i => i.quantity > i.minStock).length;
+  const lowStockCount = inventoryItems.filter(i => i.quantity > 0 && i.quantity <= i.minStock).length;
+  const outOfStockCount = inventoryItems.filter(i => i.quantity === 0).length;
+
+  // Stock filter options with counts
+  const stockOptions: FilterOption[] = [
+    { key: 'all', label: t('inventory.allItems'), count: inventoryItems.length },
+    { key: 'inStock', label: t('inventory.inStock'), count: inStockCount },
+    { key: 'lowStock', label: t('inventory.lowStock'), count: lowStockCount },
+    { key: 'outOfStock', label: t('inventory.outOfStock'), count: outOfStockCount },
+  ];
+
+  // Filter inventory items by stock status and search
+  const filteredItems = useMemo(() => {
+    let result = inventoryItems;
+    
+    // Apply stock filter
+    if (stockFilter !== 'all') {
+      result = result.filter(item => {
+        if (stockFilter === 'outOfStock') return item.quantity === 0;
+        if (stockFilter === 'lowStock') return item.quantity > 0 && item.quantity <= item.minStock;
+        if (stockFilter === 'inStock') return item.quantity > item.minStock;
+        return true;
+      });
+    }
+    
+    // Apply search
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(item => {
+        const itemName = language === 'ar' && item.nameAr ? item.nameAr : item.name;
+        return itemName.toLowerCase().includes(query);
+      });
+    }
+    
+    return result;
+  }, [inventoryItems, stockFilter, searchQuery, language]);
+
   const renderContent = () => {
     switch (activeTab) {
       case 'items':
         return (
           <FlatList
-            data={inventoryItems}
+            data={filteredItems}
             keyExtractor={(item) => item.id.toString()}
             contentContainerStyle={styles.listContent}
             renderItem={({ item }) => {
@@ -210,7 +254,12 @@ export default function InventoryScreen() {
   );
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <PageHeader
+        title={t('tabs.inventory')}
+        icon="cube"
+      />
+
       {/* Tab Switcher */}
       <View style={[styles.tabContainer, { backgroundColor: colors.surface }, needsManualRTL && styles.rtlRow]}>
         {tabs.map((tab) => (
@@ -234,6 +283,24 @@ export default function InventoryScreen() {
         ))}
       </View>
 
+      {/* Search Bar and Filter - Show only on items tab */}
+      {activeTab === 'items' && (
+        <>
+          <View style={{ paddingHorizontal: 16, paddingTop: 8, paddingBottom: 0 }}>
+            <SearchBar
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder={t('common.search')}
+            />
+          </View>
+          <FilterPanel
+            options={stockOptions}
+            selectedKey={stockFilter}
+            onSelect={setStockFilter}
+          />
+        </>
+      )}
+
       {/* Content */}
       {renderContent()}
 
@@ -250,7 +317,7 @@ export default function InventoryScreen() {
         visible={showAddModal}
         onClose={() => setShowAddModal(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 

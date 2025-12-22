@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -9,6 +8,9 @@ import { useApp } from '../../contexts/AppContext';
 import { AppointmentCard } from '../../components/AppointmentCard';
 import { AddAppointmentModal } from '../../components/modals/AddAppointmentModal';
 import { SearchBar } from '../../components/SearchBar';
+import { FilterPanel, FilterOption } from '../../components/FilterPanel';
+import { PageHeader } from '../../components/PageHeader';
+import { AppointmentStatus } from '../../data/appointments';
 
 type TabType = 'today' | 'upcoming' | 'previous';
 
@@ -21,39 +23,61 @@ export default function AppointmentsScreen() {
   const [activeTab, setActiveTab] = useState<TabType>('today');
   const [showAddModal, setShowAddModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
 
   const todayStr = new Date().toISOString().split('T')[0];
 
+  // Status filter options with counts
+  const statusOptions: FilterOption[] = [
+    { key: 'all', label: t('common.allStatus'), count: appointments.length },
+    { key: 'confirmed', label: t('status.confirmed'), count: appointments.filter(a => a.status === 'confirmed').length },
+    { key: 'pending', label: t('status.pending'), count: appointments.filter(a => a.status === 'pending').length },
+    { key: 'completed', label: t('status.completed'), count: appointments.filter(a => a.status === 'completed').length },
+    { key: 'canceled', label: t('status.canceled'), count: appointments.filter(a => a.status === 'canceled').length },
+  ];
+
   const filteredAppointments = useMemo(() => {
+    let result = appointments;
+
+    // Apply status filter
+    if (statusFilter !== 'all') {
+      result = result.filter(a => a.status === statusFilter);
+    }
+
+    // Apply search
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      return appointments.filter((a) => {
+      result = result.filter((a) => {
         const patient = getPatient(a.patientId);
         return (
           a.patientName.toLowerCase().includes(query) ||
           (patient && patient.phone.includes(query))
         );
-      }).sort((a, b) => b.day.localeCompare(a.day) || b.time.localeCompare(a.time));
+      });
+      return result.sort((a, b) => b.day.localeCompare(a.day) || b.time.localeCompare(a.time));
     }
 
+    // Apply date tab filter
     if (activeTab === 'today') {
-      return appointments.filter((a) => a.day === todayStr);
-    }
-    if (activeTab === 'previous') {
-      return appointments
+      result = result.filter((a) => a.day === todayStr);
+    } else if (activeTab === 'previous') {
+      result = result
         .filter((a) => a.day < todayStr)
         .sort((a, b) => {
           if (a.day !== b.day) return b.day.localeCompare(a.day);
           return b.time.localeCompare(a.time);
         });
+    } else {
+      result = result
+        .filter((a) => a.day > todayStr)
+        .sort((a, b) => {
+          if (a.day !== b.day) return a.day.localeCompare(b.day);
+          return a.time.localeCompare(b.time);
+        });
     }
-    return appointments
-      .filter((a) => a.day > todayStr)
-      .sort((a, b) => {
-        if (a.day !== b.day) return a.day.localeCompare(b.day);
-        return a.time.localeCompare(b.time);
-      });
-  }, [appointments, activeTab, todayStr, searchQuery, getPatient]);
+
+    return result;
+  }, [appointments, activeTab, todayStr, searchQuery, getPatient, statusFilter]);
 
   const tabs: { key: TabType; label: string }[] = [
     { key: 'previous', label: t('appointments.previous') },
@@ -73,7 +97,11 @@ export default function AppointmentsScreen() {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <PageHeader
+        title={t('tabs.appointments')}
+        icon="calendar"
+      />
       {/* Search Bar */}
       <View style={{ paddingHorizontal: 16, paddingTop: 16, paddingBottom: 8 }}>
         <SearchBar
@@ -82,6 +110,13 @@ export default function AppointmentsScreen() {
           placeholder={t('patients.searchPlaceholder')}
         />
       </View>
+
+      {/* Status Filter */}
+      <FilterPanel
+        options={statusOptions}
+        selectedKey={statusFilter}
+        onSelect={setStatusFilter}
+      />
 
       {/* Tab Switcher - Hide when searching */}
       {!searchQuery && (
@@ -149,7 +184,7 @@ export default function AppointmentsScreen() {
         visible={showAddModal}
         onClose={() => setShowAddModal(false)}
       />
-    </SafeAreaView>
+    </View>
   );
 }
 
