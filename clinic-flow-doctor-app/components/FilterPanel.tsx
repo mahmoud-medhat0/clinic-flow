@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ScrollView,
   I18nManager,
-  useWindowDimensions,
 } from 'react-native';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -26,93 +25,64 @@ interface FilterPanelProps {
 export function FilterPanel({ options, selectedKey, onSelect }: FilterPanelProps) {
   const { colors } = useTheme();
   const { isRTL } = useLanguage();
-  const { width: screenWidth } = useWindowDimensions();
   const needsManualRTL = isRTL && !I18nManager.isRTL;
 
-  // Estimate if tabs will fit: ~80px per tab minimum, plus padding
-  const estimatedTabWidth = 80;
-  const availableWidth = screenWidth - 32; // minus horizontal margins
-  const useScroll = options.length * estimatedTabWidth > availableWidth;
-
-  const TabContent = () => (
-    <>
-      {options.map((option) => {
-        const isSelected = selectedKey === option.key;
-        return (
-          <TouchableOpacity
-            key={option.key}
-            style={[
-              styles.tab,
-              !useScroll && styles.tabFlex,
-              isSelected && { backgroundColor: colors.primaryLight },
-            ]}
-            onPress={() => onSelect(option.key)}
-            activeOpacity={0.7}
-          >
-            <Text
-              style={[
-                styles.tabText,
-                { color: isSelected ? colors.primary : colors.textSecondary },
-              ]}
-              numberOfLines={1}
-            >
-              {option.label}
-            </Text>
-            {option.count !== undefined && (
-              <View style={[
-                styles.badge,
-                { backgroundColor: isSelected ? colors.primary : colors.textMuted }
-              ]}>
-                <Text style={styles.badgeText}>{option.count}</Text>
-              </View>
-            )}
-          </TouchableOpacity>
-        );
-      })}
-    </>
-  );
-
-  if (useScroll) {
-    return (
+  return (
+    <View style={[styles.wrapper, { backgroundColor: colors.surface }]}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={[
           styles.scrollContent,
-          { backgroundColor: colors.surface },
           needsManualRTL && styles.rtlRow
         ]}
-        style={styles.scrollView}
       >
-        <TabContent />
+        {options.map((option) => {
+          const isSelected = selectedKey === option.key;
+          return (
+            <TouchableOpacity
+              key={option.key}
+              style={[
+                styles.tab,
+                isSelected && { backgroundColor: colors.primaryLight },
+              ]}
+              onPress={() => onSelect(option.key)}
+              activeOpacity={0.7}
+            >
+              <Text
+                style={[
+                  styles.tabText,
+                  { color: isSelected ? colors.primary : colors.textSecondary },
+                ]}
+                numberOfLines={1}
+              >
+                {option.label}
+              </Text>
+              {option.count !== undefined && (
+                <View style={[
+                  styles.badge,
+                  { backgroundColor: isSelected ? colors.primary : colors.textMuted }
+                ]}>
+                  <Text style={styles.badgeText}>{option.count}</Text>
+                </View>
+              )}
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
-    );
-  }
-
-  return (
-    <View style={[styles.container, { backgroundColor: colors.surface }, needsManualRTL && styles.rtlRow]}>
-      <TabContent />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollView: {
+  wrapper: {
     marginHorizontal: 16,
     marginVertical: 8,
+    borderRadius: 12,
+    padding: 4,
   },
   scrollContent: {
     flexDirection: 'row',
-    padding: 4,
-    borderRadius: 12,
-    gap: 4,
-  },
-  container: {
-    flexDirection: 'row',
-    marginHorizontal: 16,
-    marginVertical: 8,
-    padding: 4,
-    borderRadius: 12,
     gap: 4,
   },
   rtlRow: {
@@ -123,12 +93,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 10,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     borderRadius: 10,
     gap: 6,
-  },
-  tabFlex: {
-    flex: 1,
+    minHeight: 40,
   },
   tabText: {
     fontSize: 13,
