@@ -9,8 +9,10 @@ import {
   ScrollView,
   Dimensions,
   I18nManager,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useTranslation, useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
@@ -36,8 +38,12 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(initialPatient || null);
   const [patientSearch, setPatientSearch] = useState(initialPatient?.name || '');
   const [showPatientDropdown, setShowPatientDropdown] = useState(false);
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [time, setTime] = useState('09:00');
+  const [appointmentDate, setAppointmentDate] = useState<Date>(new Date());
+  const [appointmentTime, setAppointmentTime] = useState<Date>(new Date(new Date().setHours(9, 0, 0, 0)));
+  const [dateText, setDateText] = useState(new Date().toISOString().split('T')[0]);
+  const [timeText, setTimeText] = useState('09:00');
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [type, setType] = useState<AppointmentType>('checkup');
   const [duration, setDuration] = useState('30');
   const [notes, setNotes] = useState('');
@@ -77,13 +83,65 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
     setShowPatientDropdown(false);
   };
 
+  const formatDate = (date: Date): string => {
+    return date.toISOString().split('T')[0];
+  };
+
+  const formatTime = (date: Date): string => {
+    return date.toTimeString().slice(0, 5);
+  };
+
+  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+    if (selectedDate) {
+      setAppointmentDate(selectedDate);
+      setDateText(formatDate(selectedDate));
+    }
+  };
+
+  const handleTimeChange = (event: DateTimePickerEvent, selectedTime?: Date) => {
+    if (Platform.OS === 'android') {
+      setShowTimePicker(false);
+    }
+    if (selectedTime) {
+      setAppointmentTime(selectedTime);
+      setTimeText(formatTime(selectedTime));
+    }
+  };
+
+  const handleDateTextBlur = () => {
+    // Try to parse the date - only update if valid format
+    const parsed = new Date(dateText + 'T00:00:00');
+    if (!isNaN(parsed.getTime()) && dateText.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      setAppointmentDate(parsed);
+    }
+    // Don't reset invalid dates - let user continue editing
+  };
+
+  const handleTimeTextBlur = () => {
+    // Try to parse the time - only update if valid format
+    const match = timeText.match(/^(\d{1,2}):(\d{2})$/);
+    if (match) {
+      const hours = parseInt(match[1], 10);
+      const minutes = parseInt(match[2], 10);
+      if (hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59) {
+        const newTime = new Date();
+        newTime.setHours(hours, minutes, 0, 0);
+        setAppointmentTime(newTime);
+      }
+    }
+    // Don't reset invalid times - let user continue editing
+  };
+
   const handleSave = () => {
     if (!selectedPatient) return;
     addAppointment({
       patientId: selectedPatient.id,
       patientName: selectedPatient.name,
-      day: date,
-      time,
+      day: formatDate(appointmentDate),
+      time: formatTime(appointmentTime),
       type,
       duration: parseInt(duration) || 30,
       notes,
@@ -96,8 +154,14 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
   const resetForm = () => {
     setSelectedPatient(null);
     setPatientSearch('');
-    setDate(new Date().toISOString().split('T')[0]);
-    setTime('09:00');
+    const defaultDate = new Date();
+    const defaultTime = new Date(new Date().setHours(9, 0, 0, 0));
+    setAppointmentDate(defaultDate);
+    setAppointmentTime(defaultTime);
+    setDateText(formatDate(defaultDate));
+    setTimeText(formatTime(defaultTime));
+    setShowDatePicker(false);
+    setShowTimePicker(false);
     setType('checkup');
     setDuration('30');
     setNotes('');
@@ -207,27 +271,121 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
               <View style={[styles.row, needsManualRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
                   <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>{t('appointments.date')}</Text>
-                  <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
-                    value={date}
-                    onChangeText={setDate}
-                    placeholder="YYYY-MM-DD"
-                    placeholderTextColor={colors.textMuted}
-                  />
+                  {Platform.OS === 'web' ? (
+                    <View style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}>
+                      <Ionicons name="calendar-outline" size={18} color={colors.textMuted} />
+                      <input
+                        type="date"
+                        value={formatDate(appointmentDate)}
+                        onChange={(e) => {
+                          const newDate = new Date(e.target.value + 'T00:00:00');
+                          if (!isNaN(newDate.getTime())) {
+                            setAppointmentDate(newDate);
+                          }
+                        }}
+                        min={formatDate(new Date())}
+                        style={{
+                          flex: 1,
+                          border: 'none',
+                          background: 'transparent',
+                          color: colors.text,
+                          fontSize: 15,
+                          outline: 'none',
+                          cursor: 'pointer',
+                        }}
+                      />
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}
+                      onPress={() => setShowDatePicker(true)}
+                    >
+                      <Ionicons name="calendar-outline" size={18} color={colors.textMuted} />
+                      <Text style={[styles.dateText, { color: colors.text }]}>
+                        {formatDate(appointmentDate)}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
                 <View style={styles.halfField}>
                   <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {t('appointments.time')}
                   </Text>
-                  <TextInput
-                    style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
-                    value={time}
-                    onChangeText={setTime}
-                    placeholder="HH:MM"
-                    placeholderTextColor={colors.textMuted}
-                  />
+                  {Platform.OS === 'web' ? (
+                    <View style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}>
+                      <Ionicons name="time-outline" size={18} color={colors.textMuted} />
+                      <input
+                        type="time"
+                        value={formatTime(appointmentTime)}
+                        onChange={(e) => {
+                          const [hours, minutes] = e.target.value.split(':').map(Number);
+                          const newTime = new Date();
+                          newTime.setHours(hours, minutes, 0, 0);
+                          if (!isNaN(newTime.getTime())) {
+                            setAppointmentTime(newTime);
+                          }
+                        }}
+                        style={{
+                          flex: 1,
+                          border: 'none',
+                          background: 'transparent',
+                          color: colors.text,
+                          fontSize: 15,
+                          outline: 'none',
+                          cursor: 'pointer',
+                        }}
+                      />
+                    </View>
+                  ) : (
+                    <TouchableOpacity
+                      style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}
+                      onPress={() => setShowTimePicker(true)}
+                    >
+                      <Ionicons name="time-outline" size={18} color={colors.textMuted} />
+                      <Text style={[styles.dateText, { color: colors.text }]}>
+                        {formatTime(appointmentTime)}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
                 </View>
               </View>
+
+              {/* Date Picker for iOS (inline) */}
+              {Platform.OS === 'ios' && showDatePicker && (
+                <View style={[styles.iosPickerContainer, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }]}>
+                  <View style={[styles.iosPickerHeader, needsManualRTL && styles.rtlRow]}>
+                    <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                      <Text style={[styles.iosPickerDone, { color: colors.primary }]}>{t('common.done') || 'Done'}</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <DateTimePicker
+                    value={appointmentDate}
+                    mode="date"
+                    display="spinner"
+                    onChange={handleDateChange}
+                    minimumDate={new Date()}
+                    textColor={colors.text}
+                  />
+                </View>
+              )}
+
+              {/* Time Picker for iOS (inline) */}
+              {Platform.OS === 'ios' && showTimePicker && (
+                <View style={[styles.iosPickerContainer, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }]}>
+                  <View style={[styles.iosPickerHeader, needsManualRTL && styles.rtlRow]}>
+                    <TouchableOpacity onPress={() => setShowTimePicker(false)}>
+                      <Text style={[styles.iosPickerDone, { color: colors.primary }]}>{t('common.done') || 'Done'}</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <DateTimePicker
+                    value={appointmentTime}
+                    mode="time"
+                    display="spinner"
+                    onChange={handleTimeChange}
+                    textColor={colors.text}
+                  />
+                </View>
+              )}
 
               {/* Type */}
               <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
@@ -272,6 +430,27 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
                 placeholderTextColor={colors.textMuted}
               />
             </ScrollView>
+
+            {/* Date Picker for Android */}
+            {Platform.OS === 'android' && showDatePicker && (
+              <DateTimePicker
+                value={appointmentDate}
+                mode="date"
+                display="default"
+                onChange={handleDateChange}
+                minimumDate={new Date()}
+              />
+            )}
+
+            {/* Time Picker for Android */}
+            {Platform.OS === 'android' && showTimePicker && (
+              <DateTimePicker
+                value={appointmentTime}
+                mode="time"
+                display="default"
+                onChange={handleTimeChange}
+              />
+            )}
 
             {/* Footer */}
             <View style={[styles.footer, { borderTopColor: colors.border }, needsManualRTL && styles.rtlFooter]}>
@@ -480,5 +659,40 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
     color: '#fff',
+  },
+  dateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    gap: 8,
+  },
+  rtlDateButton: {
+    flexDirection: 'row-reverse',
+  },
+  dateText: {
+    fontSize: 15,
+  },
+  dateInput: {
+    flex: 1,
+    fontSize: 15,
+    padding: 0,
+  },
+  iosPickerContainer: {
+    borderWidth: 1,
+    borderRadius: 10,
+    marginTop: 12,
+    overflow: 'hidden',
+  },
+  iosPickerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    padding: 12,
+  },
+  iosPickerDone: {
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

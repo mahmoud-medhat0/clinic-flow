@@ -182,6 +182,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 12,
+    width: '100%',
   },
   amountContainer: {
     alignItems: 'flex-end',

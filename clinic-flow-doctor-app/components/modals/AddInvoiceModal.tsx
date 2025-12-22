@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -8,8 +8,10 @@ import {
   Modal,
   ScrollView,
   I18nManager,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
@@ -29,27 +31,67 @@ export function AddInvoiceModal({ visible, onClose, initialPatient }: AddInvoice
   const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(initialPatient || null);
-  const [patientSearch, setPatientSearch] = useState('');
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [patientSearch, setPatientSearch] = useState(initialPatient?.name || '');
+  const [showPatientDropdown, setShowPatientDropdown] = useState(false);
   const [service, setService] = useState('');
   const [amount, setAmount] = useState('');
-  const [dueDate, setDueDate] = useState('');
+  const [dueDate, setDueDate] = useState<Date>(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000));
+  const [dueDateText, setDueDateText] = useState(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
-  const filteredPatients = patients.filter(p =>
-    p.name.toLowerCase().includes(patientSearch.toLowerCase())
-  );
+  const filteredPatients = useMemo(() => {
+    if (!patientSearch.trim()) return patients.slice(0, 5);
+    const query = patientSearch.toLowerCase();
+    const sanitizedQuery = query.replace(/\D/g, '');
+    
+    return patients
+      .filter((p) => {
+        const nameMatch = p.name.toLowerCase().includes(query);
+        const phoneMatch = p.phone.replace(/\D/g, '').includes(sanitizedQuery);
+        return nameMatch || (sanitizedQuery.length > 0 && phoneMatch);
+      })
+      .slice(0, 5);
+  }, [patients, patientSearch]);
+
+  const handleSelectPatient = (patient: Patient) => {
+    setSelectedPatient(patient);
+    setPatientSearch(patient.name);
+    setShowPatientDropdown(false);
+  };
+
+  const formatDate = (date: Date): string => {
+    return date.toISOString().split('T')[0];
+  };
+
+  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
+    if (selectedDate) {
+      setDueDate(selectedDate);
+      setDueDateText(formatDate(selectedDate));
+    }
+  };
+
+  const handleDateTextBlur = () => {
+    // Try to parse the date
+    const parsed = new Date(dueDateText + 'T00:00:00');
+    if (!isNaN(parsed.getTime()) && dueDateText.match(/^\d{4}-\d{2}-\d{2}$/)) {
+      setDueDate(parsed);
+    }
+    // Don't reset invalid dates - let user continue editing
+  };
 
   const handleSave = () => {
     if (!selectedPatient || !service || !amount) return;
 
     const today = new Date().toISOString().split('T')[0];
-    const dueDateValue = dueDate || new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
 
     addInvoice({
       patientId: selectedPatient.id,
       patientName: selectedPatient.name,
       date: today,
-      dueDate: dueDateValue,
+      dueDate: formatDate(dueDate),
       amount: parseFloat(amount) || 0,
       status: 'pending',
       service,
@@ -61,11 +103,14 @@ export function AddInvoiceModal({ visible, onClose, initialPatient }: AddInvoice
 
   const handleClose = () => {
     setSelectedPatient(initialPatient || null);
-    setPatientSearch('');
-    setShowDropdown(false);
+    setPatientSearch(initialPatient?.name || '');
+    setShowPatientDropdown(false);
     setService('');
     setAmount('');
-    setDueDate('');
+    const defaultDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
+    setDueDate(defaultDate);
+    setDueDateText(formatDate(defaultDate));
+    setShowDatePicker(false);
     onClose();
   };
 
@@ -95,7 +140,7 @@ export function AddInvoiceModal({ visible, onClose, initialPatient }: AddInvoice
             <View style={styles.searchWrapper}>
               <View style={[
                 styles.searchBox,
-                { backgroundColor: colors.surfaceSecondary, borderColor: colors.border },
+                { backgroundColor: colors.surfaceSecondary, borderColor: showPatientDropdown ? colors.primary : colors.border },
                 needsManualRTL && styles.rtlSearchBox
               ]}>
                 <Ionicons name="search-outline" size={18} color={colors.textMuted} />
@@ -104,24 +149,26 @@ export function AddInvoiceModal({ visible, onClose, initialPatient }: AddInvoice
                   value={patientSearch}
                   onChangeText={(text) => {
                     setPatientSearch(text);
-                    setShowDropdown(true);
-                    if (!text) setSelectedPatient(null);
+                    setShowPatientDropdown(true);
+                    if (selectedPatient && text !== selectedPatient.name) setSelectedPatient(null);
                   }}
+                  onFocus={() => setShowPatientDropdown(true)}
                   placeholder={t('invoices.selectPatient')}
                   placeholderTextColor={colors.textMuted}
                 />
+                {patientSearch.length > 0 && (
+                  <TouchableOpacity onPress={() => { setPatientSearch(''); setSelectedPatient(null); }}>
+                    <Ionicons name="close-circle" size={18} color={colors.textMuted} />
+                  </TouchableOpacity>
+                )}
               </View>
-              {showDropdown && patientSearch && filteredPatients.length > 0 && (
+              {showPatientDropdown && filteredPatients.length > 0 && (
                 <View style={[styles.dropdown, { backgroundColor: colors.surface, borderColor: colors.border }]}>
-                  {filteredPatients.slice(0, 5).map((p) => (
+                  {filteredPatients.map((p) => (
                     <TouchableOpacity
                       key={p.id}
                       style={[styles.dropdownItem, needsManualRTL && styles.rtlDropdownItem]}
-                      onPress={() => {
-                        setSelectedPatient(p);
-                        setPatientSearch(p.name);
-                        setShowDropdown(false);
-                      }}
+                      onPress={() => handleSelectPatient(p)}
                     >
                       <View style={[styles.patientAvatar, { backgroundColor: colors.primaryLight }]}>
                         <Text style={[styles.avatarText, { color: colors.primary }]}>
@@ -181,16 +228,74 @@ export function AddInvoiceModal({ visible, onClose, initialPatient }: AddInvoice
                 <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                   {t('invoices.dueDate')}
                 </Text>
-                <TextInput
-                  style={[styles.input, { backgroundColor: colors.surfaceSecondary, color: colors.text, borderColor: colors.border, textAlign: needsManualRTL ? 'right' : 'left' }]}
-                  value={dueDate}
-                  onChangeText={setDueDate}
-                  placeholder="YYYY-MM-DD"
-                  placeholderTextColor={colors.textMuted}
-                />
+                {Platform.OS === 'web' ? (
+                  <View style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}>
+                    <Ionicons name="calendar-outline" size={18} color={colors.textMuted} />
+                    <input
+                      type="date"
+                      value={formatDate(dueDate)}
+                      onChange={(e) => {
+                        const newDate = new Date(e.target.value + 'T00:00:00');
+                        if (!isNaN(newDate.getTime())) {
+                          setDueDate(newDate);
+                        }
+                      }}
+                      min={formatDate(new Date())}
+                      style={{
+                        flex: 1,
+                        border: 'none',
+                        background: 'transparent',
+                        color: colors.text,
+                        fontSize: 15,
+                        outline: 'none',
+                        cursor: 'pointer',
+                      }}
+                    />
+                  </View>
+                ) : (
+                  <TouchableOpacity
+                    style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}
+                    onPress={() => setShowDatePicker(true)}
+                  >
+                    <Ionicons name="calendar-outline" size={18} color={colors.textMuted} />
+                    <Text style={[styles.dateText, { color: colors.text }]}>
+                      {formatDate(dueDate)}
+                    </Text>
+                  </TouchableOpacity>
+                )}
               </View>
             </View>
+
+            {/* Date Picker for iOS (inline) */}
+            {Platform.OS === 'ios' && showDatePicker && (
+              <View style={[styles.iosPickerContainer, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }]}>
+                <View style={[styles.iosPickerHeader, needsManualRTL && styles.rtlRow]}>
+                  <TouchableOpacity onPress={() => setShowDatePicker(false)}>
+                    <Text style={[styles.iosPickerDone, { color: colors.primary }]}>{t('common.done') || 'Done'}</Text>
+                  </TouchableOpacity>
+                </View>
+                <DateTimePicker
+                  value={dueDate}
+                  mode="date"
+                  display="spinner"
+                  onChange={handleDateChange}
+                  minimumDate={new Date()}
+                  textColor={colors.text}
+                />
+              </View>
+            )}
           </ScrollView>
+
+          {/* Date Picker for Android */}
+          {Platform.OS === 'android' && showDatePicker && (
+            <DateTimePicker
+              value={dueDate}
+              mode="date"
+              display="default"
+              onChange={handleDateChange}
+              minimumDate={new Date()}
+            />
+          )}
 
           {/* Footer */}
           <View style={[styles.footer, needsManualRTL && styles.rtlFooter]}>
@@ -375,6 +480,42 @@ const styles = StyleSheet.create({
   saveText: {
     color: '#fff',
     fontSize: 15,
+    fontWeight: '600',
+  },
+  dateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    gap: 10,
+    marginBottom: 16,
+  },
+  rtlDateButton: {
+    flexDirection: 'row-reverse',
+  },
+  dateText: {
+    fontSize: 15,
+  },
+  dateInput: {
+    flex: 1,
+    fontSize: 15,
+    padding: 0,
+  },
+  iosPickerContainer: {
+    borderWidth: 1,
+    borderRadius: 12,
+    marginBottom: 16,
+    overflow: 'hidden',
+  },
+  iosPickerHeader: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    padding: 12,
+  },
+  iosPickerDone: {
+    fontSize: 16,
     fontWeight: '600',
   },
 });
