@@ -71,12 +71,12 @@ export function InvoiceCard({ invoice }: InvoiceCardProps) {
       </View>
 
       {/* Content */}
-      <View style={[styles.content, needsManualRTL && { alignItems: 'flex-end' }]}>
+      <View style={styles.content}>
         <View style={[styles.headerRow, needsManualRTL && styles.rtlRow]}>
           <Text style={[styles.invoiceNumber, { color: colors.text }]}>
             {invoice.invoiceNumber}
           </Text>
-          <View style={[styles.statusBadge, { backgroundColor: `${statusColor}20` }]}>
+          <View style={[styles.statusBadge, { backgroundColor: `${statusColor}20` }, needsManualRTL && styles.rtlRow]}>
             <View style={[styles.statusDot, { backgroundColor: statusColor }]} />
             <Text style={[styles.statusText, { color: statusColor }]}>
               {getStatusLabel(invoice.status)}
@@ -100,7 +100,7 @@ export function InvoiceCard({ invoice }: InvoiceCardProps) {
           </View>
           <View style={[styles.detailItem, needsManualRTL && styles.rtlRow]}>
             <Ionicons name="medical-outline" size={14} color={colors.textMuted} />
-            <Text style={[styles.detailText, { color: colors.textMuted }]}>
+            <Text style={[styles.detailText, { color: colors.textMuted }]} numberOfLines={1}>
               {invoice.service}
             </Text>
           </View>
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: 8,
     marginBottom: 4,
   },
   invoiceNumber: {
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
   },
   detailText: {
     fontSize: 12,
-    width: '100%',
+    flexShrink: 1,
   },
   amountContainer: {
     alignItems: 'flex-end',
