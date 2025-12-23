@@ -46,7 +46,7 @@ export function InvoiceCard({ invoice }: InvoiceCardProps) {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
     const locale = language === 'ar' ? 'ar-EG' : language === 'fr' ? 'fr-FR' : 'en-US';
-    return date.toLocaleDateString(locale, { month: 'short', day: 'numeric' });
+    return date.toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
   const formatAmount = (amount: number) => {
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   detailText: {
     fontSize: 12,
     flexShrink: 1,
-    width: '100%',
+    width: '50%',
   },
   amountContainer: {
     alignItems: 'flex-end',
