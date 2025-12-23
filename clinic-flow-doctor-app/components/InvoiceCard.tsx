@@ -92,15 +92,15 @@ export function InvoiceCard({ invoice }: InvoiceCardProps) {
         </Text>
 
         <View style={[styles.detailsRow, needsManualRTL && styles.rtlRow]}>
-          <View style={[styles.detailItem, needsManualRTL && styles.rtlRow]}>
+          <View style={[styles.dateItem, needsManualRTL && styles.rtlRow]}>
             <Ionicons name="calendar-outline" size={14} color={colors.textMuted} />
-            <Text style={[styles.detailText, { color: colors.textMuted }]}>
+            <Text style={[styles.dateText, { color: colors.textMuted }]} numberOfLines={1}>
               {formatDate(invoice.date)}
             </Text>
           </View>
-          <View style={[styles.detailItem, needsManualRTL && styles.rtlRow]}>
+          <View style={[styles.serviceItem, needsManualRTL && styles.rtlRow]}>
             <Ionicons name="medical-outline" size={14} color={colors.textMuted} />
-            <Text style={[styles.detailText, { color: colors.textMuted }]} numberOfLines={1}>
+            <Text style={[styles.serviceText, { color: colors.textMuted }]} numberOfLines={1}>
               {invoice.service}
             </Text>
           </View>
@@ -173,17 +173,28 @@ const styles = StyleSheet.create({
   },
   detailsRow: {
     flexDirection: 'row',
-    gap: 16,
+    gap: 12,
+    flexWrap: 'nowrap',
   },
-  detailItem: {
+  dateItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    flexShrink: 0,
   },
-  detailText: {
+  dateText: {
     fontSize: 12,
-    flexShrink: 1,
-    width: '50%',
+  },
+  serviceItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    flex: 1,
+    minWidth: 0,
+  },
+  serviceText: {
+    fontSize: 12,
+    flex: 1,
   },
   amountContainer: {
     alignItems: 'flex-end',
