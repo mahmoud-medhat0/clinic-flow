@@ -166,7 +166,6 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 11,
     fontWeight: '600',
-    width:'100%'
   },
   patientName: {
     fontSize: 14,
@@ -184,6 +183,7 @@ const styles = StyleSheet.create({
   detailText: {
     fontSize: 12,
     flexShrink: 1,
+    width: '100%',
   },
   amountContainer: {
     alignItems: 'flex-end',
