@@ -12,12 +12,17 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useTranslation, useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
 import { AppointmentType, AppointmentStatus } from '../../data/appointments';
 import { Patient } from '../../data/patients';
+
+// Only import DateTimePicker on native platforms
+let DateTimePicker: any = null;
+if (Platform.OS !== 'web') {
+  DateTimePicker = require('@react-native-community/datetimepicker').default;
+}
 
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 
@@ -40,8 +45,6 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
   const [showPatientDropdown, setShowPatientDropdown] = useState(false);
   const [appointmentDate, setAppointmentDate] = useState<Date>(new Date());
   const [appointmentTime, setAppointmentTime] = useState<Date>(new Date(new Date().setHours(9, 0, 0, 0)));
-  const [dateText, setDateText] = useState(new Date().toISOString().split('T')[0]);
-  const [timeText, setTimeText] = useState('09:00');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [type, setType] = useState<AppointmentType>('checkup');
@@ -91,49 +94,25 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
     return date.toTimeString().slice(0, 5);
   };
 
-  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+  const handleDateChange = (event: any, selectedDate?: Date) => {
     if (Platform.OS === 'android') {
       setShowDatePicker(false);
     }
     if (selectedDate) {
       setAppointmentDate(selectedDate);
-      setDateText(formatDate(selectedDate));
     }
   };
 
-  const handleTimeChange = (event: DateTimePickerEvent, selectedTime?: Date) => {
+  const handleTimeChange = (event: any, selectedTime?: Date) => {
     if (Platform.OS === 'android') {
       setShowTimePicker(false);
     }
     if (selectedTime) {
       setAppointmentTime(selectedTime);
-      setTimeText(formatTime(selectedTime));
     }
   };
 
-  const handleDateTextBlur = () => {
-    // Try to parse the date - only update if valid format
-    const parsed = new Date(dateText + 'T00:00:00');
-    if (!isNaN(parsed.getTime()) && dateText.match(/^\d{4}-\d{2}-\d{2}$/)) {
-      setAppointmentDate(parsed);
-    }
-    // Don't reset invalid dates - let user continue editing
-  };
 
-  const handleTimeTextBlur = () => {
-    // Try to parse the time - only update if valid format
-    const match = timeText.match(/^(\d{1,2}):(\d{2})$/);
-    if (match) {
-      const hours = parseInt(match[1], 10);
-      const minutes = parseInt(match[2], 10);
-      if (hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59) {
-        const newTime = new Date();
-        newTime.setHours(hours, minutes, 0, 0);
-        setAppointmentTime(newTime);
-      }
-    }
-    // Don't reset invalid times - let user continue editing
-  };
 
   const handleSave = () => {
     if (!selectedPatient) return;
@@ -154,12 +133,8 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
   const resetForm = () => {
     setSelectedPatient(null);
     setPatientSearch('');
-    const defaultDate = new Date();
-    const defaultTime = new Date(new Date().setHours(9, 0, 0, 0));
-    setAppointmentDate(defaultDate);
-    setAppointmentTime(defaultTime);
-    setDateText(formatDate(defaultDate));
-    setTimeText(formatTime(defaultTime));
+    setAppointmentDate(new Date());
+    setAppointmentTime(new Date(new Date().setHours(9, 0, 0, 0)));
     setShowDatePicker(false);
     setShowTimePicker(false);
     setType('checkup');

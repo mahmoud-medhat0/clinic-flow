@@ -11,11 +11,19 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useApp } from '../../contexts/AppContext';
 import { Patient } from '../../data/patients';
+
+// Only import DateTimePicker on native platforms
+let DateTimePicker: any = null;
+let DateTimePickerEvent: any = null;
+if (Platform.OS !== 'web') {
+  const picker = require('@react-native-community/datetimepicker');
+  DateTimePicker = picker.default;
+  DateTimePickerEvent = picker.DateTimePickerEvent;
+}
 
 interface AddInvoiceModalProps {
   visible: boolean;
@@ -36,7 +44,6 @@ export function AddInvoiceModal({ visible, onClose, initialPatient }: AddInvoice
   const [service, setService] = useState('');
   const [amount, setAmount] = useState('');
   const [dueDate, setDueDate] = useState<Date>(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000));
-  const [dueDateText, setDueDateText] = useState(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]);
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const filteredPatients = useMemo(() => {
@@ -63,23 +70,13 @@ export function AddInvoiceModal({ visible, onClose, initialPatient }: AddInvoice
     return date.toISOString().split('T')[0];
   };
 
-  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+  const handleDateChange = (event: any, selectedDate?: Date) => {
     if (Platform.OS === 'android') {
       setShowDatePicker(false);
     }
     if (selectedDate) {
       setDueDate(selectedDate);
-      setDueDateText(formatDate(selectedDate));
     }
-  };
-
-  const handleDateTextBlur = () => {
-    // Try to parse the date
-    const parsed = new Date(dueDateText + 'T00:00:00');
-    if (!isNaN(parsed.getTime()) && dueDateText.match(/^\d{4}-\d{2}-\d{2}$/)) {
-      setDueDate(parsed);
-    }
-    // Don't reset invalid dates - let user continue editing
   };
 
   const handleSave = () => {
@@ -107,9 +104,7 @@ export function AddInvoiceModal({ visible, onClose, initialPatient }: AddInvoice
     setShowPatientDropdown(false);
     setService('');
     setAmount('');
-    const defaultDate = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000);
-    setDueDate(defaultDate);
-    setDueDateText(formatDate(defaultDate));
+    setDueDate(new Date(Date.now() + 14 * 24 * 60 * 60 * 1000));
     setShowDatePicker(false);
     onClose();
   };
