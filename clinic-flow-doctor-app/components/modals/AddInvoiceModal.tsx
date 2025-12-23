@@ -9,6 +9,7 @@ import {
   ScrollView,
   I18nManager,
   Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -111,7 +112,11 @@ export function AddInvoiceModal({ visible, onClose, initialPatient }: AddInvoice
 
   return (
     <Modal visible={visible} animationType="slide" transparent>
-      <View style={styles.overlay}>
+      <KeyboardAvoidingView 
+        style={styles.overlay}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      >
         <View style={[styles.modal, { backgroundColor: colors.surface }]}>
           {/* Header */}
           <View style={[styles.header, needsManualRTL && styles.rtlHeader]}>
@@ -282,7 +287,7 @@ export function AddInvoiceModal({ visible, onClose, initialPatient }: AddInvoice
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

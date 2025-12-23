@@ -10,6 +10,7 @@ import {
   Dimensions,
   I18nManager,
   Platform,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -149,7 +150,11 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
 
   return (
     <Modal visible={visible} animationType="slide" transparent statusBarTranslucent>
-      <View style={styles.overlay}>
+      <KeyboardAvoidingView 
+        style={styles.overlay}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      >
         {/* Backdrop */}
         <TouchableOpacity style={styles.backdrop} onPress={handleClose} activeOpacity={1} />
         
@@ -389,7 +394,7 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
             </View>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

@@ -9,6 +9,8 @@ import {
   ScrollView,
   Dimensions,
   I18nManager,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -71,7 +73,11 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
 
   return (
     <Modal visible={visible} animationType="slide" transparent statusBarTranslucent>
-      <View style={styles.overlay}>
+      <KeyboardAvoidingView 
+        style={styles.overlay}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      >
         <TouchableOpacity style={styles.backdrop} onPress={onClose} activeOpacity={1} />
         
         <View style={[styles.modalWrapper, { marginBottom: 90 }]}>
@@ -92,6 +98,7 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
               style={styles.scrollView}
               contentContainerStyle={styles.scrollContent}
               showsVerticalScrollIndicator={true}
+              keyboardShouldPersistTaps="handled"
             >
               <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('patients.name')} *
@@ -198,7 +205,7 @@ export function AddPatientModal({ visible, onClose }: AddPatientModalProps) {
             </View>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }

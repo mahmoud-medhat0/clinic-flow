@@ -9,6 +9,8 @@ import {
   ScrollView,
   Dimensions,
   I18nManager,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -80,7 +82,11 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
 
   return (
     <Modal visible={visible} animationType="slide" transparent statusBarTranslucent>
-      <View style={styles.overlay}>
+      <KeyboardAvoidingView 
+        style={styles.overlay}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
+      >
         <TouchableOpacity style={styles.backdrop} onPress={onClose} activeOpacity={1} />
         
         <View style={[styles.modalWrapper, { marginBottom: 90 }]}>
@@ -101,6 +107,7 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
               style={styles.scrollView}
               contentContainerStyle={styles.scrollContent}
               showsVerticalScrollIndicator={true}
+              keyboardShouldPersistTaps="handled"
             >
               <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                 {t('inventory.itemName')} (EN) *
@@ -239,7 +246,7 @@ export function AddInventoryItemModal({ visible, onClose }: AddInventoryItemModa
             </View>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </Modal>
   );
 }
