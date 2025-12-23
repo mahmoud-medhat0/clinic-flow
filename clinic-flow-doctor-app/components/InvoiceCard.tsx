@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 11,
     fontWeight: '600',
+    width:'100%'
   },
   patientName: {
     fontSize: 14,
