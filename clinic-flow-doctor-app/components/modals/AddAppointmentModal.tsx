@@ -271,82 +271,29 @@ export function AddAppointmentModal({ visible, onClose, initialPatient }: AddApp
               <View style={[styles.row, needsManualRTL && styles.rtlRow]}>
                 <View style={styles.halfField}>
                   <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>{t('appointments.date')}</Text>
-                  {Platform.OS === 'web' ? (
-                    <View style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}>
-                      <Ionicons name="calendar-outline" size={18} color={colors.textMuted} />
-                      <input
-                        type="date"
-                        value={formatDate(appointmentDate)}
-                        onChange={(e) => {
-                          const newDate = new Date(e.target.value + 'T00:00:00');
-                          if (!isNaN(newDate.getTime())) {
-                            setAppointmentDate(newDate);
-                          }
-                        }}
-                        min={formatDate(new Date())}
-                        style={{
-                          flex: 1,
-                          border: 'none',
-                          background: 'transparent',
-                          color: colors.text,
-                          fontSize: 15,
-                          outline: 'none',
-                          cursor: 'pointer',
-                        }}
-                      />
-                    </View>
-                  ) : (
-                    <TouchableOpacity
-                      style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}
-                      onPress={() => setShowDatePicker(true)}
-                    >
-                      <Ionicons name="calendar-outline" size={18} color={colors.textMuted} />
-                      <Text style={[styles.dateText, { color: colors.text }]}>
-                        {formatDate(appointmentDate)}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
+                  <TouchableOpacity
+                    style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}
+                    onPress={() => setShowDatePicker(true)}
+                  >
+                    <Ionicons name="calendar-outline" size={18} color={colors.textMuted} />
+                    <Text style={[styles.dateText, { color: colors.text }]}>
+                      {formatDate(appointmentDate)}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
                 <View style={styles.halfField}>
                   <Text style={[styles.label, { color: colors.text, textAlign: needsManualRTL ? 'right' : 'left' }]}>
                     {t('appointments.time')}
                   </Text>
-                  {Platform.OS === 'web' ? (
-                    <View style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}>
-                      <Ionicons name="time-outline" size={18} color={colors.textMuted} />
-                      <input
-                        type="time"
-                        value={formatTime(appointmentTime)}
-                        onChange={(e) => {
-                          const [hours, minutes] = e.target.value.split(':').map(Number);
-                          const newTime = new Date();
-                          newTime.setHours(hours, minutes, 0, 0);
-                          if (!isNaN(newTime.getTime())) {
-                            setAppointmentTime(newTime);
-                          }
-                        }}
-                        style={{
-                          flex: 1,
-                          border: 'none',
-                          background: 'transparent',
-                          color: colors.text,
-                          fontSize: 15,
-                          outline: 'none',
-                          cursor: 'pointer',
-                        }}
-                      />
-                    </View>
-                  ) : (
-                    <TouchableOpacity
-                      style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}
-                      onPress={() => setShowTimePicker(true)}
-                    >
-                      <Ionicons name="time-outline" size={18} color={colors.textMuted} />
-                      <Text style={[styles.dateText, { color: colors.text }]}>
-                        {formatTime(appointmentTime)}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
+                  <TouchableOpacity
+                    style={[styles.dateButton, { backgroundColor: colors.surfaceSecondary, borderColor: colors.border }, needsManualRTL && styles.rtlDateButton]}
+                    onPress={() => setShowTimePicker(true)}
+                  >
+                    <Ionicons name="time-outline" size={18} color={colors.textMuted} />
+                    <Text style={[styles.dateText, { color: colors.text }]}>
+                      {formatTime(appointmentTime)}
+                    </Text>
+                  </TouchableOpacity>
                 </View>
               </View>
 
