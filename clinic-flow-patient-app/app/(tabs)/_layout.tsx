@@ -1,27 +1,41 @@
 import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useColorScheme } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { useTheme } from '../../contexts/ThemeContext';
+import { useTranslation } from '../../contexts/LanguageContext';
 
-// Default colors that work without context (fallback)
-const lightColors = {
-  primary: '#0ea5e9',
-  surface: '#ffffff',
-  border: '#e5e7eb',
-  text: '#1f2937',
-  textMuted: '#9ca3af',
-};
+function ThemeToggleButton() {
+  const { isDark, setThemeMode, colors } = useTheme();
+  const { isRTL } = useTranslation();
 
-const darkColors = {
-  primary: '#38bdf8',
-  surface: '#1e293b',
-  border: '#334155',
-  text: '#f9fafb',
-  textMuted: '#94a3b8',
-};
+  const toggleTheme = () => {
+    setThemeMode(isDark ? 'light' : 'dark');
+  };
+
+  return (
+    <TouchableOpacity
+      onPress={toggleTheme}
+      accessibilityLabel={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      style={{
+        marginLeft: isRTL ? 16 : 0,
+        marginRight: isRTL ? 0 : 16,
+        padding: 8,
+        borderRadius: 20,
+        backgroundColor: colors.surfaceSecondary,
+      }}
+    >
+      <Ionicons
+        name={isDark ? 'sunny' : 'moon'}
+        size={20}
+        color={isDark ? '#fbbf24' : '#6366f1'}
+      />
+    </TouchableOpacity>
+  );
+}
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-  const colors = colorScheme === 'dark' ? darkColors : lightColors;
+  const { colors } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <Tabs
@@ -50,12 +64,13 @@ export default function TabLayout() {
         },
         headerTitleAlign: 'center',
         headerShadowVisible: false,
+        headerRight: () => <ThemeToggleButton />,
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: t('tabs.home'),
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'home' : 'home-outline'}
@@ -69,7 +84,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="book"
         options={{
-          title: 'Book',
+          title: t('tabs.book'),
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'add-circle' : 'add-circle-outline'}
@@ -77,13 +92,13 @@ export default function TabLayout() {
               color={color}
             />
           ),
-          headerTitle: 'Book Appointment',
+          headerTitle: t('booking.title'),
         }}
       />
       <Tabs.Screen
         name="appointments"
         options={{
-          title: 'Appointments',
+          title: t('tabs.appointments'),
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'calendar' : 'calendar-outline'}
@@ -91,13 +106,13 @@ export default function TabLayout() {
               color={color}
             />
           ),
-          headerTitle: 'My Appointments',
+          headerTitle: t('appointments.title'),
         }}
       />
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: t('tabs.profile'),
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? 'person' : 'person-outline'}
@@ -105,9 +120,10 @@ export default function TabLayout() {
               color={color}
             />
           ),
-          headerTitle: 'Profile',
+          headerTitle: t('profile.title'),
         }}
       />
     </Tabs>
   );
 }
+

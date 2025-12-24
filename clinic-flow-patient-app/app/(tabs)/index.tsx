@@ -20,6 +20,36 @@ import { LoadingState } from '../../components/LoadingState';
 import { ErrorState } from '../../components/ErrorState';
 import { EmptyState } from '../../components/EmptyState';
 
+function ThemeToggleButton() {
+  const { isDark, setThemeMode, colors } = useTheme();
+
+  const toggleTheme = () => {
+    setThemeMode(isDark ? 'light' : 'dark');
+  };
+
+  return (
+    <TouchableOpacity
+      onPress={toggleTheme}
+      style={{
+        width: 44,
+        height: 44,
+        borderRadius: 22,
+        backgroundColor: colors.surface,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: colors.border,
+      }}
+    >
+      <Ionicons
+        name={isDark ? 'sunny' : 'moon'}
+        size={22}
+        color={isDark ? '#fbbf24' : '#6366f1'}
+      />
+    </TouchableOpacity>
+  );
+}
+
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const { colors, isDark } = useTheme();
@@ -140,21 +170,24 @@ export default function HomeScreen() {
               {patient?.name || t('profile.guest')}
             </Text>
           </View>
-          <TouchableOpacity
-            onPress={() => router.push('/profile')}
-            style={{
-              width: 44,
-              height: 44,
-              borderRadius: 22,
-              backgroundColor: colors.surface,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderWidth: 1,
-              borderColor: colors.border,
-            }}
-          >
-            <Ionicons name="person-outline" size={22} color={colors.text} />
-          </TouchableOpacity>
+          <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', gap: 10 }}>
+            <ThemeToggleButton />
+            <TouchableOpacity
+              onPress={() => router.push('/profile')}
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: 22,
+                backgroundColor: colors.surface,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderWidth: 1,
+                borderColor: colors.border,
+              }}
+            >
+              <Ionicons name="person-outline" size={22} color={colors.text} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Search Bar */}

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useTranslation, useLanguage, Language } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import { Card } from '../../components/ui/Card';
+import { ConfirmationModal } from '../../components/ui/ConfirmationModal';
 import Constants from 'expo-constants';
 
 type ThemeMode = 'light' | 'dark' | 'system';
@@ -17,6 +18,7 @@ export default function ProfileScreen() {
   const { patient, isAuthenticated, isGuest, logout } = useAuth();
   const [showLanguagePicker, setShowLanguagePicker] = useState(false);
   const [showThemePicker, setShowThemePicker] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const languages: { code: Language; label: string }[] = [
     { code: 'en', label: 'English' },
@@ -46,18 +48,15 @@ export default function ProfileScreen() {
   };
 
   const handleLogout = () => {
-    Alert.alert(
-      t('profile.logout'),
-      t('profile.logoutConfirm'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('profile.logout'),
-          style: 'destructive',
-          onPress: () => logout(),
-        },
-      ]
-    );
+    console.log('🚪 Logout button pressed');
+    setShowLogoutModal(true);
+  };
+
+  const confirmLogout = async () => {
+    console.log('🚪 Logout confirmed, calling logout()');
+    await logout();
+    console.log('🚪 Logout complete, navigating to login');
+    router.replace('/login');
   };
 
   const MenuRow = ({
@@ -78,6 +77,7 @@ export default function ProfileScreen() {
     <TouchableOpacity
       onPress={onPress}
       disabled={!onPress}
+      activeOpacity={0.6}
       style={{
         flexDirection: isRTL ? 'row-reverse' : 'row',
         alignItems: 'center',
@@ -139,6 +139,7 @@ export default function ProfileScreen() {
   );
 
   return (
+    <>
     <ScrollView
       style={{ flex: 1, backgroundColor: colors.background }}
       contentContainerStyle={{ padding: 16 }}
@@ -418,5 +419,15 @@ export default function ProfileScreen() {
         {t('profile.version')} {Constants.expoConfig?.version || '1.0.0'}
       </Text>
     </ScrollView>
+
+    <ConfirmationModal
+      visible={showLogoutModal}
+      title={t('profile.logout')}
+      message={t('profile.logoutConfirm')}
+      type="danger"
+      onConfirm={confirmLogout}
+      onClose={() => setShowLogoutModal(false)}
+    />
+  </>
   );
 }

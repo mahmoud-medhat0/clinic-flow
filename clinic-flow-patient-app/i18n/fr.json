@@ -134,6 +134,7 @@
     "female": "Femme",
     "preferences": "Préférences",
     "language": "Langue",
+    "theme": "Thème",
     "notifications": "Notifications",
     "notificationSettings": "Paramètres de notification",
     "pushNotifications": "Notifications push",
@@ -170,6 +171,7 @@
     "resetPassword": "Réinitialiser le mot de passe",
     "loginButton": "Se connecter",
     "registerButton": "S'inscrire",
+    "signUp": "S'inscrire",
     "noAccount": "Vous n'avez pas de compte?",
     "hasAccount": "Vous avez déjà un compte?",
     "continueAsGuest": "Continuer en tant qu'invité",
@@ -199,6 +201,14 @@
     "en": "English",
     "ar": "العربية",
     "fr": "Français"
+  },
+  "theme": {
+    "title": "Thème",
+    "light": "Mode clair",
+    "dark": "Mode sombre",
+    "system": "Système par défaut",
+    "switchToLight": "Passer au mode clair",
+    "switchToDark": "Passer au mode sombre"
   },
   "errors": {
     "network": "Erreur réseau. Vérifiez votre connexion.",

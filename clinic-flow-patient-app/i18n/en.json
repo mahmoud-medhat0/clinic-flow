@@ -134,6 +134,7 @@
     "female": "Female",
     "preferences": "Preferences",
     "language": "Language",
+    "theme": "Theme",
     "notifications": "Notifications",
     "notificationSettings": "Notification Settings",
     "pushNotifications": "Push Notifications",
@@ -170,6 +171,7 @@
     "resetPassword": "Reset Password",
     "loginButton": "Sign In",
     "registerButton": "Sign Up",
+    "signUp": "Sign Up",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
     "continueAsGuest": "Continue as Guest",
@@ -199,6 +201,14 @@
     "en": "English",
     "ar": "العربية",
     "fr": "Français"
+  },
+  "theme": {
+    "title": "Theme",
+    "light": "Light Mode",
+    "dark": "Dark Mode",
+    "system": "System Default",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode"
   },
   "errors": {
     "network": "Network error. Please check your connection.",

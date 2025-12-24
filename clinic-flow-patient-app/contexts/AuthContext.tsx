@@ -2,12 +2,32 @@ import React, { createContext, useContext, useState, useCallback, ReactNode, use
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { authApi, Patient, LoginPayload, RegisterPayload } from '../services/auth';
 
+// ============================================
+// DEVELOPMENT MODE CONFIGURATION
+// Set to true to simulate a logged-in user
+// ============================================
+const DEV_SIMULATE_LOGIN = true;
+
+const MOCK_PATIENT: Patient = {
+  id: 'dev-patient-001',
+  name: 'أحمد محمد',
+  email: 'ahmed@example.com',
+  phone: '+201234567890',
+  dateOfBirth: '1990-05-15',
+  gender: 'male',
+  createdAt: new Date().toISOString(),
+};
+
+const MOCK_TOKEN = 'dev-mock-token-12345';
+// ============================================
+
 interface AuthContextType {
   patient: Patient | null;
   token: string | null;
   isAuthenticated: boolean;
   isGuest: boolean;
   isLoading: boolean;
+  isDevMode: boolean;
   login: (data: LoginPayload) => Promise<void>;
   register: (data: RegisterPayload) => Promise<void>;
   logout: () => Promise<void>;
@@ -18,6 +38,7 @@ interface AuthContextType {
 const TOKEN_KEY = 'patient-auth-token';
 const PATIENT_KEY = 'patient-data';
 const GUEST_KEY = 'patient-guest-info';
+const DEV_LOGOUT_KEY = 'patient-dev-logout-flag';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -31,6 +52,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadAuth = async () => {
       try {
+        // Development mode: simulate logged-in user
+        if (DEV_SIMULATE_LOGIN && __DEV__) {
+          // Check if user explicitly logged out
+          const wasLoggedOut = await AsyncStorage.getItem(DEV_LOGOUT_KEY);
+          if (wasLoggedOut !== 'true') {
+            console.log('🔧 DEV MODE: Simulating logged-in user');
+            setToken(MOCK_TOKEN);
+            setPatient(MOCK_PATIENT);
+            setIsLoading(false);
+            return;
+          }
+        }
+
         const [storedToken, storedPatient, storedGuest] = await Promise.all([
           AsyncStorage.getItem(TOKEN_KEY),
           AsyncStorage.getItem(PATIENT_KEY),
@@ -60,13 +94,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (data: LoginPayload) => {
     setIsLoading(true);
     try {
-      const response = await authApi.login(data);
-      setToken(response.token);
-      setPatient(response.patient);
+      let responseToken: string;
+      let responsePatient: Patient;
+
+      // Development mode: use mock login (skip API)
+      if (DEV_SIMULATE_LOGIN && __DEV__) {
+        console.log('🔧 DEV MODE: Mock login with:', data.email);
+        responseToken = MOCK_TOKEN;
+        responsePatient = { ...MOCK_PATIENT, email: data.email };
+      } else {
+        const response = await authApi.login(data);
+        responseToken = response.token;
+        responsePatient = response.patient;
+      }
+
+      setToken(responseToken);
+      setPatient(responsePatient);
       
       await Promise.all([
-        AsyncStorage.setItem(TOKEN_KEY, response.token),
-        AsyncStorage.setItem(PATIENT_KEY, JSON.stringify(response.patient)),
+        AsyncStorage.setItem(TOKEN_KEY, responseToken),
+        AsyncStorage.setItem(PATIENT_KEY, JSON.stringify(responsePatient)),
+        AsyncStorage.removeItem(DEV_LOGOUT_KEY), // Clear logout flag to allow dev auto-login
       ]);
       
       // Clear guest info on successful login
@@ -103,6 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await Promise.all([
       AsyncStorage.removeItem(TOKEN_KEY),
       AsyncStorage.removeItem(PATIENT_KEY),
+      AsyncStorage.setItem(DEV_LOGOUT_KEY, 'true'), // Mark as logged out to prevent dev auto-login
     ]);
   }, []);
 
@@ -132,6 +181,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAuthenticated,
     isGuest,
     isLoading,
+    isDevMode: DEV_SIMULATE_LOGIN && __DEV__,
     login,
     register,
     logout,

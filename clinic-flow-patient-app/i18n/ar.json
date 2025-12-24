@@ -134,6 +134,7 @@
     "female": "أنثى",
     "preferences": "التفضيلات",
     "language": "اللغة",
+    "theme": "المظهر",
     "notifications": "الإشعارات",
     "notificationSettings": "إعدادات الإشعارات",
     "pushNotifications": "الإشعارات الفورية",
@@ -170,6 +171,7 @@
     "resetPassword": "إعادة تعيين كلمة المرور",
     "loginButton": "تسجيل الدخول",
     "registerButton": "إنشاء حساب",
+    "signUp": "إنشاء حساب",
     "noAccount": "ليس لديك حساب؟",
     "hasAccount": "لديك حساب بالفعل؟",
     "continueAsGuest": "المتابعة كزائر",
@@ -199,6 +201,14 @@
     "en": "English",
     "ar": "العربية",
     "fr": "Français"
+  },
+  "theme": {
+    "title": "المظهر",
+    "light": "الوضع الفاتح",
+    "dark": "الوضع الداكن",
+    "system": "إعداد النظام",
+    "switchToLight": "التبديل للوضع الفاتح",
+    "switchToDark": "التبديل للوضع الداكن"
   },
   "errors": {
     "network": "خطأ في الشبكة. يرجى التحقق من اتصالك.",
