@@ -91,16 +91,16 @@ export function InvoiceCard({ invoice }: InvoiceCardProps) {
           {invoice.patientName}
         </Text>
 
-        <View style={[styles.detailsRow, needsManualRTL && styles.rtlRow]}>
-          <View style={[styles.dateItem, needsManualRTL && styles.rtlRow]}>
+        <View style={[styles.detailsColumn, needsManualRTL && { alignItems: 'flex-end' }]}>
+          <View style={[styles.detailItem, needsManualRTL && styles.rtlRow]}>
             <Ionicons name="calendar-outline" size={14} color={colors.textMuted} />
-            <Text style={[styles.dateText, { color: colors.textMuted }]} numberOfLines={1}>
+            <Text style={[styles.detailText, { color: colors.textMuted }]}>
               {formatDate(invoice.date)}
             </Text>
           </View>
-          <View style={[styles.serviceItem, needsManualRTL && styles.rtlRow]}>
+          <View style={[styles.detailItem, needsManualRTL && styles.rtlRow]}>
             <Ionicons name="medical-outline" size={14} color={colors.textMuted} />
-            <Text style={[styles.serviceText, { color: colors.textMuted }]} numberOfLines={1}>
+            <Text style={[styles.detailText, { color: colors.textMuted }]} numberOfLines={1}>
               {invoice.service}
             </Text>
           </View>
@@ -171,30 +171,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 6,
   },
-  detailsRow: {
-    flexDirection: 'row',
-    gap: 12,
-    flexWrap: 'nowrap',
+  detailsColumn: {
+    flexDirection: 'column',
+    gap: 4,
   },
-  dateItem: {
+  detailItem: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    flexShrink: 0,
   },
-  dateText: {
+  detailText: {
     fontSize: 12,
-  },
-  serviceItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    flex: 1,
-    minWidth: 0,
-  },
-  serviceText: {
-    fontSize: 12,
-    flex: 1,
   },
   amountContainer: {
     alignItems: 'flex-end',
