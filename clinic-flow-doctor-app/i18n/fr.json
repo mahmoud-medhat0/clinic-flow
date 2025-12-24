@@ -18,12 +18,15 @@
     "markAsDone": "Marquer comme fait",
     "viewAll": "Voir tout",
     "closed": "Fermé",
-    "of": "de"
+    "of": "de",
+    "filter": "Filtrer",
+    "allStatus": "Tout"
   },
   "tabs": {
     "home": "Accueil",
     "appointments": "Rendez-vous",
     "patients": "Patients",
+    "invoices": "Factures",
     "inventory": "Inventaire",
     "settings": "Paramètres"
   },
@@ -63,7 +66,8 @@
     "previous": "Précédents",
     "noPrevious": "Aucun rendez-vous passé",
     "noToday": "Aucun rendez-vous aujourd'hui",
-    "noUpcoming": "Aucun rendez-vous à venir"
+    "noUpcoming": "Aucun rendez-vous à venir",
+    "date": "Date"
   },
   "patients": {
     "title": "Patients",
@@ -87,7 +91,9 @@
     "noVisits": "Aucune visite",
     "quickNotes": "Notes Rapides",
     "medicalInfo": "Info Médicales",
-    "contactInfo": "Coordonnées"
+    "contactInfo": "Coordonnées",
+    "noSearchResults": "Aucun patient trouvé",
+    "addFirst": "Ajoutez votre premier patient"
   },
   "inventory": {
     "title": "Inventaire",
@@ -117,9 +123,12 @@
     "currentStock": "Stock Actuel",
     "recordMovement": "Enregistrer Mouvement",
     "movementType": "Type Mouvement",
+    "confirmStockInMessage": "Voulez-vous vraiment ajouter {{qty}} {{unit}} de \"{{name}}\" au stock ?",
+    "confirmStockOutMessage": "Voulez-vous vraiment retirer {{qty}} {{unit}} de \"{{name}}\" du stock ?",
     "noItems": "Aucun article",
     "noCategories": "Aucune catégorie",
-    "noMovements": "Aucun mouvement"
+    "noMovements": "Aucun mouvement",
+    "allItems": "Tous les Articles"
   },
   "settings": {
     "title": "Paramètres",
@@ -151,5 +160,47 @@
     "thursday": "Jeudi",
     "friday": "Vendredi",
     "saturday": "Samedi"
+  },
+  "auth": {
+    "login": "Connexion",
+    "welcomeBack": "Bon Retour",
+    "loginSubtitle": "Connectez-vous à votre compte",
+    "email": "Email",
+    "password": "Mot de passe",
+    "forgotPassword": "Mot de passe oublié ?",
+    "loginButton": "Se Connecter",
+    "noAccount": "Vous n'avez pas de compte ?",
+    "signUp": "S'inscrire"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "Aucune notification",
+    "emptySubtitle": "Vous êtes à jour !",
+    "markAllRead": "Tout marquer comme lu",
+    "appointment": "Rendez-vous",
+    "inventory": "Inventaire",
+    "system": "Système"
+  },
+  "invoices": {
+    "title": "Factures",
+    "createInvoice": "Créer Facture",
+    "invoiceNumber": "Facture #",
+    "patient": "Patient",
+    "selectPatient": "Sélectionner patient",
+    "date": "Date",
+    "dueDate": "Date d'échéance",
+    "amount": "Montant",
+    "service": "Service",
+    "enterService": "Entrer la description du service",
+    "status": "Statut",
+    "paid": "Payée",
+    "pending": "En attente",
+    "overdue": "En retard",
+    "total": "Total",
+    "noInvoices": "Aucune facture",
+    "addFirst": "Créer votre première facture",
+    "markAsPaid": "Marquer comme payée",
+    "details": "Détails de la Facture",
+    "all": "Tout"
   }
 }
