@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Text, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, RefreshControl, TouchableOpacity, I18nManager } from 'react-native';
 import { router } from 'expo-router';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useTranslation, useLanguage } from '../../contexts/LanguageContext';
@@ -16,6 +16,8 @@ export default function AppointmentsScreen() {
   const { colors } = useTheme();
   const { t, isRTL } = useTranslation();
   const { isAuthenticated, isGuest } = useAuth();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [activeTab, setActiveTab] = useState<Tab>('upcoming');
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -75,11 +77,14 @@ export default function AppointmentsScreen() {
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       {/* Tab Selector */}
       <View
-        style={{
-          flexDirection: isRTL ? 'row-reverse' : 'row',
-          padding: 16,
-          gap: 12,
-        }}
+        style={[
+          {
+            flexDirection: 'row',
+            padding: 16,
+            gap: 12,
+          },
+          needsManualRTL && { flexDirection: 'row-reverse' },
+        ]}
       >
         {(['upcoming', 'past'] as Tab[]).map((tab) => (
           <TouchableOpacity

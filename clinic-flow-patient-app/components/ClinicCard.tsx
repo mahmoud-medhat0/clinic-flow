@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, I18nManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage, useTranslation } from '../contexts/LanguageContext';
@@ -16,6 +16,8 @@ export function ClinicCard({ clinic, onPress, onBookPress }: ClinicCardProps) {
   const { colors } = useTheme();
   const { isRTL } = useLanguage();
   const { t } = useTranslation();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
@@ -37,7 +39,7 @@ export function ClinicCard({ clinic, onPress, onBookPress }: ClinicCardProps) {
           style={{
             position: 'absolute',
             top: 12,
-            [isRTL ? 'left' : 'right']: 12,
+            [needsManualRTL ? 'left' : 'right']: 12,
             backgroundColor: clinic.isOpen ? colors.success : colors.danger,
             paddingHorizontal: 10,
             paddingVertical: 4,
@@ -57,7 +59,7 @@ export function ClinicCard({ clinic, onPress, onBookPress }: ClinicCardProps) {
               fontWeight: '700',
               color: colors.text,
               marginBottom: 6,
-              textAlign: isRTL ? 'right' : 'left',
+              textAlign: needsManualRTL ? 'right' : 'left',
             }}
           >
             {clinic.name}
@@ -65,11 +67,14 @@ export function ClinicCard({ clinic, onPress, onBookPress }: ClinicCardProps) {
 
           {/* Rating */}
           <View
-            style={{
-              flexDirection: isRTL ? 'row-reverse' : 'row',
-              alignItems: 'center',
-              marginBottom: 8,
-            }}
+            style={[
+              {
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 8,
+              },
+              needsManualRTL && { flexDirection: 'row-reverse' },
+            ]}
           >
             <Ionicons name="star" size={16} color="#f59e0b" />
             <Text
@@ -89,11 +94,14 @@ export function ClinicCard({ clinic, onPress, onBookPress }: ClinicCardProps) {
 
           {/* Address */}
           <View
-            style={{
-              flexDirection: isRTL ? 'row-reverse' : 'row',
-              alignItems: 'center',
-              marginBottom: 12,
-            }}
+            style={[
+              {
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 12,
+              },
+              needsManualRTL && { flexDirection: 'row-reverse' },
+            ]}
           >
             <Ionicons
               name="location-outline"
@@ -104,10 +112,10 @@ export function ClinicCard({ clinic, onPress, onBookPress }: ClinicCardProps) {
               style={{
                 fontSize: 14,
                 color: colors.textSecondary,
-                marginLeft: isRTL ? 0 : 6,
-                marginRight: isRTL ? 6 : 0,
+                marginLeft: needsManualRTL ? 0 : 6,
+                marginRight: needsManualRTL ? 6 : 0,
                 flex: 1,
-                textAlign: isRTL ? 'right' : 'left',
+                textAlign: needsManualRTL ? 'right' : 'left',
               }}
               numberOfLines={1}
             >
@@ -118,12 +126,15 @@ export function ClinicCard({ clinic, onPress, onBookPress }: ClinicCardProps) {
           {/* Services Preview */}
           {clinic.services?.length > 0 && (
             <View
-              style={{
-                flexDirection: isRTL ? 'row-reverse' : 'row',
-                flexWrap: 'wrap',
-                gap: 6,
-                marginBottom: 12,
-              }}
+              style={[
+                {
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  gap: 6,
+                  marginBottom: 12,
+                },
+                needsManualRTL && { flexDirection: 'row-reverse' },
+              ]}
             >
               {clinic.services.slice(0, 3).map((service) => (
                 <View

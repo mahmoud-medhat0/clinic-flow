@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, I18nManager } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -16,6 +16,9 @@ export default function ProfileScreen() {
   const { t, isRTL } = useTranslation();
   const { language, changeLanguage } = useLanguage();
   const { patient, isAuthenticated, isGuest, logout } = useAuth();
+  
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
+  
   const [showLanguagePicker, setShowLanguagePicker] = useState(false);
   const [showThemePicker, setShowThemePicker] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);

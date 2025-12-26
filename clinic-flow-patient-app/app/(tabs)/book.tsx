@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, I18nManager } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -16,6 +16,8 @@ export default function BookScreen() {
   const { colors } = useTheme();
   const { t, isRTL } = useTranslation();
   const { booking, setClinic, setService, resetBooking } = useBooking();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [services, setServices] = useState<Service[]>([]);
@@ -104,7 +106,7 @@ export default function BookScreen() {
               fontWeight: '700',
               color: colors.text,
               marginBottom: 12,
-              textAlign: isRTL ? 'right' : 'left',
+              textAlign: needsManualRTL ? 'right' : 'left',
             }}
           >
             1. {t('booking.selectService').split('?')[0]}
@@ -172,7 +174,7 @@ export default function BookScreen() {
                 fontWeight: '700',
                 color: colors.text,
                 marginBottom: 12,
-                textAlign: isRTL ? 'right' : 'left',
+                textAlign: needsManualRTL ? 'right' : 'left',
               }}
             >
               2. {t('booking.selectService')}
@@ -216,7 +218,8 @@ export default function BookScreen() {
       {/* Bottom Action */}
       {selectedClinicId && selectedServiceId && (
         <View
-          style={{
+          style={[
+            {
             position: 'absolute',
             bottom: 0,
             left: 0,
@@ -225,9 +228,11 @@ export default function BookScreen() {
             backgroundColor: colors.surface,
             borderTopWidth: 1,
             borderTopColor: colors.border,
-            flexDirection: isRTL ? 'row-reverse' : 'row',
+            flexDirection: 'row',
             gap: 12,
-          }}
+          },
+          needsManualRTL && { flexDirection: 'row-reverse' },
+        ]}
         >
           <TouchableOpacity
             onPress={handleReset}

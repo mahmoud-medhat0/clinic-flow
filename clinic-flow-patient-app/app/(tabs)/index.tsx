@@ -6,6 +6,7 @@ import {
   TextInput,
   RefreshControl,
   TouchableOpacity,
+  I18nManager,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -56,6 +57,8 @@ export default function HomeScreen() {
   const { t, isRTL } = useTranslation();
   const { patient } = useAuth();
   const { setClinic } = useBooking();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [clinics, setClinics] = useState<Clinic[]>([]);
   const [filteredClinics, setFilteredClinics] = useState<Clinic[]>([]);
@@ -142,19 +145,22 @@ export default function HomeScreen() {
       >
         {/* Header */}
         <View
-          style={{
-            flexDirection: isRTL ? 'row-reverse' : 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 24,
-          }}
+          style={[
+            {
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 24,
+            },
+            needsManualRTL && { flexDirection: 'row-reverse' },
+          ]}
         >
-          <View>
+          <View style={needsManualRTL && { alignItems: 'flex-end' }}>
             <Text
               style={{
                 fontSize: 14,
                 color: colors.textSecondary,
-                textAlign: isRTL ? 'right' : 'left',
+                textAlign: needsManualRTL ? 'right' : 'left',
               }}
             >
               {getGreeting()}
@@ -164,13 +170,16 @@ export default function HomeScreen() {
                 fontSize: 24,
                 fontWeight: '700',
                 color: colors.text,
-                textAlign: isRTL ? 'right' : 'left',
+                textAlign: needsManualRTL ? 'right' : 'left',
               }}
             >
               {patient?.name || t('profile.guest')}
             </Text>
           </View>
-          <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', gap: 10 }}>
+          <View style={[
+            { flexDirection: 'row', gap: 10 },
+            needsManualRTL && { flexDirection: 'row-reverse' },
+          ]}>
             <ThemeToggleButton />
             <TouchableOpacity
               onPress={() => router.push('/profile')}
@@ -192,16 +201,19 @@ export default function HomeScreen() {
 
         {/* Search Bar */}
         <View
-          style={{
-            flexDirection: isRTL ? 'row-reverse' : 'row',
-            alignItems: 'center',
-            backgroundColor: colors.surface,
-            borderRadius: 12,
-            paddingHorizontal: 14,
-            marginBottom: 24,
-            borderWidth: 1,
-            borderColor: colors.border,
-          }}
+          style={[
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+              backgroundColor: colors.surface,
+              borderRadius: 12,
+              paddingHorizontal: 14,
+              marginBottom: 24,
+              borderWidth: 1,
+              borderColor: colors.border,
+            },
+            needsManualRTL && { flexDirection: 'row-reverse' },
+          ]}
         >
           <Ionicons name="search" size={20} color={colors.textMuted} />
           <TextInput
@@ -215,7 +227,7 @@ export default function HomeScreen() {
               paddingHorizontal: 10,
               fontSize: 16,
               color: colors.text,
-              textAlign: isRTL ? 'right' : 'left',
+              textAlign: needsManualRTL ? 'right' : 'left',
             }}
           />
           {searchQuery.length > 0 && (
@@ -227,12 +239,15 @@ export default function HomeScreen() {
 
         {/* Section Title */}
         <View
-          style={{
-            flexDirection: isRTL ? 'row-reverse' : 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: 16,
-          }}
+          style={[
+            {
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 16,
+            },
+            needsManualRTL && { flexDirection: 'row-reverse' },
+          ]}
         >
           <Text
             style={{
