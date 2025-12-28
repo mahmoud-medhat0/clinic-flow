@@ -106,7 +106,7 @@ export default function BookScreen() {
               fontWeight: '700',
               color: colors.text,
               marginBottom: 16,
-              textAlign: needsManualRTL ? 'right' : 'left',
+              textAlign: needsManualRTL ? 'left' : 'right',
               letterSpacing: 0.3,
             }}
           >
@@ -121,7 +121,7 @@ export default function BookScreen() {
                 gap: 16,
                 marginTop: 4,
               },
-              needsManualRTL && { flexDirection: 'row-reverse' },
+              needsManualRTL && { flexDirection: 'row' },
             ]}
           >
             {clinics.map((clinic) => (
@@ -219,7 +219,7 @@ export default function BookScreen() {
                 fontWeight: '700',
                 color: colors.text,
                 marginBottom: 16,
-                textAlign: needsManualRTL ? 'right' : 'left',
+                textAlign: needsManualRTL ? 'left' : 'right',
                 letterSpacing: 0.3,
               }}
             >

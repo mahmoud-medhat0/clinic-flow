@@ -150,6 +150,12 @@
     "register": "إنشاء حساب",
     "version": "الإصدار"
   },
+  "notifications": {
+    "title": "الإشعارات",
+    "markAllRead": "تعليم الكل كمقروء",
+    "empty": "لا توجد إشعارات",
+    "emptySubtitle": "لقد قرأت كل شيء!"
+  },
   "auth": {
     "login": "تسجيل الدخول",
     "register": "إنشاء حساب",

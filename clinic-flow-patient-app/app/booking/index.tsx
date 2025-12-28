@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert, I18nManager } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, I18nManager } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,6 +15,7 @@ import { LoadingState } from '../../components/LoadingState';
 import { Input } from '../../components/ui/Input';
 import { Button } from '../../components/ui/Button';
 import { Card } from '../../components/ui/Card';
+import { SuccessModal } from '../../components/ui/SuccessModal';
 
 export default function BookingScreen() {
   const insets = useSafeAreaInsets();
@@ -48,6 +49,8 @@ export default function BookingScreen() {
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
   const steps = [
     { key: 1, label: t('booking.step.service') },
     { key: 2, label: t('booking.step.datetime') },
@@ -62,10 +65,10 @@ export default function BookingScreen() {
   }, [booking.clinicId]);
 
   useEffect(() => {
-    if (selectedDate && booking.doctorId) {
+    if (selectedDate) {
       loadTimeSlots();
     }
-  }, [selectedDate, booking.doctorId]);
+  }, [selectedDate]);
 
   const loadServices = async () => {
     if (!booking.clinicId) return;
@@ -81,13 +84,32 @@ export default function BookingScreen() {
   };
 
   const loadTimeSlots = async () => {
-    if (!booking.doctorId) return;
     try {
-      const slots = await doctorsApi.getTimeSlots(booking.doctorId, selectedDate, booking.serviceId || undefined);
-      setTimeSlots(slots);
+      // If we have a doctor, try to load real slots
+      if (booking.doctorId) {
+        const slots = await doctorsApi.getTimeSlots(booking.doctorId, selectedDate, booking.serviceId || undefined);
+        setTimeSlots(slots);
+        return;
+      }
+      
+      // Fallback: Generate mock slots for demo
+      setTimeSlots([
+        { time: '09:00', available: true },
+        { time: '09:30', available: true },
+        { time: '10:00', available: false },
+        { time: '10:30', available: true },
+        { time: '11:00', available: true },
+        { time: '11:30', available: true },
+        { time: '14:00', available: true },
+        { time: '14:30', available: false },
+        { time: '15:00', available: true },
+        { time: '15:30', available: true },
+        { time: '16:00', available: true },
+        { time: '16:30', available: true },
+      ]);
     } catch (err) {
       console.error('Failed to load time slots', err);
-      // Fallback mock slots for demo
+      // Fallback mock slots on error
       setTimeSlots([
         { time: '09:00', available: true },
         { time: '09:30', available: true },
@@ -128,11 +150,11 @@ export default function BookingScreen() {
 
   const handleNextStep = () => {
     if (currentStep === 1 && !booking.serviceId) {
-      Alert.alert('', t('booking.selectService'));
+      alert(t('booking.selectService'));
       return;
     }
     if (currentStep === 2 && (!booking.selectedDate || !booking.selectedTime)) {
-      Alert.alert('', t('booking.selectTime'));
+      alert(t('booking.selectTime'));
       return;
     }
     if (currentStep === 3) {
@@ -145,28 +167,10 @@ export default function BookingScreen() {
   const handleConfirmBooking = async () => {
     try {
       const appointment = await submitBooking();
-      Alert.alert(
-        t('booking.bookingSuccess'),
-        t('booking.bookingSuccessMessage'),
-        [
-          {
-            text: t('booking.viewAppointments'),
-            onPress: () => {
-              resetBooking();
-              router.replace('/(tabs)/appointments');
-            },
-          },
-          {
-            text: t('booking.bookAnother'),
-            onPress: () => {
-              resetBooking();
-              router.replace('/(tabs)/book');
-            },
-          },
-        ]
-      );
+      setShowSuccessModal(true);
     } catch (err) {
-      Alert.alert(t('common.error'), t('errors.server'));
+      // Show error - could also use a custom error modal here
+      alert(t('errors.server'));
     }
   };
 
@@ -192,7 +196,7 @@ export default function BookingScreen() {
       case 1:
         return (
           <View>
-            <Text style={{ fontSize: 18, fontWeight: '600', color: colors.text, marginBottom: 16, textAlign: isRTL ? 'right' : 'left' }}>
+            <Text style={{ fontSize: 18, fontWeight: '600', color: colors.text, marginBottom: 16, textAlign: needsManualRTL ? 'left' : 'right' }}>
               {t('booking.selectService')}
             </Text>
             {isLoading ? (
@@ -214,7 +218,7 @@ export default function BookingScreen() {
         return (
           <View>
             {/* Date Selector */}
-            <Text style={{ fontSize: 16, fontWeight: '600', color: colors.text, marginBottom: 12, textAlign: isRTL ? 'right' : 'left' }}>
+            <Text style={{ fontSize: 16, fontWeight: '600', color: colors.text, marginBottom: 12, textAlign: needsManualRTL ? 'left' : 'right' }}>
               {t('booking.selectDate')}
             </Text>
             <ScrollView
@@ -310,32 +314,32 @@ export default function BookingScreen() {
               <View style={{ gap: 12 }}>
                 <View style={[
                   { flexDirection: 'row', justifyContent: 'space-between' },
-                  needsManualRTL && { flexDirection: 'row-reverse' },
+                  needsManualRTL && { flexDirection: 'row' },
                 ]}>
                   <Text style={{ color: colors.textMuted }}>{t('booking.service')}</Text>
-                  <Text style={{ fontWeight: '600', color: colors.text }}>{booking.serviceName}</Text>
+                  <Text style={{ fontWeight: '600', color: colors.text, textAlign: needsManualRTL ? 'left' : 'right' }}>{booking.serviceName}</Text>
                 </View>
                 <View style={[
                   { flexDirection: 'row', justifyContent: 'space-between' },
-                  needsManualRTL && { flexDirection: 'row-reverse' },
+                  needsManualRTL && { flexDirection: 'row' },
                 ]}>
                   <Text style={{ color: colors.textMuted }}>{t('booking.date')}</Text>
-                  <Text style={{ fontWeight: '600', color: colors.text }}>{booking.selectedDate}</Text>
+                  <Text style={{ fontWeight: '600', color: colors.text, textAlign: needsManualRTL ? 'left' : 'right' }}>{booking.selectedDate}</Text>
                 </View>
-                <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between' }}>
+                <View style={{ flexDirection: isRTL ? 'row' : 'row', justifyContent: 'space-between' }}>
                   <Text style={{ color: colors.textMuted }}>{t('booking.time')}</Text>
-                  <Text style={{ fontWeight: '600', color: colors.text }}>{booking.selectedTime}</Text>
+                  <Text style={{ fontWeight: '600', color: colors.text, textAlign: needsManualRTL ? 'left' : 'right' }}>{booking.selectedTime}</Text>
                 </View>
-                <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between' }}>
+                <View style={{ flexDirection: isRTL ? 'row' : 'row', justifyContent: 'space-between' }}>
                   <Text style={{ color: colors.textMuted }}>{t('booking.patient')}</Text>
                   <Text style={{ fontWeight: '600', color: colors.text }}>{booking.patientName}</Text>
                 </View>
-                <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between' }}>
+                <View style={{ flexDirection: isRTL ? 'row' : 'row', justifyContent: 'space-between' }}>
                   <Text style={{ color: colors.textMuted }}>{t('booking.phone')}</Text>
                   <Text style={{ fontWeight: '600', color: colors.text }}>{booking.patientPhone}</Text>
                 </View>
                 {booking.servicePrice && (
-                  <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', marginTop: 8, paddingTop: 12, borderTopWidth: 1, borderTopColor: colors.border }}>
+                  <View style={{ flexDirection: isRTL ? 'row' : 'row', justifyContent: 'space-between', marginTop: 8, paddingTop: 12, borderTopWidth: 1, borderTopColor: colors.border }}>
                     <Text style={{ color: colors.text, fontWeight: '500' }}>{t('booking.price')}</Text>
                     <Text style={{ fontSize: 18, fontWeight: '700', color: colors.primary }}>${booking.servicePrice}</Text>
                   </View>
@@ -360,7 +364,7 @@ export default function BookingScreen() {
             borderBottomWidth: 1,
             borderBottomColor: colors.border,
           },
-          needsManualRTL && { flexDirection: 'row-reverse' },
+          needsManualRTL && { flexDirection: 'row' },
         ]}
       >
         <TouchableOpacity onPress={handleClose}>
@@ -380,7 +384,7 @@ export default function BookingScreen() {
             padding: 16,
             gap: 8,
           },
-          needsManualRTL && { flexDirection: 'row-reverse' },
+          needsManualRTL && { flexDirection: 'row' },
         ]}
       >
         {steps.map((step, index) => (
@@ -431,7 +435,7 @@ export default function BookingScreen() {
             flexDirection: 'row',
             gap: 12,
           },
-          needsManualRTL && { flexDirection: 'row-reverse' },
+          needsManualRTL && { flexDirection: 'row' },
         ]}
       >
         {currentStep > 1 && (
@@ -458,6 +462,24 @@ export default function BookingScreen() {
           )}
         </View>
       </View>
+
+      {/* Success Modal */}
+      <SuccessModal
+        visible={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title={t('booking.bookingSuccess')}
+        message={t('booking.bookingSuccessMessage')}
+        primaryButtonText={t('booking.viewAppointments')}
+        secondaryButtonText={t('booking.bookAnother')}
+        onPrimaryPress={() => {
+          resetBooking();
+          router.replace('/(tabs)/appointments');
+        }}
+        onSecondaryPress={() => {
+          resetBooking();
+          router.replace('/(tabs)/book');
+        }}
+      />
     </View>
   );
 }

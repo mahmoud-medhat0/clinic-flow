@@ -150,6 +150,12 @@
     "register": "S'inscrire",
     "version": "Version"
   },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Tout marquer lu",
+    "empty": "Aucune notification",
+    "emptySubtitle": "Vous êtes à jour!"
+  },
   "auth": {
     "login": "Connexion",
     "register": "Inscription",

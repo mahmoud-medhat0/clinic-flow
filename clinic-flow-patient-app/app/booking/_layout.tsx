@@ -1,10 +1,12 @@
 import { Stack } from 'expo-router';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useTranslation } from '../../contexts/LanguageContext';
+import { I18nManager } from 'react-native';
 
 export default function BookingLayout() {
   const { colors } = useTheme();
-  const { t } = useTranslation();
+  const { isRTL,t } = useTranslation();
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   return (
     <Stack

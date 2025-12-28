@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, I18nManager } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage, useTranslation } from '../contexts/LanguageContext';
@@ -16,7 +16,7 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
   const { colors } = useTheme();
   const { isRTL } = useLanguage();
   const { t } = useTranslation();
-
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
   const getStatusColor = () => {
     switch (appointment.status) {
       case 'confirmed': return colors.success;
@@ -39,7 +39,7 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
-    return date.toLocaleDateString(isRTL ? 'ar-EG' : 'en-US', {
+    return date.toLocaleDateString(needsManualRTL ? 'ar-EG' : 'en-US', {
       weekday: 'short',
       month: 'short',
       day: 'numeric',
@@ -49,7 +49,7 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
   return (
     <TouchableOpacity onPress={onPress} activeOpacity={0.9}>
       <Card variant="elevated" style={{ marginBottom: 12 }}>
-        <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row' }}>
+        <View style={{ flexDirection: needsManualRTL ? 'row' : 'row' }}>
           {/* Clinic Image */}
           <Image
             source={{ uri: appointment.clinic.image }}
@@ -65,14 +65,14 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
           <View
             style={{
               flex: 1,
-              marginLeft: isRTL ? 0 : 12,
-              marginRight: isRTL ? 12 : 0,
+              marginLeft: needsManualRTL ? 12 : 0,
+              marginRight: needsManualRTL ? 0 : 12,
             }}
           >
             {/* Status Badge */}
             <View
               style={{
-                flexDirection: isRTL ? 'row-reverse' : 'row',
+                flexDirection: needsManualRTL ? 'row' : 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 marginBottom: 6,
@@ -84,6 +84,7 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
                   paddingHorizontal: 8,
                   paddingVertical: 3,
                   borderRadius: 6,
+                  flexShrink: 1,
                 }}
               >
                 <Text
@@ -93,15 +94,17 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
                     color: getStatusColor(),
                     textTransform: 'capitalize',
                   }}
+                  numberOfLines={1}
                 >
                   {t(`status.${appointment.status}`)}
                 </Text>
               </View>
               
               <Ionicons
-                name={isRTL ? 'chevron-back' : 'chevron-forward'}
+                name={needsManualRTL ? 'chevron-back' : 'chevron-forward'}
                 size={20}
                 color={colors.textMuted}
+                style={{ flexShrink: 0 }}
               />
             </View>
 
@@ -111,7 +114,7 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
                 fontSize: 16,
                 fontWeight: '600',
                 color: colors.text,
-                textAlign: isRTL ? 'right' : 'left',
+                textAlign: needsManualRTL ? 'left' : 'right',
                 marginBottom: 4,
               }}
               numberOfLines={1}
@@ -124,7 +127,7 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
               style={{
                 fontSize: 13,
                 color: colors.textSecondary,
-                textAlign: isRTL ? 'right' : 'left',
+                textAlign: needsManualRTL ? 'left' : 'right',
                 marginBottom: 8,
               }}
               numberOfLines={1}
@@ -135,14 +138,14 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
             {/* Date and Time */}
             <View
               style={{
-                flexDirection: isRTL ? 'row-reverse' : 'row',
+                flexDirection: needsManualRTL ? 'row' : 'row',
                 alignItems: 'center',
                 gap: 12,
               }}
             >
               <View
                 style={{
-                  flexDirection: isRTL ? 'row-reverse' : 'row',
+                  flexDirection: needsManualRTL ? 'row' : 'row',
                   alignItems: 'center',
                 }}
               >
@@ -156,8 +159,8 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
                     fontSize: 13,
                     color: colors.text,
                     fontWeight: '500',
-                    marginLeft: isRTL ? 0 : 4,
-                    marginRight: isRTL ? 4 : 0,
+                    marginLeft: needsManualRTL ? 4 : 0,
+                    marginRight: needsManualRTL ? 0 : 4,
                   }}
                 >
                   {formatDate(appointment.date)}
@@ -166,7 +169,7 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
 
               <View
                 style={{
-                  flexDirection: isRTL ? 'row-reverse' : 'row',
+                  flexDirection: needsManualRTL ? 'row' : 'row',
                   alignItems: 'center',
                 }}
               >
@@ -180,8 +183,8 @@ export function AppointmentCard({ appointment, onPress, variant = 'upcoming' }: 
                     fontSize: 13,
                     color: colors.text,
                     fontWeight: '500',
-                    marginLeft: isRTL ? 0 : 4,
-                    marginRight: isRTL ? 4 : 0,
+                    marginLeft: needsManualRTL ? 4 : 0,
+                    marginRight: needsManualRTL ? 0 : 4,
                   }}
                 >
                   {appointment.time}

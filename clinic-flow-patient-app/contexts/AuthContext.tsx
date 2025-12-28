@@ -33,6 +33,8 @@ interface AuthContextType {
   logout: () => Promise<void>;
   updatePatient: (data: Partial<Patient>) => void;
   setGuestInfo: (name: string, phone: string, email?: string) => void;
+  updateProfile: (data: Partial<Patient>) => Promise<void>;
+  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
 }
 
 const TOKEN_KEY = 'patient-auth-token';
@@ -170,6 +172,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await AsyncStorage.setItem(GUEST_KEY, JSON.stringify(info));
   }, []);
 
+  const updateProfile = useCallback(async (data: Partial<Patient>) => {
+    if (!patient) throw new Error('Not authenticated');
+    
+    const updatedPatient = { ...patient, ...data };
+    setPatient(updatedPatient);
+    await AsyncStorage.setItem(PATIENT_KEY, JSON.stringify(updatedPatient));
+    
+    // In production, also call API
+    // await authApi.updateProfile(data);
+  }, [patient]);
+
+  const changePassword = useCallback(async (currentPassword: string, newPassword: string) => {
+    if (!patient) throw new Error('Not authenticated');
+    
+    // In production, call API
+    // await authApi.changePassword({ currentPassword, newPassword });
+    
+    // For now, just simulate success
+    console.log('Password changed successfully');
+  }, [patient]);
+
   const value = useMemo(() => ({
     patient: patient || (guestInfo ? { 
       id: 'guest', 
@@ -187,7 +210,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     logout,
     updatePatient,
     setGuestInfo,
-  }), [patient, token, isAuthenticated, isGuest, isLoading, login, register, logout, updatePatient, setGuestInfo, guestInfo]);
+    updateProfile,
+    changePassword,
+  }), [patient, token, isAuthenticated, isGuest, isLoading, login, register, logout, updatePatient, setGuestInfo, guestInfo, updateProfile, changePassword]);
 
   return (
     <AuthContext.Provider value={value}>

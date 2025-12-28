@@ -150,6 +150,12 @@
     "register": "Register",
     "version": "Version"
   },
+  "notifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark All Read",
+    "empty": "No notifications",
+    "emptySubtitle": "You're all caught up!"
+  },
   "auth": {
     "login": "Login",
     "register": "Register",

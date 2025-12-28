@@ -17,7 +17,7 @@ export default function ProfileScreen() {
   const { language, changeLanguage } = useLanguage();
   const { patient, isAuthenticated, isGuest, logout } = useAuth();
   
-  const needsManualRTL = isRTL && !I18nManager.isRTL;
+  const needsManualRTL = isRTL &&  !I18nManager.isRTL;
   
   const [showLanguagePicker, setShowLanguagePicker] = useState(false);
   const [showThemePicker, setShowThemePicker] = useState(false);
@@ -82,7 +82,7 @@ export default function ProfileScreen() {
       disabled={!onPress}
       activeOpacity={0.6}
       style={{
-        flexDirection: isRTL ? 'row-reverse' : 'row',
+        flexDirection: needsManualRTL ? 'row-reverse' : 'row',
         alignItems: 'center',
         paddingVertical: 14,
         borderBottomWidth: 1,
@@ -97,8 +97,8 @@ export default function ProfileScreen() {
           backgroundColor: danger ? colors.dangerLight : colors.primaryLight,
           alignItems: 'center',
           justifyContent: 'center',
-          marginRight: isRTL ? 0 : 12,
-          marginLeft: isRTL ? 12 : 0,
+          marginRight: needsManualRTL ? 0 : 12,
+          marginLeft: needsManualRTL ? 12 : 0,
         }}
       >
         <Ionicons
@@ -113,7 +113,7 @@ export default function ProfileScreen() {
             fontSize: 15,
             fontWeight: '500',
             color: danger ? colors.danger : colors.text,
-            textAlign: isRTL ? 'right' : 'left',
+            textAlign: needsManualRTL ? 'right' : 'left',
           }}
         >
           {label}
@@ -124,8 +124,8 @@ export default function ProfileScreen() {
           style={{
             fontSize: 14,
             color: colors.textMuted,
-            marginRight: isRTL ? 0 : 8,
-            marginLeft: isRTL ? 8 : 0,
+            marginRight: needsManualRTL ? 0 : 8,
+            marginLeft: needsManualRTL ? 8 : 0,
           }}
         >
           {value}
@@ -133,7 +133,7 @@ export default function ProfileScreen() {
       )}
       {showChevron && onPress && (
         <Ionicons
-          name={isRTL ? 'chevron-back' : 'chevron-forward'}
+          name={needsManualRTL ? 'chevron-forward' : 'chevron-back'}
           size={20}
           color={colors.textMuted}
         />
@@ -197,7 +197,7 @@ export default function ProfileScreen() {
           <TouchableOpacity
             onPress={() => router.push('/login')}
             style={{
-              flexDirection: isRTL ? 'row-reverse' : 'row',
+              flexDirection: needsManualRTL ? 'row-reverse' : 'row',
               alignItems: 'center',
               justifyContent: 'center',
               paddingVertical: 14,
@@ -212,8 +212,8 @@ export default function ProfileScreen() {
                 fontSize: 16,
                 fontWeight: '600',
                 color: colors.white,
-                marginLeft: isRTL ? 0 : 8,
-                marginRight: isRTL ? 8 : 0,
+                marginLeft: needsManualRTL ? 0 : 8,
+                marginRight: needsManualRTL ? 8 : 0,
               }}
             >
               {t('profile.login')}
@@ -222,7 +222,7 @@ export default function ProfileScreen() {
           <TouchableOpacity
             onPress={() => router.push('/register')}
             style={{
-              flexDirection: isRTL ? 'row-reverse' : 'row',
+              flexDirection: needsManualRTL ? 'row-reverse' : 'row',
               alignItems: 'center',
               justifyContent: 'center',
               paddingVertical: 14,
@@ -238,8 +238,8 @@ export default function ProfileScreen() {
                 fontSize: 16,
                 fontWeight: '600',
                 color: colors.primary,
-                marginLeft: isRTL ? 0 : 8,
-                marginRight: isRTL ? 8 : 0,
+                marginLeft: needsManualRTL ? 0 : 8,
+                marginRight: needsManualRTL ? 8 : 0,
               }}
             >
               {t('profile.register')}
@@ -256,9 +256,9 @@ export default function ProfileScreen() {
           color: colors.textMuted,
           textTransform: 'uppercase',
           marginBottom: 8,
-          textAlign: isRTL ? 'right' : 'left',
-          marginLeft: isRTL ? 0 : 4,
-          marginRight: isRTL ? 4 : 0,
+          textAlign: needsManualRTL ? 'left' : 'right',
+          marginLeft: needsManualRTL ? 0 : 4,
+          marginRight: needsManualRTL ? 4 : 0,
         }}
       >
         {t('profile.preferences')}
@@ -278,8 +278,7 @@ export default function ProfileScreen() {
           <View
             style={{
               paddingVertical: 8,
-              paddingLeft: isRTL ? 0 : 48,
-              paddingRight: isRTL ? 48 : 0,
+              direction: needsManualRTL ? 'rtl' : 'ltr'
             }}
           >
             {languages.map((lang) => (
@@ -287,7 +286,7 @@ export default function ProfileScreen() {
                 key={lang.code}
                 onPress={() => handleLanguageChange(lang.code)}
                 style={{
-                  flexDirection: isRTL ? 'row-reverse' : 'row',
+                  flexDirection: needsManualRTL ? 'row' : 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   paddingVertical: 12,
@@ -296,6 +295,7 @@ export default function ProfileScreen() {
                 <Text
                   style={{
                     fontSize: 15,
+                    width: '80%',
                     color:
                       language === lang.code ? colors.primary : colors.text,
                     fontWeight: language === lang.code ? '600' : '400',
@@ -325,8 +325,7 @@ export default function ProfileScreen() {
           <View
             style={{
               paddingVertical: 8,
-              paddingLeft: isRTL ? 0 : 48,
-              paddingRight: isRTL ? 48 : 0,
+              direction: needsManualRTL ? 'rtl' : 'ltr'
             }}
           >
             {themes.map((theme) => (
@@ -334,13 +333,13 @@ export default function ProfileScreen() {
                 key={theme.code}
                 onPress={() => handleThemeChange(theme.code)}
                 style={{
-                  flexDirection: isRTL ? 'row-reverse' : 'row',
+                  flexDirection: needsManualRTL ? 'row' : 'row',
                   alignItems: 'center',
                   justifyContent: 'space-between',
                   paddingVertical: 12,
                 }}
               >
-                <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', gap: 10 }}>
+                <View style={{ flexDirection: needsManualRTL ? 'row' : 'row', alignItems: 'center', gap: 10 }}>
                   <Ionicons 
                     name={theme.icon} 
                     size={18} 
@@ -349,6 +348,7 @@ export default function ProfileScreen() {
                   <Text
                     style={{
                       fontSize: 15,
+                      width: '80%',
                       color: themeMode === theme.code ? colors.primary : colors.text,
                       fontWeight: themeMode === theme.code ? '600' : '400',
                     }}
@@ -367,7 +367,7 @@ export default function ProfileScreen() {
         <MenuRow
           icon="notifications-outline"
           label={t('profile.notifications')}
-          onPress={() => {}}
+          onPress={() => router.push('/notifications')}
         />
       </Card>
 
@@ -381,9 +381,9 @@ export default function ProfileScreen() {
               color: colors.textMuted,
               textTransform: 'uppercase',
               marginBottom: 8,
-              textAlign: isRTL ? 'right' : 'left',
-              marginLeft: isRTL ? 0 : 4,
-              marginRight: isRTL ? 4 : 0,
+              textAlign: needsManualRTL ? 'left' : 'right',
+              marginLeft: needsManualRTL ? 0 : 4,
+              marginRight: needsManualRTL ? 4 : 0,
             }}
           >
             {t('profile.account')}
@@ -392,12 +392,12 @@ export default function ProfileScreen() {
             <MenuRow
               icon="create-outline"
               label={t('profile.editProfile')}
-              onPress={() => {}}
+              onPress={() => router.push('/edit-profile')}
             />
             <MenuRow
               icon="lock-closed-outline"
               label={t('profile.changePassword')}
-              onPress={() => {}}
+              onPress={() => router.push('/change-password')}
             />
             <MenuRow
               icon="log-out-outline"

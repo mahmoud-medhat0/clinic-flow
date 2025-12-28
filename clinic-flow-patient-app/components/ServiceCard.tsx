@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage, useTranslation } from '../contexts/LanguageContext';
 import type { Service } from '../services/clinics';
-
+import { I18nManager } from 'react-native';
 interface ServiceCardProps {
   service: Service;
   selected?: boolean;
@@ -15,7 +15,7 @@ export function ServiceCard({ service, selected, onPress }: ServiceCardProps) {
   const { colors } = useTheme();
   const { isRTL } = useLanguage();
   const { t } = useTranslation();
-
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
   return (
     <TouchableOpacity
       onPress={onPress}
@@ -27,7 +27,7 @@ export function ServiceCard({ service, selected, onPress }: ServiceCardProps) {
         marginBottom: 12,
         borderWidth: selected ? 2 : 1,
         borderColor: selected ? colors.primary : colors.border,
-        flexDirection: isRTL ? 'row-reverse' : 'row',
+        flexDirection: needsManualRTL ? 'row' : 'row',
         alignItems: 'center',
       }}
     >
@@ -37,7 +37,7 @@ export function ServiceCard({ service, selected, onPress }: ServiceCardProps) {
             fontSize: 16,
             fontWeight: '600',
             color: colors.text,
-            textAlign: isRTL ? 'right' : 'left',
+            textAlign: needsManualRTL ? 'left' : 'right',
             marginBottom: 4,
           }}
         >
@@ -49,7 +49,7 @@ export function ServiceCard({ service, selected, onPress }: ServiceCardProps) {
             style={{
               fontSize: 13,
               color: colors.textSecondary,
-              textAlign: isRTL ? 'right' : 'left',
+              textAlign: needsManualRTL ? 'left' : 'right',
               marginBottom: 8,
             }}
             numberOfLines={2}
@@ -60,19 +60,19 @@ export function ServiceCard({ service, selected, onPress }: ServiceCardProps) {
         
         <View
           style={{
-            flexDirection: isRTL ? 'row-reverse' : 'row',
+            flexDirection: needsManualRTL ? 'row' : 'row',
             alignItems: 'center',
             gap: 16,
           }}
         >
-          <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center' }}>
+          <View style={{ flexDirection: needsManualRTL ? 'row' : 'row', alignItems: 'center' }}>
             <Ionicons name="time-outline" size={14} color={colors.textMuted} />
             <Text
               style={{
                 fontSize: 13,
                 color: colors.textSecondary,
-                marginLeft: isRTL ? 0 : 4,
-                marginRight: isRTL ? 4 : 0,
+                marginLeft: needsManualRTL ? 4 : 0,
+                marginRight: needsManualRTL ? 0 : 4,
               }}
             >
               {service.duration} {t('booking.minutes')}
@@ -99,8 +99,8 @@ export function ServiceCard({ service, selected, onPress }: ServiceCardProps) {
           backgroundColor: selected ? colors.primary : colors.border,
           alignItems: 'center',
           justifyContent: 'center',
-          marginLeft: isRTL ? 0 : 12,
-          marginRight: isRTL ? 12 : 0,
+          marginLeft: needsManualRTL ? 12 : 0,
+          marginRight: needsManualRTL ? 0 : 12,
         }}
       >
         {selected && (

@@ -3,11 +3,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { TouchableOpacity } from 'react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 import { useTranslation } from '../../contexts/LanguageContext';
+import { I18nManager } from 'react-native';
 
 function ThemeToggleButton() {
   const { isDark, setThemeMode, colors } = useTheme();
-  const { isRTL } = useTranslation();
-
+  const { isRTL  } = useTranslation();
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
   const toggleTheme = () => {
     setThemeMode(isDark ? 'light' : 'dark');
   };
@@ -17,8 +18,8 @@ function ThemeToggleButton() {
       onPress={toggleTheme}
       accessibilityLabel={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       style={{
-        marginLeft: isRTL ? 16 : 0,
-        marginRight: isRTL ? 0 : 16,
+        marginLeft: needsManualRTL ? 0 : 16,
+        marginRight: needsManualRTL ? 16 : 0,
         padding: 8,
         borderRadius: 20,
         backgroundColor: colors.surfaceSecondary,
