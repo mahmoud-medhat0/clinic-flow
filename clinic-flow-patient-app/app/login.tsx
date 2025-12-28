@@ -164,9 +164,8 @@ export default function LoginScreen() {
           {/* Demo User Quick Fill */}
           <TouchableOpacity 
             onPress={() => {
-              setEmail('demo@clinicflow.com');
-              setPassword('demo123');
-              setErrors({});
+              // Use guest mode for demo in production
+              router.replace('/(tabs)');
             }}
             style={{
               marginTop: 8,
@@ -184,11 +183,11 @@ export default function LoginScreen() {
             ]}>
               <Ionicons name="person-circle-outline" size={20} color={colors.primary} />
               <Text style={{ color: colors.primary, fontWeight: '600', fontSize: 14 }}>
-                Use Demo Account
+                {t('auth.continueAsGuest')}
               </Text>
             </View>
             <Text style={{ color: colors.textMuted, fontSize: 11, textAlign: 'center', marginTop: 4 }}>
-              demo@clinicflow.com
+              {t('auth.guestSubtitle') || 'No login required'}
             </Text>
           </TouchableOpacity>
         </View>
