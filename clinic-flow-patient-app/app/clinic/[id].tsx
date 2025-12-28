@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Image, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, ScrollView, Image, TouchableOpacity, Linking, I18nManager } from 'react-native';
 import { useLocalSearchParams, router, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -16,6 +16,8 @@ export default function ClinicDetailsScreen() {
   const { colors } = useTheme();
   const { t, isRTL } = useTranslation();
   const { setClinic } = useBooking();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [clinic, setClinicData] = useState<Clinic | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -81,12 +83,18 @@ export default function ClinicDetailsScreen() {
           <View style={{ padding: 16, marginTop: -24 }}>
             {/* Main Info Card */}
             <Card variant="elevated" style={{ marginBottom: 16 }}>
-              <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <View style={[
+                { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start' },
+                needsManualRTL && { flexDirection: 'row-reverse' },
+              ]}>
                 <View style={{ flex: 1 }}>
                   <Text style={{ fontSize: 22, fontWeight: '700', color: colors.text, textAlign: isRTL ? 'right' : 'left', marginBottom: 8 }}>
                     {clinic.name}
                   </Text>
-                  <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', marginBottom: 8 }}>
+                  <View style={[
+                    { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
+                    needsManualRTL && { flexDirection: 'row-reverse' },
+                  ]}>
                     <Ionicons name="star" size={18} color="#f59e0b" />
                     <Text style={{ fontSize: 15, fontWeight: '600', color: colors.text, marginHorizontal: 4 }}>
                       {clinic.rating.toFixed(1)}
@@ -104,7 +112,10 @@ export default function ClinicDetailsScreen() {
               </View>
 
               {/* Location */}
-              <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', marginTop: 12 }}>
+              <View style={[
+                { flexDirection: 'row', alignItems: 'center', marginTop: 12 },
+                needsManualRTL && { flexDirection: 'row-reverse' },
+              ]}>
                 <Ionicons name="location-outline" size={18} color={colors.textSecondary} />
                 <Text style={{ flex: 1, fontSize: 14, color: colors.textSecondary, marginLeft: isRTL ? 0 : 8, marginRight: isRTL ? 8 : 0, textAlign: isRTL ? 'right' : 'left' }}>
                   {clinic.address}
@@ -130,7 +141,10 @@ export default function ClinicDetailsScreen() {
                 <Text style={{ fontSize: 16, fontWeight: '600', color: colors.text, marginBottom: 12, textAlign: isRTL ? 'right' : 'left' }}>
                   {t('clinic.services')}
                 </Text>
-                <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', flexWrap: 'wrap', gap: 8 }}>
+                <View style={[
+                  { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+                  needsManualRTL && { flexDirection: 'row-reverse' },
+                ]}>
                   {clinic.services.map((service) => (
                     <View key={service.id} style={{ backgroundColor: colors.primaryLight, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20 }}>
                       <Text style={{ fontSize: 13, color: colors.primary, fontWeight: '500' }}>
@@ -148,7 +162,10 @@ export default function ClinicDetailsScreen() {
                 {t('clinic.contact')}
               </Text>
               <View style={{ gap: 12 }}>
-                <TouchableOpacity onPress={handleCall} style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center' }}>
+                <TouchableOpacity onPress={handleCall} style={[
+                  { flexDirection: 'row', alignItems: 'center' },
+                  needsManualRTL && { flexDirection: 'row-reverse' },
+                ]}>
                   <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.primaryLight, alignItems: 'center', justifyContent: 'center' }}>
                     <Ionicons name="call" size={20} color={colors.primary} />
                   </View>
@@ -176,7 +193,10 @@ export default function ClinicDetailsScreen() {
                   {t('clinic.openingHours')}
                 </Text>
                 {clinic.openingHours.map((hour, index) => (
-                  <View key={index} style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', paddingVertical: 8, borderBottomWidth: index < clinic.openingHours.length - 1 ? 1 : 0, borderBottomColor: colors.borderLight }}>
+                  <View key={index} style={[
+                    { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 8, borderBottomWidth: index < clinic.openingHours.length - 1 ? 1 : 0, borderBottomColor: colors.borderLight },
+                    needsManualRTL && { flexDirection: 'row-reverse' },
+                  ]}>
                     <Text style={{ fontSize: 14, color: colors.text }}>{hour.day}</Text>
                     <Text style={{ fontSize: 14, color: hour.isClosed ? colors.danger : colors.textSecondary }}>
                       {hour.isClosed ? t('clinic.closed') : `${hour.open} - ${hour.close}`}

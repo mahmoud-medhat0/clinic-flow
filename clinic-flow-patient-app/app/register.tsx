@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, I18nManager } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,6 +14,8 @@ export default function RegisterScreen() {
   const { colors } = useTheme();
   const { t, isRTL } = useTranslation();
   const { register, isLoading } = useAuth();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -219,12 +221,15 @@ export default function RegisterScreen() {
 
         {/* Login Link */}
         <View
-          style={{
-            flexDirection: isRTL ? 'row-reverse' : 'row',
-            justifyContent: 'center',
-            marginTop: 24,
-            gap: 4,
-          }}
+          style={[
+            {
+              flexDirection: 'row',
+              justifyContent: 'center',
+              marginTop: 24,
+              gap: 4,
+            },
+            needsManualRTL && { flexDirection: 'row-reverse' },
+          ]}
         >
           <Text style={{ color: colors.textSecondary }}>{t('auth.hasAccount')}</Text>
           <TouchableOpacity onPress={() => router.push('/login')}>

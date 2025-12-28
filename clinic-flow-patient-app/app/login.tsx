@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, KeyboardAvoidingView, Platform, I18nManager } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -14,6 +14,8 @@ export default function LoginScreen() {
   const { colors } = useTheme();
   const { t, isRTL } = useTranslation();
   const { login, isLoading } = useAuth();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -176,7 +178,10 @@ export default function LoginScreen() {
               borderStyle: 'dashed',
             }}
           >
-            <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            <View style={[
+              { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
+              needsManualRTL && { flexDirection: 'row-reverse' },
+            ]}>
               <Ionicons name="person-circle-outline" size={20} color={colors.primary} />
               <Text style={{ color: colors.primary, fontWeight: '600', fontSize: 14 }}>
                 Use Demo Account

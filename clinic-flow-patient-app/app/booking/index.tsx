@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Alert, I18nManager } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -33,6 +33,8 @@ export default function BookingScreen() {
     submitBooking,
     resetBooking,
   } = useBooking();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [services, setServices] = useState<Service[]>([]);
   const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
@@ -306,11 +308,17 @@ export default function BookingScreen() {
             </Text>
             <Card variant="outlined">
               <View style={{ gap: 12 }}>
-                <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between' }}>
+                <View style={[
+                  { flexDirection: 'row', justifyContent: 'space-between' },
+                  needsManualRTL && { flexDirection: 'row-reverse' },
+                ]}>
                   <Text style={{ color: colors.textMuted }}>{t('booking.service')}</Text>
                   <Text style={{ fontWeight: '600', color: colors.text }}>{booking.serviceName}</Text>
                 </View>
-                <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between' }}>
+                <View style={[
+                  { flexDirection: 'row', justifyContent: 'space-between' },
+                  needsManualRTL && { flexDirection: 'row-reverse' },
+                ]}>
                   <Text style={{ color: colors.textMuted }}>{t('booking.date')}</Text>
                   <Text style={{ fontWeight: '600', color: colors.text }}>{booking.selectedDate}</Text>
                 </View>
@@ -343,14 +351,17 @@ export default function BookingScreen() {
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       {/* Header */}
       <View
-        style={{
-          flexDirection: isRTL ? 'row-reverse' : 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: 16,
-          borderBottomWidth: 1,
-          borderBottomColor: colors.border,
-        }}
+        style={[
+          {
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: 16,
+            borderBottomWidth: 1,
+            borderBottomColor: colors.border,
+          },
+          needsManualRTL && { flexDirection: 'row-reverse' },
+        ]}
       >
         <TouchableOpacity onPress={handleClose}>
           <Ionicons name="close" size={28} color={colors.text} />
@@ -363,11 +374,14 @@ export default function BookingScreen() {
 
       {/* Progress Steps */}
       <View
-        style={{
-          flexDirection: isRTL ? 'row-reverse' : 'row',
-          padding: 16,
-          gap: 8,
-        }}
+        style={[
+          {
+            flexDirection: 'row',
+            padding: 16,
+            gap: 8,
+          },
+          needsManualRTL && { flexDirection: 'row-reverse' },
+        ]}
       >
         {steps.map((step, index) => (
           <View key={step.key} style={{ flex: 1, alignItems: 'center' }}>
@@ -403,19 +417,22 @@ export default function BookingScreen() {
 
       {/* Bottom Actions */}
       <View
-        style={{
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          padding: 16,
-          paddingBottom: insets.bottom + 16,
-          backgroundColor: colors.surface,
-          borderTopWidth: 1,
-          borderTopColor: colors.border,
-          flexDirection: isRTL ? 'row-reverse' : 'row',
-          gap: 12,
-        }}
+        style={[
+          {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            padding: 16,
+            paddingBottom: insets.bottom + 16,
+            backgroundColor: colors.surface,
+            borderTopWidth: 1,
+            borderTopColor: colors.border,
+            flexDirection: 'row',
+            gap: 12,
+          },
+          needsManualRTL && { flexDirection: 'row-reverse' },
+        ]}
       >
         {currentStep > 1 && (
           <Button
