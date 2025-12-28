@@ -99,82 +99,128 @@ export default function BookScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Step 1: Select Clinic */}
-        <View style={{ marginBottom: 24 }}>
+        <View style={{ marginBottom: 32 }}>
           <Text
             style={{
-              fontSize: 18,
+              fontSize: 20,
               fontWeight: '700',
               color: colors.text,
-              marginBottom: 12,
+              marginBottom: 16,
               textAlign: needsManualRTL ? 'right' : 'left',
+              letterSpacing: 0.3,
             }}
           >
             1. {t('booking.selectService').split('?')[0]}
           </Text>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ gap: 12 }}
-            style={{ marginHorizontal: -16, paddingHorizontal: 16 }}
+          <View
+            style={[
+              {
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: 16,
+                marginTop: 4,
+              },
+              needsManualRTL && { flexDirection: 'row-reverse' },
+            ]}
           >
             {clinics.map((clinic) => (
               <TouchableOpacity
                 key={clinic.id}
                 onPress={() => handleClinicSelect(clinic)}
                 style={{
-                  backgroundColor:
-                    selectedClinicId === clinic.id
-                      ? colors.primary
-                      : colors.surface,
-                  paddingVertical: 16,
+                  backgroundColor: colors.surface,
+                  paddingVertical: 24,
                   paddingHorizontal: 20,
-                  borderRadius: 12,
-                  borderWidth: selectedClinicId === clinic.id ? 0 : 1,
-                  borderColor: colors.border,
-                  minWidth: 140,
+                  borderRadius: 16,
+                  borderWidth: selectedClinicId === clinic.id ? 3 : 1,
+                  borderColor: selectedClinicId === clinic.id ? colors.primary : colors.border,
+                  flex: 1,
+                  minWidth: '46%',
+                  maxWidth: '48%',
                   alignItems: 'center',
+                  shadowColor: selectedClinicId === clinic.id ? colors.primary : '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: selectedClinicId === clinic.id ? 8 : 4,
+                  },
+                  shadowOpacity: selectedClinicId === clinic.id ? 0.3 : 0.1,
+                  shadowRadius: selectedClinicId === clinic.id ? 12 : 6,
+                  elevation: selectedClinicId === clinic.id ? 12 : 4,
+                  transform: [{ scale: selectedClinicId === clinic.id ? 1.02 : 1 }],
                 }}
               >
-                <Ionicons
-                  name="medical"
-                  size={24}
-                  color={
-                    selectedClinicId === clinic.id
-                      ? colors.white
-                      : colors.primary
-                  }
-                />
-                <Text
+                <View
                   style={{
-                    fontSize: 14,
-                    fontWeight: '600',
-                    color:
+                    width: 56,
+                    height: 56,
+                    borderRadius: 28,
+                    backgroundColor: selectedClinicId === clinic.id 
+                      ? colors.primary 
+                      : `${colors.primary}15`,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 12,
+                  }}
+                >
+                  <Ionicons
+                    name="medical"
+                    size={28}
+                    color={
                       selectedClinicId === clinic.id
                         ? colors.white
-                        : colors.text,
-                    marginTop: 8,
+                        : colors.primary
+                    }
+                  />
+                </View>
+                <Text
+                  style={{
+                    fontSize: 15,
+                    fontWeight: '700',
+                    color: selectedClinicId === clinic.id
+                      ? colors.primary
+                      : colors.text,
+                    marginTop: 4,
                     textAlign: 'center',
+                    letterSpacing: 0.2,
                   }}
                   numberOfLines={2}
                 >
                   {clinic.name}
                 </Text>
+                {selectedClinicId === clinic.id && (
+                  <View
+                    style={{
+                      position: 'absolute',
+                      top: 12,
+                      right: 12,
+                      backgroundColor: colors.primary,
+                      borderRadius: 12,
+                      width: 24,
+                      height: 24,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <Ionicons name="checkmark" size={16} color={colors.white} />
+                  </View>
+                )}
               </TouchableOpacity>
             ))}
-          </ScrollView>
+          </View>
         </View>
 
         {/* Step 2: Select Service */}
         {selectedClinicId && (
-          <View style={{ marginBottom: 24 }}>
+          <View style={{ marginBottom: 32 }}>
             <Text
               style={{
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: '700',
                 color: colors.text,
-                marginBottom: 12,
+                marginBottom: 16,
                 textAlign: needsManualRTL ? 'right' : 'left',
+                letterSpacing: 0.3,
               }}
             >
               2. {t('booking.selectService')}

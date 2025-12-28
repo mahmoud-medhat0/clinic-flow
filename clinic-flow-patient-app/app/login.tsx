@@ -158,6 +158,34 @@ export default function LoginScreen() {
               {t('auth.forgotPassword')}
             </Text>
           </TouchableOpacity>
+
+          {/* Demo User Quick Fill */}
+          <TouchableOpacity 
+            onPress={() => {
+              setEmail('demo@clinicflow.com');
+              setPassword('demo123');
+              setErrors({});
+            }}
+            style={{
+              marginTop: 8,
+              padding: 12,
+              backgroundColor: `${colors.primary}10`,
+              borderRadius: 8,
+              borderWidth: 1,
+              borderColor: `${colors.primary}30`,
+              borderStyle: 'dashed',
+            }}
+          >
+            <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+              <Ionicons name="person-circle-outline" size={20} color={colors.primary} />
+              <Text style={{ color: colors.primary, fontWeight: '600', fontSize: 14 }}>
+                Use Demo Account
+              </Text>
+            </View>
+            <Text style={{ color: colors.textMuted, fontSize: 11, textAlign: 'center', marginTop: 4 }}>
+              demo@clinicflow.com
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Login Button */}

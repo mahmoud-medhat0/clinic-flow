@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Alert, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, ScrollView, Alert, TouchableOpacity, Linking, I18nManager } from 'react-native';
 import { useLocalSearchParams, router, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -14,6 +14,8 @@ export default function AppointmentDetailsScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { colors } = useTheme();
   const { t, isRTL } = useTranslation();
+
+  const needsManualRTL = isRTL && !I18nManager.isRTL;
 
   const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -109,98 +111,377 @@ export default function AppointmentDetailsScreen() {
     <>
       <Stack.Screen options={{ title: t('appointments.details') }} />
       <View style={{ flex: 1, backgroundColor: colors.background }}>
-        <ScrollView contentContainerStyle={{ padding: 16 }} showsVerticalScrollIndicator={false}>
+        <ScrollView contentContainerStyle={{ padding: 16, paddingBottom: 32 }} showsVerticalScrollIndicator={false}>
           {/* Status Badge */}
           <View style={{ alignItems: 'center', marginBottom: 24 }}>
-            <View style={{ backgroundColor: getStatusBg(), paddingHorizontal: 20, paddingVertical: 10, borderRadius: 30 }}>
-              <Text style={{ fontSize: 15, fontWeight: '600', color: getStatusColor(), textTransform: 'capitalize' }}>
+            <View 
+              style={{ 
+                backgroundColor: getStatusBg(), 
+                paddingHorizontal: 24, 
+                paddingVertical: 12, 
+                borderRadius: 24,
+                shadowColor: getStatusColor(),
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.15,
+                shadowRadius: 4,
+                elevation: 3,
+              }}
+            >
+              <Text 
+                style={{ 
+                  fontSize: 15, 
+                  fontWeight: '700', 
+                  color: getStatusColor(), 
+                  textTransform: 'capitalize',
+                  letterSpacing: 0.5,
+                }}
+              >
                 {t(`status.${appointment.status}`)}
               </Text>
             </View>
           </View>
 
           {/* Service Info */}
-          <Card variant="elevated" style={{ marginBottom: 16 }}>
-            <View style={{ alignItems: 'center', marginBottom: 16 }}>
-              <View style={{ width: 60, height: 60, borderRadius: 30, backgroundColor: colors.primaryLight, alignItems: 'center', justifyContent: 'center', marginBottom: 12 }}>
-                <Ionicons name="medical" size={28} color={colors.primary} />
+          <Card 
+            variant="elevated" 
+            style={{ 
+              marginBottom: 20,
+              shadowOffset: { width: 0, height: 4 },
+              shadowOpacity: 0.1,
+              shadowRadius: 8,
+              elevation: 6,
+            }}
+          >
+            <View style={{ alignItems: 'center', marginBottom: 20 }}>
+              <View 
+                style={{ 
+                  width: 80, 
+                  height: 80, 
+                  borderRadius: 40, 
+                  backgroundColor: `${colors.primary}15`, 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  marginBottom: 16,
+                  borderWidth: 3,
+                  borderColor: `${colors.primary}30`,
+                }}
+              >
+                <Ionicons name="medical" size={40} color={colors.primary} />
               </View>
-              <Text style={{ fontSize: 20, fontWeight: '700', color: colors.text, textAlign: 'center' }}>
+              <Text 
+                style={{ 
+                  fontSize: 22, 
+                  fontWeight: '700', 
+                  color: colors.text, 
+                  textAlign: 'center',
+                  marginBottom: 6,
+                  letterSpacing: 0.3,
+                }}
+              >
                 {appointment.service.name}
               </Text>
-              <Text style={{ fontSize: 15, color: colors.textSecondary, marginTop: 4 }}>
+              <Text 
+                style={{ 
+                  fontSize: 15, 
+                  color: colors.textSecondary, 
+                  fontWeight: '500',
+                }}
+              >
                 {appointment.clinic.name}
               </Text>
             </View>
 
             {/* Date & Time */}
-            <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', gap: 16, marginBottom: 16 }}>
-              <View style={{ flex: 1, backgroundColor: colors.surfaceSecondary, padding: 14, borderRadius: 12, alignItems: 'center' }}>
-                <Ionicons name="calendar-outline" size={22} color={colors.primary} />
-                <Text style={{ fontSize: 14, fontWeight: '600', color: colors.text, marginTop: 8, textAlign: 'center' }}>
+            <View 
+              style={[
+                { 
+                  flexDirection: 'row', 
+                  gap: 12, 
+                  marginBottom: 20,
+                },
+                needsManualRTL && { flexDirection: 'row' },
+              ]}
+            >
+              <View 
+                style={{ 
+                  flex: 1, 
+                  backgroundColor: colors.surfaceSecondary, 
+                  padding: 16, 
+                  borderRadius: 16, 
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                }}
+              >
+                <View
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    backgroundColor: `${colors.primary}20`,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 10,
+                  }}
+                >
+                  <Ionicons name="calendar-outline" size={22} color={colors.primary} />
+                </View>
+                <Text 
+                  style={{ 
+                    fontSize: 13, 
+                    fontWeight: '600', 
+                    color: colors.text, 
+                    textAlign: 'center',
+                    lineHeight: 18,
+                  }}
+                  numberOfLines={2}
+                >
                   {formatDate(appointment.date)}
                 </Text>
               </View>
-              <View style={{ flex: 1, backgroundColor: colors.surfaceSecondary, padding: 14, borderRadius: 12, alignItems: 'center' }}>
-                <Ionicons name="time-outline" size={22} color={colors.primary} />
-                <Text style={{ fontSize: 18, fontWeight: '700', color: colors.text, marginTop: 8 }}>
+              <View 
+                style={{ 
+                  flex: 1, 
+                  backgroundColor: colors.surfaceSecondary, 
+                  padding: 16, 
+                  borderRadius: 16, 
+                  alignItems: 'center',
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                }}
+              >
+                <View
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 20,
+                    backgroundColor: `${colors.primary}20`,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: 10,
+                  }}
+                >
+                  <Ionicons name="time-outline" size={22} color={colors.primary} />
+                </View>
+                <Text 
+                  style={{ 
+                    fontSize: 20, 
+                    fontWeight: '700', 
+                    color: colors.text,
+                    marginBottom: 4,
+                  }}
+                >
                   {appointment.time}
                 </Text>
-                <Text style={{ fontSize: 12, color: colors.textMuted }}>
+                <Text 
+                  style={{ 
+                    fontSize: 12, 
+                    color: colors.textMuted,
+                    fontWeight: '500',
+                  }}
+                >
                   {appointment.service.duration} {t('booking.minutes')}
                 </Text>
               </View>
             </View>
 
             {/* Price */}
-            <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', justifyContent: 'space-between', paddingTop: 16, borderTopWidth: 1, borderTopColor: colors.border }}>
-              <Text style={{ fontSize: 15, color: colors.textSecondary }}>{t('booking.price')}</Text>
-              <Text style={{ fontSize: 20, fontWeight: '700', color: colors.primary }}>
+            <View 
+              style={[
+                { 
+                  flexDirection: 'row', 
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  paddingTop: 20, 
+                  borderTopWidth: 1.5, 
+                  borderTopColor: colors.border,
+                },
+                needsManualRTL && { flexDirection: 'row' },
+              ]}
+            >
+              <Text 
+                style={{ 
+                  fontSize: 16, 
+                  color: colors.textSecondary,
+                  fontWeight: '600',
+                }}
+              >
+                {t('booking.price')}
+              </Text>
+              <Text 
+                style={{ 
+                  fontSize: 24, 
+                  fontWeight: '800', 
+                  color: colors.primary,
+                  letterSpacing: 0.5,
+                }}
+              >
                 ${appointment.service.price}
               </Text>
             </View>
           </Card>
 
           {/* Clinic Info */}
-          <Card variant="outlined" style={{ marginBottom: 16 }}>
-            <Text style={{ fontSize: 16, fontWeight: '600', color: colors.text, marginBottom: 12, textAlign: isRTL ? 'right' : 'left' }}>
+          <Card 
+            variant="outlined" 
+            style={{ 
+              marginBottom: 16,
+              borderWidth: 1.5,
+            }}
+          >
+            <Text 
+              style={{ 
+                fontSize: 17, 
+                fontWeight: '700', 
+                color: colors.text, 
+                marginBottom: 16, 
+                textAlign: needsManualRTL ? 'left' : 'right',
+                letterSpacing: 0.3,
+              }}
+            >
               {t('clinic.details')}
             </Text>
-            <TouchableOpacity onPress={handleCallClinic} style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center' }}>
-              <View style={{ width: 48, height: 48, borderRadius: 12, backgroundColor: colors.primaryLight, alignItems: 'center', justifyContent: 'center' }}>
-                <Ionicons name="medical" size={24} color={colors.primary} />
+            <TouchableOpacity 
+              onPress={handleCallClinic} 
+              style={[
+                { 
+                  flexDirection: 'row', 
+                  alignItems: 'center',
+                  backgroundColor: colors.surfaceSecondary,
+                  padding: 16,
+                  borderRadius: 12,
+                },
+                needsManualRTL && { flexDirection: 'row' },
+              ]}
+            >
+              <View 
+                style={{ 
+                  width: 56, 
+                  height: 56, 
+                  borderRadius: 16, 
+                  backgroundColor: `${colors.primary}15`, 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  borderWidth: 2,
+                  borderColor: `${colors.primary}30`,
+                }}
+              >
+                <Ionicons name="medical" size={28} color={colors.primary} />
               </View>
-              <View style={{ flex: 1, marginLeft: isRTL ? 0 : 12, marginRight: isRTL ? 12 : 0 }}>
-                <Text style={{ fontSize: 15, fontWeight: '600', color: colors.text, textAlign: isRTL ? 'right' : 'left' }}>
+              <View 
+                style={[
+                  { flex: 1 },
+                  needsManualRTL ? { marginRight: 16 } : { marginLeft: 16 },
+                ]}
+              >
+                <Text 
+                  style={{ 
+                    fontSize: 16, 
+                    fontWeight: '700', 
+                    color: colors.text, 
+                    textAlign: needsManualRTL ? 'right' : 'left',
+                    marginBottom: 4,
+                  }}
+                >
                   {appointment.clinic.name}
                 </Text>
-                <Text style={{ fontSize: 13, color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }}>
+                <Text 
+                  style={{ 
+                    fontSize: 13, 
+                    color: colors.textSecondary, 
+                    textAlign: needsManualRTL ? 'right' : 'left',
+                    lineHeight: 18,
+                  }}
+                >
                   {appointment.clinic.address}
                 </Text>
               </View>
-              <View style={{ flexDirection: 'row', gap: 8 }}>
-                <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: colors.tealLight, alignItems: 'center', justifyContent: 'center' }}>
-                  <Ionicons name="call" size={18} color={colors.teal} />
-                </View>
+              <View 
+                style={{ 
+                  width: 44, 
+                  height: 44, 
+                  borderRadius: 22, 
+                  backgroundColor: colors.tealLight, 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                }}
+              >
+                <Ionicons name="call" size={20} color={colors.teal} />
               </View>
             </TouchableOpacity>
           </Card>
 
           {/* Doctor Info (if assigned) */}
           {appointment.doctor && (
-            <Card variant="outlined" style={{ marginBottom: 16 }}>
-              <Text style={{ fontSize: 16, fontWeight: '600', color: colors.text, marginBottom: 12, textAlign: isRTL ? 'right' : 'left' }}>
+            <Card 
+              variant="outlined" 
+              style={{ 
+                marginBottom: 16,
+                borderWidth: 1.5,
+              }}
+            >
+              <Text 
+                style={{ 
+                  fontSize: 17, 
+                  fontWeight: '700', 
+                  color: colors.text, 
+                  marginBottom: 16, 
+                  textAlign: needsManualRTL ? 'left' : 'right',
+                  letterSpacing: 0.3,
+                }}
+              >
                 {t('booking.doctor')}
               </Text>
-              <View style={{ flexDirection: isRTL ? 'row-reverse' : 'row', alignItems: 'center' }}>
-                <View style={{ width: 48, height: 48, borderRadius: 24, backgroundColor: colors.tealLight, alignItems: 'center', justifyContent: 'center' }}>
-                  <Ionicons name="person" size={24} color={colors.teal} />
+              <View 
+                style={[
+                  { 
+                    flexDirection: 'row', 
+                    alignItems: 'center',
+                    backgroundColor: colors.surfaceSecondary,
+                    padding: 16,
+                    borderRadius: 12,
+                  },
+                  needsManualRTL && { flexDirection: 'row' },
+                ]}
+              >
+                <View 
+                  style={{ 
+                    width: 56, 
+                    height: 56, 
+                    borderRadius: 28, 
+                    backgroundColor: colors.tealLight, 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    borderWidth: 2,
+                    borderColor: `${colors.teal}30`,
+                  }}
+                >
+                  <Ionicons name="person" size={28} color={colors.teal} />
                 </View>
-                <View style={{ flex: 1, marginLeft: isRTL ? 0 : 12, marginRight: isRTL ? 12 : 0 }}>
-                  <Text style={{ fontSize: 15, fontWeight: '600', color: colors.text, textAlign: isRTL ? 'right' : 'left' }}>
+                <View 
+                  style={[
+                    { flex: 1 },
+                    needsManualRTL ? { marginRight: 16 } : { marginLeft: 16 },
+                  ]}
+                >
+                  <Text 
+                    style={{ 
+                      fontSize: 16, 
+                      fontWeight: '700', 
+                      color: colors.text, 
+                      textAlign: needsManualRTL ? 'right' : 'left',
+                      marginBottom: 4,
+                    }}
+                  >
                     Dr. {appointment.doctor.name}
                   </Text>
-                  <Text style={{ fontSize: 13, color: colors.textSecondary, textAlign: isRTL ? 'right' : 'left' }}>
+                  <Text 
+                    style={{ 
+                      fontSize: 13, 
+                      color: colors.textSecondary, 
+                      textAlign: needsManualRTL ? 'right' : 'left',
+                    }}
+                  >
                     {appointment.doctor.specialty}
                   </Text>
                 </View>
@@ -210,11 +491,34 @@ export default function AppointmentDetailsScreen() {
 
           {/* Notes */}
           {appointment.notes && (
-            <Card variant="outlined" style={{ marginBottom: 24 }}>
-              <Text style={{ fontSize: 16, fontWeight: '600', color: colors.text, marginBottom: 8, textAlign: isRTL ? 'right' : 'left' }}>
+            <Card 
+              variant="outlined" 
+              style={{ 
+                marginBottom: 24,
+                borderWidth: 1.5,
+                backgroundColor: `${colors.primary}05`,
+              }}
+            >
+              <Text 
+                style={{ 
+                  fontSize: 17, 
+                  fontWeight: '700', 
+                  color: colors.text, 
+                  marginBottom: 12, 
+                  textAlign: needsManualRTL ? 'left' : 'right',
+                  letterSpacing: 0.3,
+                }}
+              >
                 {t('booking.notes')}
               </Text>
-              <Text style={{ fontSize: 14, color: colors.textSecondary, lineHeight: 22, textAlign: isRTL ? 'right' : 'left' }}>
+              <Text 
+                style={{ 
+                  fontSize: 14, 
+                  color: colors.textSecondary, 
+                  lineHeight: 22, 
+                  textAlign: needsManualRTL ? 'left' : 'right',
+                }}
+              >
                 {appointment.notes}
               </Text>
             </Card>
