@@ -1,0 +1,1977 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "ClinicFlow API Documentation",
+        "description": "Comprehensive API documentation for ClinicFlow Backend",
+        "contact": {
+            "email": "admin@clinicflow.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000/api",
+            "description": "Development Server"
+        },
+        {
+            "url": "https://api.clinicflow.com/api",
+            "description": "Production Server"
+        }
+    ],
+    "paths": {
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register new user",
+                "operationId": "f8f20d8e5fa3ee0d9ab537e9ac6206b5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation",
+                                    "role"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "John Doe"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "john@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "example": "password123"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+201234567890"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "admin",
+                                            "doctor",
+                                            "patient",
+                                            "staff"
+                                        ],
+                                        "example": "patient"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Registration successful"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "User login",
+                "description": "Authenticate user and return access token",
+                "operationId": "3d1aae0ea009e03fadebec819afd774e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "admin@clinicflow.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful login",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "user": {
+                                                    "type": "object"
+                                                },
+                                                "token": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Logout user",
+                "operationId": "0f604af450f66d99a17c511d6067a1c9",
+                "responses": {
+                    "200": {
+                        "description": "Logged out successfully"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/profile": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Get authenticated user profile",
+                "operationId": "d4f977f7af422db49c76c562f997a863",
+                "responses": {
+                    "200": {
+                        "description": "User profile"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Update user profile",
+                "operationId": "84945775528173b819640153a80503d0",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "avatar": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/auth/change-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Change user password",
+                "operationId": "000615dea47b4e76d90368283f7d5ca5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "current_password",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "current_password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password changed successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/appointments": {
+            "get": {
+                "tags": [
+                    "Dashboard - Appointments"
+                ],
+                "summary": "Get appointments list",
+                "operationId": "2e965403971df8fefde004ecdbec9a63",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Appointments list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Dashboard - Appointments"
+                ],
+                "summary": "Create new appointment",
+                "operationId": "869d23b3199fae8ec783c2cb81cdd37a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "patient_id",
+                                    "doctor_id",
+                                    "clinic_id",
+                                    "service_id",
+                                    "date",
+                                    "time"
+                                ],
+                                "properties": {
+                                    "patient_id": {
+                                        "type": "integer"
+                                    },
+                                    "doctor_id": {
+                                        "type": "integer"
+                                    },
+                                    "clinic_id": {
+                                        "type": "integer"
+                                    },
+                                    "service_id": {
+                                        "type": "integer"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "time": {
+                                        "type": "string"
+                                    },
+                                    "notes": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Appointment created"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/appointments/{id}": {
+            "get": {
+                "tags": [
+                    "Dashboard - Appointments"
+                ],
+                "summary": "Get appointment details",
+                "operationId": "f2bed0c93723017c7b31c64a6ef1129a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Appointment details"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Dashboard - Appointments"
+                ],
+                "summary": "Update appointment",
+                "operationId": "2ba2dcd66fc164c405744bc5e69812f4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "time": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Appointment updated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Dashboard - Appointments"
+                ],
+                "summary": "Delete appointment",
+                "operationId": "6ade0b36773afe6fe81418ee794e56d7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Appointment deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/appointments/{id}/status": {
+            "put": {
+                "tags": [
+                    "Dashboard - Appointments"
+                ],
+                "summary": "Update appointment status",
+                "operationId": "4c74a59667ae382eef5d3e34c4782d16",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "pending",
+                                            "confirmed",
+                                            "cancelled",
+                                            "completed"
+                                        ]
+                                    },
+                                    "cancellation_reason": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status updated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/statistics": {
+            "get": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Get dashboard statistics",
+                "operationId": "66a99077253228169974aa946ffeff10",
+                "responses": {
+                    "200": {
+                        "description": "Statistics data",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "total_patients": {
+                                            "type": "integer"
+                                        },
+                                        "total_doctors": {
+                                            "type": "integer"
+                                        },
+                                        "total_appointments": {
+                                            "type": "integer"
+                                        },
+                                        "pending_appointments": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/inventory": {
+            "get": {
+                "tags": [
+                    "Dashboard - Inventory"
+                ],
+                "summary": "Get inventory items",
+                "operationId": "57f4029612a728c0b568fb4266f80e17",
+                "parameters": [
+                    {
+                        "name": "clinic_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inventory list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Dashboard - Inventory"
+                ],
+                "summary": "Create inventory item",
+                "operationId": "84374918edab0c19a1e1d74f1768de89",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "clinic_id",
+                                    "item_name",
+                                    "quantity",
+                                    "unit_price",
+                                    "reorder_level"
+                                ],
+                                "properties": {
+                                    "clinic_id": {
+                                        "type": "integer"
+                                    },
+                                    "item_name": {
+                                        "type": "string"
+                                    },
+                                    "quantity": {
+                                        "type": "integer"
+                                    },
+                                    "unit_price": {
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Item created"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/invoices": {
+            "get": {
+                "tags": [
+                    "Dashboard - Invoices"
+                ],
+                "summary": "Get invoices list",
+                "operationId": "dd818e150c7d076daf6979a1bec293b5",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "patient_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Invoices list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Dashboard - Invoices"
+                ],
+                "summary": "Create invoice",
+                "operationId": "58d68901eb0db5ff7c62b5c7510faa73",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "patient_id",
+                                    "total_amount",
+                                    "paid_amount",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "patient_id": {
+                                        "type": "integer"
+                                    },
+                                    "total_amount": {
+                                        "type": "number"
+                                    },
+                                    "paid_amount": {
+                                        "type": "number"
+                                    },
+                                    "status": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Invoice created"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/patients": {
+            "get": {
+                "tags": [
+                    "Dashboard - Patients"
+                ],
+                "summary": "Get patients list",
+                "operationId": "fea559ab87d2c95abce083ac634f1109",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "gender",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Patients list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Dashboard - Patients"
+                ],
+                "summary": "Create new patient",
+                "operationId": "19f76521b41523f0d327db783a47986f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "gender": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Patient created"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/patients/{id}": {
+            "get": {
+                "tags": [
+                    "Dashboard - Patients"
+                ],
+                "summary": "Get patient details",
+                "operationId": "369249e991b4ca96fe6c61e03d5e80ec",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Patient details"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Dashboard - Patients"
+                ],
+                "summary": "Update patient",
+                "operationId": "58eeb98635b77607e6a5e54fae416a00",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Patient updated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Dashboard - Patients"
+                ],
+                "summary": "Delete patient",
+                "operationId": "deb84aa16023fbbc5df0597836a6358d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Patient deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/patients/{id}/appointments": {
+            "get": {
+                "tags": [
+                    "Dashboard - Patients"
+                ],
+                "summary": "Get patient appointments",
+                "operationId": "e69647e91dc508057349f0959db7325f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Patient appointments"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/patients/{id}/invoices": {
+            "get": {
+                "tags": [
+                    "Dashboard - Patients"
+                ],
+                "summary": "Get patient invoices",
+                "operationId": "267eb391eb3aa9b50797accc130f2ae9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Patient invoices"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/dashboard/settings": {
+            "get": {
+                "tags": [
+                    "Dashboard - Settings"
+                ],
+                "summary": "Get application settings",
+                "operationId": "681fe974de3f2f8944a4bed6023fcd39",
+                "responses": {
+                    "200": {
+                        "description": "Settings data"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Dashboard - Settings"
+                ],
+                "summary": "Update settings",
+                "operationId": "472f16ed2758fc465911ffd684e7edf3",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "clinic_name": {
+                                        "type": "string"
+                                    },
+                                    "timezone": {
+                                        "type": "string"
+                                    },
+                                    "currency": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Settings updated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/files/upload": {
+            "post": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Upload file",
+                "operationId": "fb0091b919f84d4c94b51e6300b3784d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "required": [
+                                    "file",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "enum": [
+                                            "image",
+                                            "document",
+                                            "avatar"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "File uploaded"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/files/delete": {
+            "post": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Delete file",
+                "operationId": "2d4fe07e803e2eb9074fc3dd77205af1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "path"
+                                ],
+                                "properties": {
+                                    "path": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "File deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/files/url": {
+            "post": {
+                "tags": [
+                    "Files"
+                ],
+                "summary": "Get file URL",
+                "operationId": "8b426a3cb3a881bbafa6a8a50a6d2296",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "path"
+                                ],
+                                "properties": {
+                                    "path": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "File URL"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/doctor/appointments": {
+            "get": {
+                "tags": [
+                    "Mobile - Doctor"
+                ],
+                "summary": "Get doctor's appointments",
+                "operationId": "a89b7fc4875a405ba7779da0b9e9d951",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Appointments list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/doctor/appointments/today": {
+            "get": {
+                "tags": [
+                    "Mobile - Doctor"
+                ],
+                "summary": "Get today's appointments",
+                "operationId": "641ada6ad20950a65094d6b5ea5757c5",
+                "responses": {
+                    "200": {
+                        "description": "Today's appointments"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/doctor/appointments/{id}/status": {
+            "put": {
+                "tags": [
+                    "Mobile - Doctor"
+                ],
+                "summary": "Update appointment status",
+                "operationId": "9c069bf97bfddf6104b4982f14411af7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "status"
+                                ],
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "confirmed",
+                                            "completed",
+                                            "cancelled"
+                                        ]
+                                    },
+                                    "notes": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Status updated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/doctor/patients": {
+            "get": {
+                "tags": [
+                    "Mobile - Doctor"
+                ],
+                "summary": "Get doctor's patients",
+                "operationId": "94d89648b4c31a32f319557f3f939351",
+                "responses": {
+                    "200": {
+                        "description": "Patients list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/doctor/schedule": {
+            "get": {
+                "tags": [
+                    "Mobile - Doctor"
+                ],
+                "summary": "Get doctor schedule",
+                "operationId": "cb615f3d072159387b5d9572a42a3c49",
+                "responses": {
+                    "200": {
+                        "description": "Doctor schedule"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Mobile - Doctor"
+                ],
+                "summary": "Update doctor schedule",
+                "operationId": "e6b2b884ac9e8ad11f0d71c9ff0a647e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "available_from",
+                                    "available_to"
+                                ],
+                                "properties": {
+                                    "available_from": {
+                                        "type": "string",
+                                        "format": "time",
+                                        "example": "09:00"
+                                    },
+                                    "available_to": {
+                                        "type": "string",
+                                        "format": "time",
+                                        "example": "17:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Schedule updated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/doctor/statistics": {
+            "get": {
+                "tags": [
+                    "Mobile - Doctor"
+                ],
+                "summary": "Get doctor statistics",
+                "operationId": "d3150de3db8ab4a468d852d6a97aa8b8",
+                "responses": {
+                    "200": {
+                        "description": "Doctor statistics"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/patient/appointments": {
+            "get": {
+                "tags": [
+                    "Mobile - Patient"
+                ],
+                "summary": "Get patient's appointments",
+                "operationId": "068c2fcc7d5fbd58f3a34f540b50d7c8",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Appointments list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Mobile - Patient"
+                ],
+                "summary": "Book new appointment",
+                "operationId": "20cf276069fbea7893efa5e966a32c0f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "doctor_id",
+                                    "clinic_id",
+                                    "service_id",
+                                    "date",
+                                    "time"
+                                ],
+                                "properties": {
+                                    "doctor_id": {
+                                        "type": "integer"
+                                    },
+                                    "clinic_id": {
+                                        "type": "integer"
+                                    },
+                                    "service_id": {
+                                        "type": "integer"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "time": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Appointment booked"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/patient/appointments/{id}/cancel": {
+            "put": {
+                "tags": [
+                    "Mobile - Patient"
+                ],
+                "summary": "Cancel appointment",
+                "operationId": "aeb4fa7d5a7cf47c2f5d794ec8b869e5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "cancellation_reason"
+                                ],
+                                "properties": {
+                                    "cancellation_reason": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Appointment cancelled"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/patient/clinics": {
+            "get": {
+                "tags": [
+                    "Mobile - Patient"
+                ],
+                "summary": "Get available clinics",
+                "operationId": "871a25e5e5e465b046904a35e622ca93",
+                "responses": {
+                    "200": {
+                        "description": "Clinics list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/patient/doctors": {
+            "get": {
+                "tags": [
+                    "Mobile - Patient"
+                ],
+                "summary": "Get available doctors",
+                "operationId": "6e5f1f875e69ca64bbbfef4ded76fd83",
+                "parameters": [
+                    {
+                        "name": "specialization",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Doctors list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/patient/services": {
+            "get": {
+                "tags": [
+                    "Mobile - Patient"
+                ],
+                "summary": "Get available services",
+                "operationId": "d4db3532053fa7bb9c4f31d7bc4ac6e6",
+                "parameters": [
+                    {
+                        "name": "clinic_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Services list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/mobile/patient/medical-records": {
+            "get": {
+                "tags": [
+                    "Mobile - Patient"
+                ],
+                "summary": "Get patient's medical records",
+                "operationId": "458e07ad656a262e0fecf67ec887ca18",
+                "responses": {
+                    "200": {
+                        "description": "Medical records"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifications": {
+            "get": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Get user notifications",
+                "operationId": "b1274a2aaae8a4295a7e1925e8d8090f",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "is_read",
+                        "in": "query",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Notifications list"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifications/{id}/read": {
+            "put": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Mark notification as read",
+                "operationId": "8bc5203b95eaa5cf8614a66ced103386",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Marked as read"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/notifications/mark-all-read": {
+            "put": {
+                "tags": [
+                    "Notifications"
+                ],
+                "summary": "Mark all notifications as read",
+                "operationId": "48969f1c1523374341cf86b5610b3e03",
+                "responses": {
+                    "200": {
+                        "description": "All marked as read"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/website/booking": {
+            "post": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Book appointment (public/guest)",
+                "operationId": "a2b84f027def02242d54dd3e27900024",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "doctor_id",
+                                    "clinic_id",
+                                    "service_id",
+                                    "date",
+                                    "time"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "doctor_id": {
+                                        "type": "integer"
+                                    },
+                                    "clinic_id": {
+                                        "type": "integer"
+                                    },
+                                    "service_id": {
+                                        "type": "integer"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    },
+                                    "time": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Booking created"
+                    }
+                }
+            }
+        },
+        "/website/available-slots": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Get available time slots",
+                "operationId": "0e383a01b462bd4605690106f0ec23b1",
+                "parameters": [
+                    {
+                        "name": "doctor_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Available slots"
+                    }
+                }
+            }
+        },
+        "/website/clinics": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Get all clinics (public)",
+                "operationId": "9af8a8dc4e38678d252c14dbc643ba36",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Clinics list"
+                    }
+                }
+            }
+        },
+        "/website/clinics/{id}": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Get clinic details",
+                "operationId": "4cb0f210e55c63843bd2eb3865e3b668",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Clinic details"
+                    }
+                }
+            }
+        },
+        "/website/clinics/{id}/services": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Get clinic services",
+                "operationId": "f3ef390db4d86fce35cee640416129b6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Services list"
+                    }
+                }
+            }
+        },
+        "/website/clinics/{id}/doctors": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Get clinic doctors",
+                "operationId": "36c1c2a2aef978a557b629b6040c41f7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Doctors list"
+                    }
+                }
+            }
+        },
+        "/website/services": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Get all services (public)",
+                "operationId": "8dac7600d33d9119c0206f0cc149023b",
+                "parameters": [
+                    {
+                        "name": "clinic_id",
+                        "in": "query",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Services list"
+                    }
+                }
+            }
+        },
+        "/website/services/{id}": {
+            "get": {
+                "tags": [
+                    "Website"
+                ],
+                "summary": "Get service details",
+                "operationId": "2012d0d64bfd425d677e96ed955cf8dc",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Service details"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "Dashboard - Appointments",
+            "description": "Dashboard - Appointments"
+        },
+        {
+            "name": "Dashboard",
+            "description": "Dashboard"
+        },
+        {
+            "name": "Dashboard - Inventory",
+            "description": "Dashboard - Inventory"
+        },
+        {
+            "name": "Dashboard - Invoices",
+            "description": "Dashboard - Invoices"
+        },
+        {
+            "name": "Dashboard - Patients",
+            "description": "Dashboard - Patients"
+        },
+        {
+            "name": "Dashboard - Settings",
+            "description": "Dashboard - Settings"
+        },
+        {
+            "name": "Files",
+            "description": "Files"
+        },
+        {
+            "name": "Mobile - Doctor",
+            "description": "Mobile - Doctor"
+        },
+        {
+            "name": "Mobile - Patient",
+            "description": "Mobile - Patient"
+        },
+        {
+            "name": "Notifications",
+            "description": "Notifications"
+        },
+        {
+            "name": "Website",
+            "description": "Website"
+        }
+    ]
+}
